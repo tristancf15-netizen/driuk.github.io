@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Driuk | Rocket League Creator</title>
+    <style>
+        :root {
+            --bg-color: #080808;
+            --card-bg: #141414;
+            --primary-red: #ff1e38;
+            --dark-red: #b30018;
+            --text-white: #ffffff;
+            --text-gray: #a0a0a0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px 20px 20px;
+        }
+
+        h1 {
+            color: var(--primary-red);
+            font-size: 3.5em;
+            margin: 0;
+            text-shadow: 0 0 20px rgba(255, 30, 56, 0.4);
+            letter-spacing: 2px;
+        }
+
+        p.subtitle {
+            color: var(--text-gray);
+            font-size: 1.2em;
+            margin-top: 5px;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            color: white;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(255, 30, 56, 0.3);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            margin: 20px auto;
+        }
+
+        /* Redes Sociales */
+        .social-box {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+
+        .btn-social {
+            background-color: var(--card-bg);
+            color: var(--text-white);
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-weight: bold;
+            border: 2px solid #222;
+            transition: 0.3s;
+        }
+
+        .btn-social:hover {
+            border-color: var(--primary-red);
+            background-color: #1a0205;
+            transform: translateY(-3px);
+        }
+
+        /* Secciones */
+        section {
+            background-color: var(--card-bg);
+            border: 1px solid #222;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+        }
+
+        h2 {
+            color: var(--primary-red);
+            border-bottom: 2px solid var(--primary-red);
+            padding-bottom: 8px;
+            margin-top: 0;
+        }
+
+        /* Grid Vídeos y Shorts */
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .video-card {
+            background: #0d0d0d;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #222;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .video-card:hover {
+            transform: scale(1.02);
+            border-color: var(--primary-red);
+        }
+
+        .video-card img {
+            width: 100%;
+            height: 160px;
+            object-fit: cover;
+        }
+
+        .video-card h3 {
+            font-size: 1em;
+            margin: 15px 10px;
+        }
+
+        .video-card a {
+            display: inline-block;
+            margin-bottom: 15px;
+            background-color: var(--primary-red);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        /* Rocket League Config */
+        .config-flex {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .config-list {
+            flex: 1;
+            list-style: none;
+            padding: 0;
+            line-height: 1.8em;
+        }
+
+        .config-list li strong {
+            color: var(--primary-red);
+        }
+
+        .config-img {
+            flex: 1;
+            text-align: center;
+        }
+
+        .config-img img {
+            max-width: 100%;
+            border-radius: 10px;
+            border: 2px solid #333;
+        }
+
+        /* Sección Chat */
+        .chat-box {
+            background: #0d0d0d;
+            border-radius: 10px;
+            border: 1px solid #222;
+            padding: 15px;
+            height: 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        .chat-messages {
+            overflow-y: auto;
+            flex-grow: 1;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: left;
+        }
+
+        .chat-msg {
+            background: #1a1a1a;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            border-left: 3px solid var(--primary-red);
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-area input {
+            flex-grow: 1;
+            background: #141414;
+            border: 1px solid #333;
+            padding: 10px;
+            border-radius: 5px;
+            color: white;
+        }
+
+        .chat-input-area button {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>DRIUK</h1>
+        <p class="subtitle">Creador de Contenido & Jugador de Rocket League 🚀</p>
+        <div class="badge">💎 RANGO: PLATINO (Ruta a Diamante)</div>
+    </header>
+
+    <div class="container">
+        <!-- Redes Sociales -->
+        <div class="social-box">
+            <a class="btn-social" href="https://www.youtube.com/@driuk" target="_blank">📺 YouTube</a>
+            <a class="btn-social" href="https://twitch.tv/driukstrife" target="_blank">💜 Twitch</a>
+            <a class="btn-social" href="https://discord.gg/WDXTun5rfR" target="_blank">💬 Discord</a>
+        </div>
+
+        <!-- Último Vídeo y Short -->
+        <section>
+            <h2>🎬 ÚLTIMO CONTENIDO</h2>
+            <div class="video-grid">
+                <!-- Último Vídeo Largo -->
+                <div class="video-card">
+                    <img src="https://via.placeholder.com/480x270/1a1a1a/ff1e38?text=Miniatura+Ultimo+Video" alt="Último Vídeo">
+                    <h3>Mi último Vídeo Largo de Rocket League</h3>
+                    <a href="https://www.youtube.com/@driuk" target="_blank">Ver Vídeo 🔴</a>
+                </div>
+                <!-- Último Short -->
+                <div class="video-card">
+                    <img src="https://via.placeholder.com/270x480/1a1a1a/ff1e38?text=Miniatura+Short" alt="Último Short">
+                    <h3>Mi último Short épico</h3>
+                    <a href="https://www.youtube.com/@driuk" target="_blank">Ver Short 🔥</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Configuraciones de Cámara Rocket League -->
+        <section>
+            <h2>⚙️ CONFIGURACIONES DE CÁMARA</h2>
+            <div class="config-flex">
+                <ul class="config-list">
+                    <li><strong>FOV (Campo de visión):</strong> 110</li>
+                    <li><strong>Distancia:</strong> 270</li>
+                    <li><strong>Altura:</strong> 100</li>
+                    <li><strong>Ángulo:</strong> -4.0</li>
+                    <li><strong>Rigidez:</strong> 0.45</li>
+                    <li><strong>Velocidad de giro:</strong> 4.20</li>
+                </ul>
+                <div class="config-img">
+                    <img src="https://via.placeholder.com/350x200/111/ff1e38?text=Vista+en+Partida" alt="Vista en partida de cámara">
+                    <p style="font-size: 0.85em; color: #888; margin-top: 5px;">Así se ve mi cámara in-game</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección de Chat de Comunidad -->
+        <section>
+            <h2>💬 CHAT DE LA COMUNIDAD</h2>
+            <div class="chat-box">
+                <div class="chat-messages">
+                    <div class="chat-msg"><strong>Sistema:</strong> ¡Bienvenido al chat de Driuk! Conecta con otros jugadores.</div>
+                    <div class="chat-msg"><strong>Driuk:</strong> ¡Hola gente! De camino a Diamante hoy. 💎</div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" placeholder="Escribe un mensaje..." disabled>
+                    <button onclick="alert('Sistema de amigos y chat global activo próximamente.')">Enviar</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+</body>
+</html>
