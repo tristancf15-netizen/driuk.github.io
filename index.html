@@ -3,72 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Driuk | Youtuber Creator</title>
+    <!-- Meta etiquetas SEO con Keyword Research -->
+    <meta name="description" content="Sitio oficial de Driuk. Creador de contenido de Rocket League, configuraciones de cámara, setup gamer y canal de YouTube.">
+    <meta name="keywords" content="Driuk, Rocket League, Cámara Rocket League, Ruta a Diamante, Setup Gamer, YouTube Rocket League">
+    <title>Driuk | Creador de Contenido & Rocket League</title>
     <style>
         :root {
             --bg-color: #080808;
-            --card-bg: #141414;
+            --card-bg: #121212;
             --primary-red: #ff1e38;
-            --dark-red: #b30018;
-            --neon-glow: rgba(255, 30, 56, 0.6);
+            --dark-red: #990012;
+            --neon-glow: rgba(255, 30, 56, 0.5);
             --text-white: #ffffff;
-            --text-gray: #a0a0a0;
+            --text-gray: #b0b0b0;
         }
 
+        /* Animación de fondo dinámico */
         body {
-            background-color: var(--bg-color);
+            background: radial-gradient(circle at 50% 10%, #1a0306 0%, var(--bg-color) 70%);
             color: var(--text-white);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             margin: 0;
             padding: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
         header {
             text-align: center;
-            padding: 40px 20px 20px 20px;
+            padding: 50px 20px 20px 20px;
         }
 
+        /* Animación de Texto en Título */
         h1 {
             color: var(--primary-red);
-            font-size: 3.5em;
+            font-size: 3.8em;
             margin: 0;
             text-shadow: 0 0 20px var(--neon-glow);
-            letter-spacing: 2px;
-            animation: pulseGlow 3s infinite alternate;
+            letter-spacing: 3px;
+            animation: pulseTitle 3s infinite alternate ease-in-out;
         }
 
-        @keyframes pulseGlow {
-            0% { text-shadow: 0 0 10px var(--neon-glow); }
-            100% { text-shadow: 0 0 25px var(--primary-red), 0 0 35px var(--primary-red); }
+        @keyframes pulseTitle {
+            0% { text-shadow: 0 0 10px var(--neon-glow); transform: scale(1); }
+            100% { text-shadow: 0 0 30px var(--primary-red); transform: scale(1.02); }
         }
 
         p.subtitle {
             color: var(--text-gray);
-            font-size: 1.2em;
-            margin-top: 5px;
+            font-size: 1.25em;
+            margin-top: 8px;
+            font-weight: 300;
         }
 
         .badge {
             background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
             color: white;
-            padding: 8px 20px;
+            padding: 10px 24px;
             border-radius: 30px;
             font-weight: bold;
             display: inline-block;
             margin-top: 15px;
             box-shadow: 0 0 15px var(--neon-glow);
+            letter-spacing: 1px;
         }
 
         .container {
             width: 90%;
             max-width: 900px;
-            margin: 20px auto;
+            margin: 20px auto 50px auto;
         }
 
-        /* Redes Sociales con Logos */
+        /* Secciones Principales */
+        section {
+            background-color: var(--card-bg);
+            border: 1px solid #222;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        section:hover {
+            border-color: var(--primary-red);
+            box-shadow: 0 0 25px rgba(255, 30, 56, 0.25);
+            transform: translateY(-2px);
+        }
+
+        h2 {
+            color: var(--primary-red);
+            border-bottom: 2px solid var(--primary-red);
+            padding-bottom: 10px;
+            margin-top: 0;
+            font-size: 1.6em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 1. Redes Sociales */
         .social-box {
             display: flex;
             justify-content: center;
@@ -81,151 +117,169 @@
             background-color: var(--card-bg);
             color: var(--text-white);
             text-decoration: none;
-            padding: 12px 25px;
-            border-radius: 10px;
+            padding: 14px 28px;
+            border-radius: 12px;
             font-weight: bold;
             border: 2px solid #222;
-            transition: 0.3s;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
         .btn-social svg {
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             fill: currentColor;
         }
 
         .btn-social:hover {
             border-color: var(--primary-red);
             background-color: #1a0205;
-            transform: translateY(-3px);
+            transform: translateY(-4px);
             color: var(--primary-red);
-            box-shadow: 0 0 15px var(--neon-glow);
+            box-shadow: 0 0 20px var(--neon-glow);
         }
 
-        /* Secciones con Estilo Neón */
-        section {
-            background-color: var(--card-bg);
-            border: 1px solid #222;
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-            transition: 0.3s;
-        }
-
-        section:hover {
-            border-color: rgba(255, 30, 56, 0.4);
-            box-shadow: 0 0 20px rgba(255, 30, 56, 0.2);
-        }
-
-        h2 {
-            color: var(--primary-red);
-            border-bottom: 2px solid var(--primary-red);
-            padding-bottom: 8px;
-            margin-top: 0;
-        }
-
-        /* Grid de Logros / Stats */
+        /* 2. Logros y Estadísticas */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
             text-align: center;
         }
 
         .stat-card {
-            background: #0d0d0d;
+            background: #0a0a0a;
             border: 1px solid #222;
-            border-radius: 10px;
-            padding: 20px;
-            transition: 0.3s;
+            border-radius: 12px;
+            padding: 22px;
+            transition: all 0.3s ease;
         }
 
         .stat-card:hover {
             border-color: var(--primary-red);
-            transform: translateY(-5px);
+            transform: scale(1.03);
             box-shadow: 0 0 15px var(--neon-glow);
         }
 
         .stat-number {
-            font-size: 2em;
-            font-weight: bold;
+            font-size: 2.2em;
+            font-weight: 800;
             color: var(--primary-red);
         }
 
         .stat-label {
             color: var(--text-gray);
-            font-size: 0.9em;
-            margin-top: 5px;
+            font-size: 0.95em;
+            margin-top: 6px;
         }
 
-        /* Grid Vídeos y Shorts */
+        /* 3. Vídeos y Shorts */
         .video-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 650px) {
             .video-grid {
                 grid-template-columns: 1fr;
             }
         }
 
         .video-card {
-            background: #0d0d0d;
-            border-radius: 10px;
+            background: #0a0a0a;
+            border-radius: 12px;
             overflow: hidden;
             border: 1px solid #222;
             text-align: center;
-            transition: 0.3s;
+            transition: all 0.3s ease;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
 
         .video-card:hover {
-            transform: scale(1.02);
+            transform: translateY(-5px);
             border-color: var(--primary-red);
-            box-shadow: 0 0 15px var(--neon-glow);
+            box-shadow: 0 0 20px var(--neon-glow);
         }
 
         .video-card img {
             width: 100%;
-            height: 180px;
+            height: 190px;
             object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .video-card:hover img {
+            transform: scale(1.05);
         }
 
         .video-card h3 {
-            font-size: 1em;
-            margin: 15px 10px;
+            font-size: 1.05em;
+            margin: 15px;
+            color: var(--text-white);
         }
 
         .video-card a {
-            display: inline-block;
+            display: block;
             margin: 0 15px 15px 15px;
             background-color: var(--primary-red);
             color: white;
-            padding: 10px 15px;
-            border-radius: 5px;
+            padding: 12px;
+            border-radius: 8px;
             text-decoration: none;
             font-weight: bold;
-            font-size: 0.9em;
-            transition: 0.2s;
+            font-size: 0.95em;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
         }
 
         .video-card a:hover {
             background-color: var(--dark-red);
-            box-shadow: 0 0 10px var(--neon-glow);
+            box-shadow: 0 0 12px var(--neon-glow);
         }
 
-        /* Rocket League Config */
+        /* 4. Setup Gamer */
+        .setup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .setup-card {
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 10px;
+            padding: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .setup-card:hover {
+            border-color: var(--primary-red);
+            box-shadow: 0 0 15px var(--neon-glow);
+            transform: translateY(-3px);
+        }
+
+        .setup-title {
+            color: var(--primary-red);
+            font-weight: bold;
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .setup-value {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        /* 5. Configuración Cámara */
         .config-flex {
             display: flex;
-            gap: 20px;
+            gap: 25px;
             flex-wrap: wrap;
             align-items: center;
         }
@@ -234,7 +288,16 @@
             flex: 1;
             list-style: none;
             padding: 0;
-            line-height: 1.8em;
+            margin: 0;
+            line-height: 2em;
+        }
+
+        .config-list li {
+            background: #0a0a0a;
+            margin-bottom: 8px;
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid #1a1a1a;
         }
 
         .config-list li strong {
@@ -248,51 +311,18 @@
 
         .config-img img {
             max-width: 100%;
-            border-radius: 10px;
+            border-radius: 12px;
             border: 2px solid #333;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.7);
         }
 
-        /* Grid de Setup */
-        .setup-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-        }
-
-        .setup-card {
-            background: #0d0d0d;
-            border: 1px solid #222;
-            border-radius: 10px;
-            padding: 15px;
-            transition: 0.3s;
-        }
-
-        .setup-card:hover {
-            border-color: var(--primary-red);
-            box-shadow: 0 0 15px var(--neon-glow);
-        }
-
-        .setup-title {
-            color: var(--primary-red);
-            font-weight: bold;
-            font-size: 0.9em;
-            text-transform: uppercase;
-        }
-
-        .setup-value {
-            font-size: 1.05em;
-            font-weight: 600;
-            margin-top: 5px;
-        }
-
-        /* Sección Chat */
+        /* 6. Chat de Comunidad */
         .chat-box {
-            background: #0d0d0d;
-            border-radius: 10px;
+            background: #0a0a0a;
+            border-radius: 12px;
             border: 1px solid #222;
-            padding: 15px;
-            height: 250px;
+            padding: 18px;
+            height: 260px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -301,18 +331,18 @@
         .chat-messages {
             overflow-y: auto;
             flex-grow: 1;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             text-align: left;
         }
 
         .chat-msg {
-            background: #1a1a1a;
-            padding: 8px 12px;
+            background: #141414;
+            padding: 10px 14px;
             border-radius: 8px;
-            font-size: 0.9em;
+            font-size: 0.92em;
             border-left: 3px solid var(--primary-red);
         }
 
@@ -325,24 +355,26 @@
             flex-grow: 1;
             background: #141414;
             border: 1px solid #333;
-            padding: 10px;
-            border-radius: 5px;
+            padding: 12px;
+            border-radius: 8px;
             color: white;
+            outline: none;
         }
 
         .chat-input-area button {
             background: var(--primary-red);
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
+            padding: 12px 22px;
+            border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.3s ease;
         }
 
         .chat-input-area button:hover {
-            box-shadow: 0 0 10px var(--neon-glow);
+            background: var(--dark-red);
+            box-shadow: 0 0 12px var(--neon-glow);
         }
     </style>
 </head>
@@ -350,124 +382,126 @@
 
     <header>
         <h1>DRIUK</h1>
-        <p class="subtitle">Creador de Contenido & Jugador de Rocket League 🚀</p>
+        <p class="subtitle">Creador de Contenido & Gaming de Rocket League 🚀</p>
         <div class="badge">💎 RANGO MÁXIMO: DIAMANTE 1</div>
     </header>
 
     <div class="container">
-        <!-- Redes Sociales -->
+        <!-- 1. Enlaces e Identidad Social -->
         <div class="social-box">
-            <a class="btn-social" href="https://www.youtube.com/@driuk" target="_blank">
+            <a class="btn-social" href="https://www.youtube.com/@driuk" target="_blank" title="Canal Oficial de YouTube de Driuk">
                 <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                 YouTube
             </a>
-            <a class="btn-social" href="https://twitch.tv/driukstrife" target="_blank">
+            <a class="btn-social" href="https://twitch.tv/driukstrife" target="_blank" title="Canal Oficial de Twitch de Driuk">
                 <svg viewBox="0 0 24 24"><path d="M11.571 4.714h1.715v5.143h-1.715zm4.715 0h1.714v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
                 Twitch
             </a>
-            <a class="btn-social" href="https://discord.gg/WDXTun5rfR" target="_blank">
+            <a class="btn-social" href="https://discord.gg/WDXTun5rfR" target="_blank" title="Servidor de Discord de la Comunidad">
                 <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
                 Discord
             </a>
         </div>
 
-        <!-- Logros y Estadísticas -->
+        <!-- Apartado 2. Estadísticas y Logros de la Comunidad -->
         <section>
-            <h2>🏆 LOGROS Y COMUNIDAD</h2>
+            <h2>🏆 2. LOGROS Y HITOS DE LA COMUNIDAD</h2>
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-number">1,31K</div>
-                    <div class="stat-label">Suscriptores en YouTube</div>
+                    <div class="stat-label">2.1. Suscriptores en YouTube</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number">384.644</div>
-                    <div class="stat-label">Visualizaciones Totales</div>
+                    <div class="stat-label">2.2. Visualizaciones Totales</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number">Diamante 1 💎</div>
-                    <div class="stat-label">Rango Máximo Alcanzado</div>
+                    <div class="stat-label">2.3. Rango Máximo Alcanzado</div>
                 </div>
             </div>
         </section>
 
-        <!-- Último Vídeo y Short -->
+        <!-- Apartado 3. Último Contenido Multimedia -->
         <section>
-            <h2>🎬 ÚLTIMO CONTENIDO</h2>
+            <h2>🎬 3. ÚLTIMO CONTENIDO DESTACADO</h2>
             <div class="video-grid">
+                <!-- Sub-apartado 3.1 -->
                 <div class="video-card">
                     <a href="https://youtu.be/DuFB_bxeAAg?si=fFzFck0RNGWR4q1Q" target="_blank">
-                        <img src="https://img.youtube.com/vi/DuFB_bxeAAg/hqdefault.jpg" alt="Último Vídeo Largo">
+                        <img src="https://img.youtube.com/vi/DuFB_bxeAAg/hqdefault.jpg" alt="Jugué Rocket League SIN BALL CAM">
                     </a>
-                    <h3>Jugué Rocket League SIN BALL CAM: ¿Es posible ganar?</h3>
-                    <a href="https://youtu.be/DuFB_bxeAAg?si=fFzFck0RNGWR4q1Q" target="_blank">Ver Vídeo 🔴</a>
+                    <h3>3.1. Jugué Rocket League SIN BALL CAM: ¿Es posible ganar?</h3>
+                    <a href="https://youtu.be/DuFB_bxeAAg?si=fFzFck0RNGWR4q1Q" target="_blank">Ver Vídeo Completo 🔴</a>
                 </div>
+                <!-- Sub-apartado 3.2 -->
                 <div class="video-card">
                     <a href="https://youtube.com/shorts/NXKzgqY29o4?si=90ZmHhLNa4rrtqXv" target="_blank">
-                        <img src="https://img.youtube.com/vi/NXKzgqY29o4/hqdefault.jpg" alt="Último Short">
+                        <img src="https://img.youtube.com/vi/NXKzgqY29o4/hqdefault.jpg" alt="Tengo una sorpresa para el canal">
                     </a>
-                    <h3>Tengo una sorpresa para el canal 👀</h3>
-                    <a href="https://youtube.com/shorts/NXKzgqY29o4?si=90ZmHhLNa4rrtqXv" target="_blank">Ver Short 🔥</a>
+                    <h3>3.2. Tengo una sorpresa para el canal 👀</h3>
+                    <a href="https://youtube.com/shorts/NXKzgqY29o4?si=90ZmHhLNa4rrtqXv" target="_blank">Ver Short Épico 🔥</a>
                 </div>
             </div>
         </section>
 
-        <!-- Setup Gamer -->
+        <!-- Apartado 4. Hardware y Periféricos -->
         <section>
-            <h2>🖥️ MI SETUP GAMER</h2>
+            <h2>🖥️ 4. MI SETUP COMPETITIVO</h2>
             <div class="setup-grid">
                 <div class="setup-card">
-                    <div class="setup-title">🎮 Mando</div>
+                    <div class="setup-title">4.1. Mando Gamer</div>
                     <div class="setup-value">GameSir G7 SE</div>
                 </div>
                 <div class="setup-card">
-                    <div class="setup-title">🖥️ Monitor</div>
+                    <div class="setup-title">4.2. Monitor 240Hz</div>
                     <div class="setup-value">AOC 25G3ZM</div>
                 </div>
                 <div class="setup-card">
-                    <div class="setup-title">🎧 Cascos</div>
+                    <div class="setup-title">4.3. Auriculares</div>
                     <div class="setup-value">Logitech G PRO X LIGHTSPEED</div>
                 </div>
                 <div class="setup-card">
-                    <div class="setup-title">⚡ Tarjeta Gráfica</div>
+                    <div class="setup-title">4.4. Tarjeta Gráfica</div>
                     <div class="setup-value">AMD Radeon RX 7800 XT</div>
                 </div>
                 <div class="setup-card">
-                    <div class="setup-title">🧠 Procesador</div>
+                    <div class="setup-title">4.5. Procesador</div>
                     <div class="setup-value">AMD Ryzen 7 5700X3D</div>
                 </div>
             </div>
         </section>
 
-        <!-- Configuraciones de Cámara Rocket League -->
+        <!-- Apartado 5. Configuración del Juego -->
         <section>
-            <h2>⚙️ CONFIGURACIONES DE CÁMARA</h2>
+            <h2>⚙️ 5. CONFIGURACIÓN DE CÁMARA (ROCKET LEAGUE)</h2>
             <div class="config-flex">
                 <ul class="config-list">
-                    <li><strong>FOV (Campo de visión):</strong> 110</li>
-                    <li><strong>Distancia:</strong> 270</li>
-                    <li><strong>Altura:</strong> 100</li>
-                    <li><strong>Ángulo:</strong> -4.0</li>
-                    <li><strong>Rigidez:</strong> 0.45</li>
-                    <li><strong>Velocidad de giro:</strong> 4.20</li>
+                    <li><strong>5.1. FOV (Campo de visión):</strong> 110</li>
+                    <li><strong>5.2. Distancia:</strong> 270</li>
+                    <li><strong>5.3. Altura:</strong> 100</li>
+                    <li><strong>5.4. Ángulo:</strong> -4.0</li>
+                    <li><strong>5.5. Rigidez:</strong> 0.45</li>
+                    <li><strong>5.6. Velocidad de giro:</strong> 4.20</li>
                 </ul>
                 <div class="config-img">
-                    <img src="camara.jpg" alt="Vista in-game de mi cámara en Rocket League">
-                    <p style="font-size: 0.85em; color: #888; margin-top: 5px;">Mi partida real en Rocket League</p>
+                    <img src="camara.jpg" alt="Configuración de cámara real de Driuk en Rocket League">
+                    <p style="font-size: 0.85em; color: #888; margin-top: 8px;">Perspectiva real in-game</p>
                 </div>
             </div>
         </section>
 
-        <!-- Chat de Comunidad -->
+        <!-- Apartado 6. Comunidad y Chat -->
         <section>
-            <h2>💬 CHAT DE LA COMUNIDAD</h2>
+            <h2>💬 6. SALA DE CHAT Y COMUNIDAD</h2>
             <div class="chat-box">
                 <div class="chat-messages">
-                    <div class="chat-msg"><strong>Sistema:</strong> ¡Bienvenido al chat de Driuk! Conecta con otros jugadores.</div>
-                    <div class="chat-msg"><strong>Driuk:</strong> ¡Hola gente! Camino al Rango Diamante. 💎</div>
+                    <div class="chat-msg"><strong>6.1. Sistema:</strong> ¡Bienvenido a la comunidad oficial de Driuk!</div>
+                    <div class="chat-msg"><strong>6.2. Driuk:</strong> ¡A por el rango Diamante en directo! 💎</div>
                 </div>
                 <div class="chat-input-area">
-                    <input type="text" placeholder="Escribe un mensaje..." disabled>
-                    <button onclick="alert('Sistema de amigos y chat global activo próximamente.')">Enviar</button>
+                    <input type="text" placeholder="Escribe un mensaje en el chat..." disabled>
+                    <button onclick="alert('El módulo interactivo de chat estará disponible en la próxima actualización.')">Enviar</button>
                 </div>
             </div>
         </section>
