@@ -10,6 +10,7 @@
             --card-bg: #141414;
             --primary-red: #ff1e38;
             --dark-red: #b30018;
+            --neon-glow: rgba(255, 30, 56, 0.6);
             --text-white: #ffffff;
             --text-gray: #a0a0a0;
         }
@@ -34,8 +35,14 @@
             color: var(--primary-red);
             font-size: 3.5em;
             margin: 0;
-            text-shadow: 0 0 20px rgba(255, 30, 56, 0.4);
+            text-shadow: 0 0 20px var(--neon-glow);
             letter-spacing: 2px;
+            animation: pulseGlow 3s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { text-shadow: 0 0 10px var(--neon-glow); }
+            100% { text-shadow: 0 0 25px var(--primary-red), 0 0 35px var(--primary-red); }
         }
 
         p.subtitle {
@@ -52,7 +59,7 @@
             font-weight: bold;
             display: inline-block;
             margin-top: 15px;
-            box-shadow: 0 4px 15px rgba(255, 30, 56, 0.3);
+            box-shadow: 0 0 15px var(--neon-glow);
         }
 
         .container {
@@ -95,9 +102,10 @@
             background-color: #1a0205;
             transform: translateY(-3px);
             color: var(--primary-red);
+            box-shadow: 0 0 15px var(--neon-glow);
         }
 
-        /* Secciones */
+        /* Secciones con Estilo Neón */
         section {
             background-color: var(--card-bg);
             border: 1px solid #222;
@@ -105,6 +113,12 @@
             padding: 25px;
             margin-bottom: 30px;
             box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+            transition: 0.3s;
+        }
+
+        section:hover {
+            border-color: rgba(255, 30, 56, 0.4);
+            box-shadow: 0 0 20px rgba(255, 30, 56, 0.2);
         }
 
         h2 {
@@ -112,6 +126,40 @@
             border-bottom: 2px solid var(--primary-red);
             padding-bottom: 8px;
             margin-top: 0;
+        }
+
+        /* Grid de Logros / Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            text-align: center;
+        }
+
+        .stat-card {
+            background: #0d0d0d;
+            border: 1px solid #222;
+            border-radius: 10px;
+            padding: 20px;
+            transition: 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--primary-red);
+            transform: translateY(-5px);
+            box-shadow: 0 0 15px var(--neon-glow);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary-red);
+        }
+
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 0.9em;
+            margin-top: 5px;
         }
 
         /* Grid Vídeos y Shorts */
@@ -142,6 +190,7 @@
         .video-card:hover {
             transform: scale(1.02);
             border-color: var(--primary-red);
+            box-shadow: 0 0 15px var(--neon-glow);
         }
 
         .video-card img {
@@ -170,6 +219,7 @@
 
         .video-card a:hover {
             background-color: var(--dark-red);
+            box-shadow: 0 0 10px var(--neon-glow);
         }
 
         /* Rocket League Config */
@@ -201,6 +251,39 @@
             border-radius: 10px;
             border: 2px solid #333;
             box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
+
+        /* Grid de Setup */
+        .setup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .setup-card {
+            background: #0d0d0d;
+            border: 1px solid #222;
+            border-radius: 10px;
+            padding: 15px;
+            transition: 0.3s;
+        }
+
+        .setup-card:hover {
+            border-color: var(--primary-red);
+            box-shadow: 0 0 15px var(--neon-glow);
+        }
+
+        .setup-title {
+            color: var(--primary-red);
+            font-weight: bold;
+            font-size: 0.9em;
+            text-transform: uppercase;
+        }
+
+        .setup-value {
+            font-size: 1.05em;
+            font-weight: 600;
+            margin-top: 5px;
         }
 
         /* Sección Chat */
@@ -255,6 +338,11 @@
             border-radius: 5px;
             font-weight: bold;
             cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .chat-input-area button:hover {
+            box-shadow: 0 0 10px var(--neon-glow);
         }
     </style>
 </head>
@@ -263,34 +351,49 @@
     <header>
         <h1>DRIUK</h1>
         <p class="subtitle">Creador de Contenido & Jugador de Rocket League 🚀</p>
-        <div class="badge">💎 RANGO: PLATINO (Ruta a Diamante)</div>
+        <div class="badge">💎 RANGO MÁXIMO: DIAMANTE 1</div>
     </header>
 
     <div class="container">
-        <!-- Redes Sociales con Logos Oficiales SVG -->
+        <!-- Redes Sociales -->
         <div class="social-box">
-            <!-- YouTube -->
             <a class="btn-social" href="https://www.youtube.com/@driuk" target="_blank">
                 <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                 YouTube
             </a>
-            <!-- Twitch -->
             <a class="btn-social" href="https://twitch.tv/driukstrife" target="_blank">
                 <svg viewBox="0 0 24 24"><path d="M11.571 4.714h1.715v5.143h-1.715zm4.715 0h1.714v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
                 Twitch
             </a>
-            <!-- Discord -->
             <a class="btn-social" href="https://discord.gg/WDXTun5rfR" target="_blank">
                 <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
                 Discord
             </a>
         </div>
 
+        <!-- Logros y Estadísticas -->
+        <section>
+            <h2>🏆 LOGROS Y COMUNIDAD</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">1,31K</div>
+                    <div class="stat-label">Suscriptores en YouTube</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">384.644</div>
+                    <div class="stat-label">Visualizaciones Totales</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">Diamante 1 💎</div>
+                    <div class="stat-label">Rango Máximo Alcanzado</div>
+                </div>
+            </div>
+        </section>
+
         <!-- Último Vídeo y Short -->
         <section>
             <h2>🎬 ÚLTIMO CONTENIDO</h2>
             <div class="video-grid">
-                <!-- Último Vídeo Largo -->
                 <div class="video-card">
                     <a href="https://youtu.be/DuFB_bxeAAg?si=fFzFck0RNGWR4q1Q" target="_blank">
                         <img src="https://img.youtube.com/vi/DuFB_bxeAAg/hqdefault.jpg" alt="Último Vídeo Largo">
@@ -298,13 +401,39 @@
                     <h3>Jugué Rocket League SIN BALL CAM: ¿Es posible ganar?</h3>
                     <a href="https://youtu.be/DuFB_bxeAAg?si=fFzFck0RNGWR4q1Q" target="_blank">Ver Vídeo 🔴</a>
                 </div>
-                <!-- Último Short -->
                 <div class="video-card">
                     <a href="https://youtube.com/shorts/NXKzgqY29o4?si=90ZmHhLNa4rrtqXv" target="_blank">
                         <img src="https://img.youtube.com/vi/NXKzgqY29o4/hqdefault.jpg" alt="Último Short">
                     </a>
                     <h3>Tengo una sorpresa para el canal 👀</h3>
                     <a href="https://youtube.com/shorts/NXKzgqY29o4?si=90ZmHhLNa4rrtqXv" target="_blank">Ver Short 🔥</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Setup Gamer -->
+        <section>
+            <h2>🖥️ MI SETUP GAMER</h2>
+            <div class="setup-grid">
+                <div class="setup-card">
+                    <div class="setup-title">🎮 Mando</div>
+                    <div class="setup-value">GameSir G7 SE</div>
+                </div>
+                <div class="setup-card">
+                    <div class="setup-title">🖥️ Monitor</div>
+                    <div class="setup-value">AOC 25G3ZM</div>
+                </div>
+                <div class="setup-card">
+                    <div class="setup-title">🎧 Cascos</div>
+                    <div class="setup-value">Logitech G PRO X LIGHTSPEED</div>
+                </div>
+                <div class="setup-card">
+                    <div class="setup-title">⚡ Tarjeta Gráfica</div>
+                    <div class="setup-value">AMD Radeon RX 7800 XT</div>
+                </div>
+                <div class="setup-card">
+                    <div class="setup-title">🧠 Procesador</div>
+                    <div class="setup-value">AMD Ryzen 7 5700X3D</div>
                 </div>
             </div>
         </section>
@@ -328,13 +457,13 @@
             </div>
         </section>
 
-        <!-- Sección de Chat de Comunidad -->
+        <!-- Chat de Comunidad -->
         <section>
             <h2>💬 CHAT DE LA COMUNIDAD</h2>
             <div class="chat-box">
                 <div class="chat-messages">
                     <div class="chat-msg"><strong>Sistema:</strong> ¡Bienvenido al chat de Driuk! Conecta con otros jugadores.</div>
-                    <div class="chat-msg"><strong>Driuk:</strong> ¡Hola gente! De camino a Diamante hoy. 💎</div>
+                    <div class="chat-msg"><strong>Driuk:</strong> ¡Hola gente! Camino al Rango Diamante. 💎</div>
                 </div>
                 <div class="chat-input-area">
                     <input type="text" placeholder="Escribe un mensaje..." disabled>
