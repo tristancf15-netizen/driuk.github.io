@@ -6,7 +6,7 @@
     <meta name="description" content="Sitio web oficial de Driuk. Creador de contenido de videojuegos, Rocket League, gaming y canal de YouTube.">
     <title>Driuk | Youtuber & Gaming Creator</title>
 
-    <!-- Firebase App & Database Scripts (SDK v9 Compatibility) -->
+    <!-- Firebase SDK v9 Compatibility -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
@@ -34,7 +34,7 @@
             min-height: 100vh;
         }
 
-        /* Barra Superior / Header de Usuario */
+        /* Barra Superior */
         .top-bar {
             width: 100%;
             background: #0d0d0d;
@@ -92,10 +92,11 @@
             cursor: pointer;
             border: 2px solid #fff;
             box-shadow: 0 0 10px var(--neon-glow);
-            object-fit: cover;
+            background-size: cover;
+            background-position: center;
         }
 
-        /* Menú Lateral de Amigos y Ajustes */
+        /* Menú Lateral */
         .sidebar {
             position: fixed;
             top: 60px;
@@ -237,6 +238,12 @@
             color: var(--primary-red);
         }
 
+        .stat-label {
+            color: var(--text-gray);
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
         /* Chat Interactivo */
         .chat-box {
             background: #0a0a0a;
@@ -340,22 +347,22 @@
         </div>
     </div>
 
-    <!-- Botón Menú Lateral de Amigos -->
+    <!-- Botón Menú Lateral -->
     <button class="toggle-sidebar-btn" onclick="toggleSidebar()">☰ Amigos & Ajustes</button>
 
     <!-- Menú Lateral -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-section">
             <h3>⚙️ Ajustes de Perfil</h3>
-            <p style="font-size:0.85em; color:#888;">Gestiona tu cuenta y foto de perfil.</p>
-            <input type="text" id="avatar-url-input" placeholder="URL Imagen de Perfil" style="width:100%; padding:6px; background:#1e1e1e; border:1px solid #333; color:white; border-radius:4px; margin-top:5px;">
+            <p style="font-size:0.85em; color:#888;">Cambia tu foto de perfil pegando un enlace de imagen:</p>
+            <input type="text" id="avatar-url-input" placeholder="URL de la imagen" style="width:100%; padding:6px; background:#1e1e1e; border:1px solid #333; color:white; border-radius:4px; margin-top:5px;">
             <button onclick="guardarFotoPerfil()" style="margin-top:6px; width:100%; background:var(--primary-red); color:white; border:none; padding:6px; border-radius:4px; cursor:pointer;">Guardar Foto</button>
         </div>
 
         <div class="sidebar-section">
             <h3>👥 Lista de Amigos</h3>
             <ul class="friends-list">
-                <li>No tienes amigos agregados aún.</li>
+                <li>Próximamente: Amigos agregados</li>
             </ul>
         </div>
 
@@ -375,7 +382,7 @@
             <a class="btn-social" href="https://discord.gg/WDXTun5rfR" target="_blank">Discord</a>
         </div>
 
-        <!-- Estadísticas en Tiempo Real con la API de YouTube -->
+        <!-- Estadísticas en Tiempo Real con YouTube API -->
         <section>
             <h2>🏆 ESTADÍSTICAS EN TIEMPO REAL (YOUTUBE API)</h2>
             <div class="stats-grid">
@@ -399,7 +406,7 @@
             <h2>💬 CHAT GLOBAL DE LA COMUNIDAD</h2>
             <div class="chat-box">
                 <div class="chat-messages" id="chat-messages">
-                    <div class="chat-msg"><strong>Sistema:</strong> ¡Bienvenido al chat oficial en vivo!</div>
+                    <div class="chat-msg"><strong>Sistema:</strong> ¡Bienvenido al chat global en vivo!</div>
                 </div>
                 <div class="chat-input-area">
                     <input type="text" id="chat-input" placeholder="Inicia sesión para escribir..." disabled>
@@ -409,15 +416,15 @@
         </section>
     </div>
 
-    <!-- Modal de Login / Registro -->
+    <!-- Modal de Autenticación (Login / Registro) -->
     <div class="modal" id="auth-modal">
         <div class="modal-content">
-            <h3 id="modal-title">Iniciar Sesión</h3>
-            <input type="text" id="auth-username" placeholder="Nombre de Usuario (Apodo)">
+            <h3 id="modal-title">Acceso de Usuario</h3>
+            <input type="text" id="auth-username" placeholder="Apodo (Nombre de usuario)">
             <input type="email" id="auth-email" placeholder="Correo Electrónico">
             <input type="password" id="auth-password" placeholder="Contraseña">
             
-            <button class="btn-auth" onclick="iniciarSesion()">Entrar</button>
+            <button class="btn-auth" onclick="iniciarSesion()">Iniciar Sesión</button>
             <button class="btn-auth" style="background:#333;" onclick="registrarUsuario()">Crear Cuenta Nueva</button>
             <button style="background:transparent; color:#aaa; border:none; cursor:pointer; font-size:0.8em;" onclick="recuperarPassword()">¿Olvidaste tu contraseña?</button>
             <button style="background:transparent; color:red; border:none; cursor:pointer;" onclick="closeModal()">Cancelar</button>
@@ -425,7 +432,7 @@
     </div>
 
     <script>
-        // 1. Configuración de Firebase
+        // Configuración oficial de tu proyecto Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCspy94tmXYMUucN5bbr-fXlA2ry3XecSk",
             authDomain: "driuk-web-fcabd.firebaseapp.com",
@@ -442,7 +449,7 @@
 
         let usuarioActual = null;
 
-        // 2. Control de Estado de Sesión
+        // Control de sesión
         auth.onAuthStateChanged(user => {
             const btnModal = document.getElementById('btn-login-modal');
             const avatar = document.getElementById('user-avatar');
@@ -454,9 +461,14 @@
                 btnModal.style.display = 'none';
                 avatar.style.display = 'flex';
                 
-                // Cargar Apodo
                 const username = user.displayName || user.email.split('@')[0];
-                avatar.innerText = username.charAt(0).toUpperCase();
+                if (user.photoURL) {
+                    avatar.style.backgroundImage = `url(${user.photoURL})`;
+                    avatar.innerText = '';
+                } else {
+                    avatar.style.backgroundImage = 'none';
+                    avatar.innerText = username.charAt(0).toUpperCase();
+                }
 
                 chatInput.disabled = false;
                 chatBtn.disabled = false;
@@ -472,14 +484,14 @@
             }
         });
 
-        // 3. Sistema de Registro e Inicio de Sesión
+        // Registro e Inicio de sesión
         function registrarUsuario() {
             const email = document.getElementById('auth-email').value;
             const password = document.getElementById('auth-password').value;
             const username = document.getElementById('auth-username').value;
 
             if(!email || !password || !username) {
-                alert("Por favor completa todos los campos (Usuario, Email y Contraseña).");
+                alert("Por favor rellena Apodo, Correo y Contraseña.");
                 return;
             }
 
@@ -487,7 +499,7 @@
                 .then(userCredential => {
                     return userCredential.user.updateProfile({ displayName: username });
                 })
-                .then(() => alert("¡Cuenta creada con éxito!"))
+                .then(() => alert("¡Cuenta creada correctamente!"))
                 .catch(err => alert("Error al registrar: " + err.message));
         }
 
@@ -496,17 +508,17 @@
             const password = document.getElementById('auth-password').value;
 
             auth.signInWithEmailAndPassword(email, password)
-                .catch(err => alert("Error de inicio de sesión: " + err.message));
+                .catch(err => alert("Error de acceso: " + err.message));
         }
 
         function recuperarPassword() {
             const email = document.getElementById('auth-email').value;
             if(!email) {
-                alert("Escribe tu correo electrónico en la casilla para enviarte el enlace de recuperación.");
+                alert("Escribe tu correo en la casilla para enviarte el enlace de recuperación.");
                 return;
             }
             auth.sendPasswordResetEmail(email)
-                .then(() => alert("Enlace enviado a tu correo para restablecer la contraseña."))
+                .then(() => alert("Enlace de recuperación enviado a tu correo."))
                 .catch(err => alert("Error: " + err.message));
         }
 
@@ -514,7 +526,7 @@
             auth.signOut();
         }
 
-        // 4. Chat Global Sincronizado en Tiempo Real (Firebase Database)
+        // Chat global en tiempo real
         function enviarMensajeFirebase() {
             const input = document.getElementById('chat-input');
             const texto = input.value.trim();
@@ -531,7 +543,7 @@
             input.value = '';
         }
 
-        // Escuchar mensajes en tiempo real desde la nube
+        // Escuchar mensajes entrantes en vivo
         db.ref('chat_global').limitToLast(50).on('child_added', snapshot => {
             const data = snapshot.val();
             const container = document.getElementById('chat-messages');
@@ -544,7 +556,7 @@
             container.scrollTop = container.scrollHeight;
         });
 
-        // 5. Estadísticas de YouTube API v3 Automáticas
+        // YouTube API v3 (Consulta automática)
         const YT_API_KEY = "AIzaSyCKbpL_H5jrqsuoWv0EKEIJ3TB9lvN3kCo";
         const YT_HANDLE = "driuk";
 
@@ -559,13 +571,23 @@
                     document.getElementById('yt-views').innerText = Number(stats.viewCount).toLocaleString();
                 }
             } catch (e) {
-                console.error("Error al cargar la API de YouTube", e);
+                console.error("Error al conectar con la API de YouTube", e);
             }
         }
 
         window.onload = function() {
             cargarEstadisticasYouTube();
         };
+
+        // Permite enviar mensaje con tecla Enter
+        document.addEventListener("DOMContentLoaded", () => {
+            const input = document.getElementById('chat-input');
+            if(input) {
+                input.addEventListener("keypress", (e) => {
+                    if (e.key === "Enter") enviarMensajeFirebase();
+                });
+            }
+        });
 
         // Modales y Menú
         function openModal() { document.getElementById('auth-modal').style.display = 'flex'; }
@@ -576,8 +598,9 @@
             const url = document.getElementById('avatar-url-input').value;
             if(url && usuarioActual) {
                 usuarioActual.updateProfile({ photoURL: url }).then(() => {
-                    document.getElementById('user-avatar').style.backgroundImage = `url(${url})`;
-                    document.getElementById('user-avatar').innerText = '';
+                    const avatar = document.getElementById('user-avatar');
+                    avatar.style.backgroundImage = `url(${url})`;
+                    avatar.innerText = '';
                     alert("¡Foto de perfil actualizada!");
                 });
             }
