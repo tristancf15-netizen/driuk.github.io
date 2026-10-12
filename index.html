@@ -43,6 +43,7 @@
         .font-arcade { font-family: 'Press Start 2P', cursive !important; font-size: 0.8em !important; }
         .font-rajdhani { font-family: 'Rajdhani', sans-serif !important; font-weight: 700 !important; }
         .glow-name { text-shadow: 0 0 8px var(--gold-color), 0 0 15px var(--primary-red); }
+        .cyan-name { color: #00ffff !important; text-shadow: 0 0 8px #00ffff; }
 
         .toast-notification {
             position: fixed; top: 75px; right: 20px; background: #181818; border-left: 4px solid var(--primary-red); color: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 5px 20px rgba(255, 30, 56, 0.4); z-index: 300; display: none; animation: fadeInOut 3s forwards; font-size: 0.9em;
@@ -112,7 +113,6 @@
         .req-box { background: #141414; border: 1px solid #222; border-radius: 8px; padding: 10px; margin-top: 5px; }
         .req-title { color: var(--primary-red); font-size: 0.85em; font-weight: bold; margin-bottom: 6px; text-transform: uppercase; }
 
-        /* Laytout Red Social con Chat Flotante Lateral */
         .layout-container {
             display: flex; gap: 20px; max-width: 1200px; margin: 20px auto; padding: 0 20px; box-sizing: border-box; align-items: flex-start;
         }
@@ -166,7 +166,7 @@
         .post-card { background: #181818; border: 1px solid #333; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
 
         .drop-box-container { text-align: center; padding: 20px; }
-        .drop-box-anim { width: 120px; height: 120px; margin: 0 auto 15px auto; background: #1a1a1a; border: 4px solid var(--gold-color); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 3em; box-shadow: 0 0 25px var(--gold-glow); }
+        .drop-box-anim { width: 120px; height: 120px; margin: 0 auto 15px auto; background: #1a1a1a; border: 4px solid var(--gold-color); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 3em; box-shadow: 0 0 25px var(--gold-glow); transition: all 0.3s ease; }
         .drop-opening { animation: pulseRarity 2.5s forwards; }
 
         @keyframes pulseRarity {
@@ -201,8 +201,7 @@
             <div class="brand">DRIUK WEB</div>
         </div>
         <div class="user-nav">
-            <button class="btn-auth" style="background:#222; border:1px solid #444;" onclick="toggleChatRight()">💬 Toggle Chat</button>
-            <button class="btn-auth" style="background:#222; border:1px solid #444;" onclick="openModal('group-chat-modal')">👥 Grupos Privados</button>
+            <button class="btn-auth" style="background:#222; border:1px solid #444;" onclick="toggleChatRight()">💬 Chat Lateral</button>
             <button class="btn-auth" id="btn-login-modal" onclick="openModal('auth-modal')">Iniciar Sesión / Registro</button>
             <div class="user-avatar" id="user-avatar" style="display:none;" onclick="toggleProfileDropdown(event)">U</div>
             
@@ -274,14 +273,6 @@
                 </div>
             </section>
 
-            <!-- Canales Promocionados -->
-            <section style="border-color:var(--gold-color);">
-                <h2 style="color:var(--gold-color);">⭐ CANALES DESTACADOS PROMO</h2>
-                <div id="promo-channels-list" style="display:flex; gap:10px; overflow-x:auto;">
-                    <p style="color:#888; font-size:0.85em;">¡Promociona tu canal aquí usando tus puntos en la tienda!</p>
-                </div>
-            </section>
-
             <!-- Feed Infinito de Publicaciones -->
             <section>
                 <h2>🌐 FEED DE LA COMUNIDAD</h2>
@@ -302,7 +293,7 @@
                 <div class="chat-msg"><strong>Sistema:</strong> ¡Bienvenido al chat!</div>
             </div>
             <div class="chat-input-area">
-                <input type="text" id="chat-input" placeholder="Escribe..." disabled onkeydown="if(event.key==='Enter') enviarMensajeFirebase()">
+                <input type="text" id="chat-input" placeholder="Inicia sesión..." disabled onkeydown="if(event.key==='Enter') enviarMensajeFirebase()">
                 <button id="chat-btn" onclick="enviarMensajeFirebase()" disabled>Enviar</button>
             </div>
         </div>
@@ -311,22 +302,15 @@
     <!-- Modal TIENDA -->
     <div class="modal" id="shop-modal">
         <div class="modal-content" style="max-width:750px;">
-            <h3 style="color:var(--gold-color);">🛒 Tienda de Canjes, Promoción & Drops</h3>
+            <h3 style="color:var(--gold-color);">🛒 Tienda de Drops y Canjes</h3>
             
             <div class="shop-grid">
                 <div class="shop-card" style="border-color:var(--gold-color);">
                     <div class="shop-title">📦 Caja Drop Misteriosa</div>
-                    <div class="shop-desc">Brillos de nombre, fuentes, colores neón o puntos bonus.</div>
+                    <div class="shop-desc">Fuentes de letra, efectos neón y puntos bonus.</div>
                     <div class="shop-price">300 PTS</div>
                     <button class="btn-buy-item" onclick="comprarCajaOpcion()">Comprar Caja 🎁</button>
-                    <button onclick="openModal('box-odds-modal')" style="background:transparent; color:#00ff66; border:none; cursor:pointer; font-size:0.8em; margin-top:8px;">🔍 Probabilidades</button>
-                </div>
-
-                <div class="shop-card">
-                    <div class="shop-title">📢 Promocionar tu Canal</div>
-                    <div class="shop-desc">Fija tu canal de YouTube/Twitch en el feed de la web durante 7 días.</div>
-                    <div class="shop-price">2,000 PTS</div>
-                    <button class="btn-buy-item" onclick="promocionarMiCanal()">Promocionar Canal</button>
+                    <button onclick="openModal('box-odds-modal')" style="background:transparent; color:#00ff66; border:none; cursor:pointer; font-size:0.8em; margin-top:8px;">🔍 Ver Contenido / Probabilidades</button>
                 </div>
 
                 <div class="shop-card">
@@ -349,33 +333,33 @@
                 <div class="item-card-inv item-rarity-Común"><div><strong>🪙 Bonus +150 Puntos</strong></div><span style="color:var(--gold-color);">50% prob.</span></div>
                 <div class="item-card-inv item-rarity-Raro"><div><strong class="font-orbitron">🔤 Fuente Orbitron Neon</strong></div><span style="color:var(--gold-color);">25% prob.</span></div>
                 <div class="item-card-inv item-rarity-Épico"><div><strong class="glow-name">✨ Nombre Brillante Neón</strong></div><span style="color:var(--gold-color);">15% prob.</span></div>
-                <div class="item-card-inv item-rarity-Legendario"><div><strong class="font-arcade" style="color:#00ffff;">🎨 Nombre Color Cian Neón</strong></div><span style="color:var(--gold-color);">10% prob.</span></div>
+                <div class="item-card-inv item-rarity-Legendario"><div><strong class="cyan-name">🎨 Nombre Color Cian Neón</strong></div><span style="color:var(--gold-color);">10% prob.</span></div>
             </div>
             <button style="background:transparent; color:red; border:none; cursor:pointer; margin-top:10px;" onclick="closeModal('box-odds-modal')">Volver</button>
+        </div>
+    </div>
+
+    <!-- Modal ABRIR DROP ANIMACIÓN -->
+    <div class="modal" id="drop-anim-modal">
+        <div class="modal-content" style="text-align:center;">
+            <h3 style="color:var(--gold-color);">ABRIENDO DROP...</h3>
+            <div class="drop-box-container">
+                <div class="drop-box-anim" id="drop-box-elem">🎁</div>
+                <h2 id="drop-result-title" style="display:none; margin-top:10px;"></h2>
+                <p id="drop-result-desc" style="color:#aaa; font-size:0.9em; display:none;"></p>
+            </div>
+            <button class="btn-auth" id="btn-close-drop" style="display:none; margin:0 auto;" onclick="closeModal('drop-anim-modal')">Aceptar y Guardar 🎒</button>
         </div>
     </div>
 
     <!-- Modal INVENTARIO (CON BOTÓN EQUIPAR) -->
     <div class="modal" id="inventory-modal">
         <div class="modal-content">
-            <h3>🎒 Mi Inventario (Equipar Fuentes/Brillos o Abrir Cajas)</h3>
+            <h3>🎒 Mi Inventario (Equipar Fuentes o Abrir Cajas)</h3>
             <div id="inventory-list" style="max-height:350px; overflow-y:auto;">
                 <p style="color:#888;">Cargando inventario...</p>
             </div>
             <button style="background:transparent; color:red; border:none; cursor:pointer; margin-top:10px;" onclick="closeModal('inventory-modal')">Cerrar Inventario</button>
-        </div>
-    </div>
-
-    <!-- Modal GRUPOS DE CHAT PRIVADOS -->
-    <div class="modal" id="group-chat-modal">
-        <div class="modal-content">
-            <h3>👥 Grupos Privados (Ej: Tú, Iván...)</h3>
-            <input type="text" id="group-name-input" placeholder="Nombre del Grupo (ej: Equipo RL)...">
-            <label style="font-size:0.8em; color:#888;">Introduce handles de amigos separados por comas:</label>
-            <input type="text" id="group-members-input" placeholder="@ivan, @amigo2...">
-            <button class="btn-auth" onclick="crearGrupoPrivado()">Crear Grupo Privado</button>
-            <div id="my-groups-list" style="margin-top:15px; border-top:1px solid #333; padding-top:10px;"></div>
-            <button style="background:transparent; color:red; border:none; cursor:pointer; margin-top:10px;" onclick="closeModal('group-chat-modal')">Cerrar</button>
         </div>
     </div>
 
@@ -395,16 +379,16 @@
         </div>
     </div>
 
-    <!-- Modal Autenticación -->
+    <!-- Modal Autenticación REAL de Firebase -->
     <div class="modal" id="auth-modal">
         <div class="modal-content">
             <h3>Acceso de Usuario</h3>
-            <input type="text" id="auth-username" placeholder="Apodo">
+            <input type="text" id="auth-username" placeholder="Apodo o Nombre Visible">
             <input type="text" id="auth-handle" placeholder="Handle Único (ej: @driuk)">
-            <input type="email" id="auth-email" placeholder="Correo">
+            <input type="email" id="auth-email" placeholder="Correo Electrónico">
             <input type="password" id="auth-password" placeholder="Contraseña">
             <button class="btn-auth" onclick="iniciarSesion()">Iniciar Sesión</button>
-            <button class="btn-auth" style="background:#333;" onclick="registrarUsuario()">Crear Cuenta</button>
+            <button class="btn-auth" style="background:#333;" onclick="registrarUsuario()">Crear Cuenta Nueva</button>
             <button style="background:transparent; color:red; border:none; cursor:pointer;" onclick="closeModal('auth-modal')">Cancelar</button>
         </div>
     </div>
@@ -451,13 +435,54 @@
             ]
         };
 
-        document.addEventListener('click', function(e) {
-            const drop = document.getElementById('profile-dropdown');
-            const avatar = document.getElementById('user-avatar');
-            if (drop && drop.style.display === 'flex' && !drop.contains(e.target) && !avatar.contains(e.target)) {
-                drop.style.display = 'none';
-            }
-        });
+        const DROPS_POOL = [
+            { nombre: '🪙 Bonus +150 Puntos', rareza: 'Común', valor: 150, tipo: 'pts', cantidad: 150, prob: 50 },
+            { nombre: '🔤 Fuente Orbitron Neon', rareza: 'Raro', valor: 200, tipo: 'font', class: 'font-orbitron', prob: 25 },
+            { nombre: '✨ Nombre Brillante Neón', rareza: 'Épico', valor: 400, tipo: 'glow', class: 'glow-name', prob: 15 },
+            { nombre: '🎨 Nombre Color Cian Neón', rareza: 'Legendario', valor: 800, tipo: 'glow', class: 'cyan-name', prob: 10 }
+        ];
+
+        /* AUTENTICACIÓN REAL EN FIREBASE */
+        function registrarUsuario() {
+            const email = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value.trim();
+            const name = document.getElementById('auth-username').value.trim();
+            let handle = document.getElementById('auth-handle').value.trim().toLowerCase();
+
+            if(!email || !password || !name) return alert("Por favor, completa todos los campos.");
+            if(!handle.startsWith('@')) handle = '@' + handle;
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    const uid = userCredential.user.uid;
+                    const userObj = { uid: uid, displayName: name, handle: handle, email: email, points: 0 };
+                    db.ref('users/' + uid).set(userObj);
+                    alert("¡Cuenta creada e inicio de sesión correcto!");
+                    closeModal('auth-modal');
+                })
+                .catch(err => alert("Error al registrarse: " + err.message));
+        }
+
+        function iniciarSesion() {
+            const email = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value.trim();
+
+            if(!email || !password) return alert("Introduce tu correo y contraseña.");
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    alert("¡Sesión iniciada correctamente!");
+                    closeModal('auth-modal');
+                })
+                .catch(err => alert("Error de inicio de sesión: " + err.message));
+        }
+
+        function cerrarSesion() {
+            auth.signOut().then(() => {
+                alert("Has cerrado sesión.");
+                location.reload();
+            });
+        }
 
         auth.onAuthStateChanged(user => {
             if (user) {
@@ -466,17 +491,20 @@
                 document.getElementById('user-avatar').style.display = 'flex';
                 document.getElementById('chat-input').disabled = false;
                 document.getElementById('chat-btn').disabled = false;
+                document.getElementById('chat-input').placeholder = "Escribe un mensaje...";
 
                 db.ref('users/' + user.uid).once('value', snapshot => {
                     escucharPuntosUsuario();
                     cargarInventario();
-                    cargarCanalesPromocionados();
                     renderMisiones();
                 });
             } else {
                 usuarioActual = null;
                 document.getElementById('btn-login-modal').style.display = 'block';
                 document.getElementById('user-avatar').style.display = 'none';
+                document.getElementById('chat-input').disabled = true;
+                document.getElementById('chat-btn').disabled = true;
+                document.getElementById('chat-input').placeholder = "Inicia sesión para chatear...";
             }
         });
 
@@ -581,15 +609,15 @@
             });
         }
 
-        /* OPCIÓN COMPRAR CAJA O GUARDAR EN INVENTARIO */
+        /* COMPRA Y ABRIR DROPS */
         function comprarCajaOpcion() {
-            if(!usuarioActual) return alert("Inicia sesión primero.");
+            if(!usuarioActual) return alert("Inicia sesión para comprar una caja.");
             db.ref(`users/${usuarioActual.uid}/points`).once('value', snap => {
                 const pts = snap.val() || 0;
-                if(pts < 300) return alert("Necesitas 300 PUNTOS.");
+                if(pts < 300) return alert("Necesitas 300 PUNTOS para comprar la caja.");
 
                 const autoSave = document.getElementById('auto-save-boxes').value === 'true';
-                if(autoSave || confirm("¿Quieres guardar la Caja en tu Inventario para abrirla cuando quieras? (Cancelar = Abrir ahora)")) {
+                if(autoSave || confirm("¿Quieres guardar la Caja en tu Inventario para abrirla cuando quieras? (Aceptar = Guardar en Inventario | Cancelar = Abrir Ahora)")) {
                     db.ref(`users/${usuarioActual.uid}/points`).set(pts - 300);
                     db.ref(`inventory/${usuarioActual.uid}`).push({
                         nombre: '📦 Caja Drop Misteriosa', rareza: 'Épico', tipo: 'caja_cerrada'
@@ -599,10 +627,57 @@
                     closeModal('shop-modal');
                 } else {
                     db.ref(`users/${usuarioActual.uid}/points`).set(pts - 300);
-                    alert("Caja abierta: ¡Has recibido un ítem exclusivo!");
                     closeModal('shop-modal');
+                    ejecutarAnimacionDrop();
                 }
             });
+        }
+
+        function abrirCajaDesdeInventario(itemId) {
+            if(!usuarioActual) return;
+            db.ref(`inventory/${usuarioActual.uid}/${itemId}`).remove();
+            closeModal('inventory-modal');
+            ejecutarAnimacionDrop();
+        }
+
+        function ejecutarAnimacionDrop() {
+            openModal('drop-anim-modal');
+            const dropElem = document.getElementById('drop-box-elem');
+            const titleElem = document.getElementById('drop-result-title');
+            const descElem = document.getElementById('drop-result-desc');
+            const btnClose = document.getElementById('btn-close-drop');
+
+            dropElem.className = 'drop-box-anim drop-opening';
+            titleElem.style.display = 'none';
+            descElem.style.display = 'none';
+            btnClose.style.display = 'none';
+
+            setTimeout(() => {
+                const rand = Math.random() * 100;
+                let cum = 0;
+                let itemObtenido = DROPS_POOL[0];
+                for(let item of DROPS_POOL) {
+                    cum += item.prob;
+                    if(rand <= cum) { itemObtenido = item; break; }
+                }
+
+                dropElem.className = 'drop-box-anim';
+                
+                if(itemObtenido.tipo === 'pts') {
+                    db.ref(`users/${usuarioActual.uid}/points`).transaction(c => (c || 0) + itemObtenido.cantidad);
+                    titleElem.innerText = `¡${itemObtenido.nombre}!`;
+                    descElem.innerText = `Has recibido +${itemObtenido.cantidad} puntos en tu cuenta.`;
+                } else {
+                    db.ref(`inventory/${usuarioActual.uid}`).push(itemObtenido);
+                    titleElem.innerText = `¡${itemObtenido.nombre}!`;
+                    descElem.innerText = `Rareza: ${itemObtenido.rareza} | Guardado en tu Inventario.`;
+                }
+
+                titleElem.style.display = 'block';
+                descElem.style.display = 'block';
+                btnClose.style.display = 'block';
+                cargarInventario();
+            }, 2500);
         }
 
         /* INVENTARIO Y EQUIPAR */
@@ -619,14 +694,22 @@
                     
                     const div = document.createElement('div');
                     div.className = `item-card-inv item-rarity-${item.rareza}`;
+
+                    let actionBtn = '';
+                    if (item.tipo === 'caja_cerrada') {
+                        actionBtn = `<button onclick="abrirCajaDesdeInventario('${itemId}')" style="background:var(--gold-color); color:black; border:none; padding:5px 10px; border-radius:4px; font-weight:bold; cursor:pointer; margin-right:5px;">Abrir Caja 🎁</button>`;
+                    } else if (item.tipo === 'font' || item.tipo === 'glow') {
+                        actionBtn = `<button onclick="equiparEfecto('${item.class}')" style="background:var(--primary-red); color:white; border:none; padding:5px 10px; border-radius:4px; font-weight:bold; cursor:pointer; margin-right:5px;">Equipar</button>`;
+                    }
+
                     div.innerHTML = `
                         <div>
                             <strong class="${item.class || ''}">${item.nombre}</strong>
                             <div style="font-size:0.75em; color:#888;">Rareza: ${item.rareza}</div>
                         </div>
                         <div>
-                            ${item.tipo === 'font' || item.tipo === 'glow' ? `<button onclick="equiparEfecto('${item.class}')" style="background:var(--primary-red); color:white; border:none; padding:5px 10px; border-radius:4px; cursor:pointer; margin-right:5px;">Equipar</button>` : ''}
-                            <button onclick="venderItem('${itemId}', 100)" style="background:#222; color:var(--gold-color); border:1px solid var(--gold-color); padding:5px 10px; border-radius:4px; cursor:pointer;">Vender</button>
+                            ${actionBtn}
+                            <button onclick="venderItem('${itemId}', 100)" style="background:#222; color:var(--gold-color); border:1px solid var(--gold-color); padding:5px 10px; border-radius:4px; cursor:pointer;">Vender (+100 PTS)</button>
                         </div>
                     `;
                     container.appendChild(div);
@@ -637,68 +720,15 @@
         function equiparEfecto(clase) {
             if(!usuarioActual) return;
             db.ref(`users/${usuarioActual.uid}/customClass`).set(clase);
-            alert("¡Efecto/Fuente equipada en tu nombre!");
+            alert("¡Estilo y fuente equipada en tu nombre con éxito!");
+            closeModal('inventory-modal');
         }
 
         function venderItem(itemId, valor) {
             if(!usuarioActual) return;
             db.ref(`inventory/${usuarioActual.uid}/${itemId}`).remove();
             db.ref(`users/${usuarioActual.uid}/points`).transaction(c => (c || 0) + valor);
-            alert(`Vendido por +${valor} PTS.`);
-        }
-
-        /* PROMOCIONAR CANAL */
-        function promocionarMiCanal() {
-            if(!usuarioActual) return alert("Inicia sesión.");
-            const url = prompt("Escribe el enlace de tu canal de YouTube o Twitch para destacarlo:");
-            if(!url) return;
-
-            db.ref(`users/${usuarioActual.uid}/points`).once('value', snap => {
-                const pts = snap.val() || 0;
-                if(pts < 2000) return alert("Necesitas 2,000 PTS para promocionar tu canal.");
-
-                db.ref(`users/${usuarioActual.uid}/points`).set(pts - 2000);
-                db.ref('promoted_channels').push({
-                    uid: usuarioActual.uid,
-                    authorName: usuarioActual.displayName || 'Usuario',
-                    url: url,
-                    timestamp: Date.now()
-                });
-                alert("¡Tu canal ahora está en la sección de Canales Destacados Promo!");
-                closeModal('shop-modal');
-                cargarCanalesPromocionados();
-            });
-        }
-
-        function cargarCanalesPromocionados() {
-            db.ref('promoted_channels').limitToLast(10).on('value', snap => {
-                const container = document.getElementById('promo-channels-list');
-                if(!container) return;
-                container.innerHTML = '';
-                if(!snap.exists()) return container.innerHTML = '<p style="color:#888; font-size:0.85em;">Sé el primero en promocionar tu canal aquí.</p>';
-
-                snap.forEach(c => {
-                    const p = c.val();
-                    container.innerHTML += `<a href="${p.url}" target="_blank" style="background:#181818; border:1px solid var(--gold-color); padding:8px 14px; border-radius:20px; color:white; text-decoration:none; font-weight:bold; font-size:0.85em;">⭐ ${p.authorName}</a>`;
-                });
-            });
-        }
-
-        /* GRUPOS PRIVADOS DE CHAT */
-        function crearGrupoPrivado() {
-            if(!usuarioActual) return;
-            const name = document.getElementById('group-name-input').value.trim();
-            const membersStr = document.getElementById('group-members-input').value.trim();
-            if(!name) return alert("Indica un nombre para el grupo.");
-
-            db.ref('private_groups').push({
-                groupName: name,
-                creatorUid: usuarioActual.uid,
-                members: membersStr,
-                timestamp: Date.now()
-            });
-            alert(`Grupo privado "${name}" creado.`);
-            closeModal('group-chat-modal');
+            alert(`Objeto vendido por +${valor} PTS.`);
         }
 
         /* CHAT Y FUNCIONES GENERALES */
@@ -735,13 +765,13 @@
         });
 
         function publicarContenidoStudio() {
-            if(!usuarioActual) return;
+            if(!usuarioActual) return alert("Inicia sesión para publicar.");
             const type = document.getElementById('studio-type').value;
             const title = document.getElementById('studio-title').value.trim();
             const urlInput = document.getElementById('studio-url').value.trim();
             const fileInput = document.getElementById('studio-file');
 
-            if(!title) return alert("Escribe un título.");
+            if(!title) return alert("Escribe un título para tu contenido.");
 
             db.ref('users/' + usuarioActual.uid).once('value', uSnap => {
                 const authorName = (uSnap.val() || {}).displayName || 'Usuario';
@@ -759,7 +789,7 @@
             db.ref('posts').push({
                 uid: usuarioActual.uid, authorName: authorName, tipo: type, titulo: title, url: mediaUrl, timestamp: Date.now()
             });
-            alert("¡Publicado!");
+            alert("¡Publicado en la web!");
             closeModal('studio-modal');
             renderMisiones();
         }
@@ -778,7 +808,7 @@
             container.innerHTML = '';
 
             const filtered = allPostsData.filter(p => (p.titulo || '').toLowerCase().includes(query));
-            if(filtered.length === 0) return container.innerHTML = '<p style="color:#888;">Sin publicaciones.</p>';
+            if(filtered.length === 0) return container.innerHTML = '<p style="color:#888;">Sin publicaciones en el feed.</p>';
 
             filtered.forEach(post => {
                 let mediaHtml = '';
@@ -795,7 +825,7 @@
             });
         }
 
-        function verMiPropioCanal() { toggleProfileDropdown(); alert("Sección de canal activada."); }
+        function verMiPropioCanal() { toggleProfileDropdown(); alert("Página de canal activa."); }
         function abrirModalPublicarStudio() { toggleProfileDropdown(); openModal('studio-modal'); }
         function abrirAmigosAjustesDesdePerfil() { toggleProfileDropdown(); toggleSidebar(); }
 
@@ -807,9 +837,6 @@
         function toggleProfileDropdown(e) { if(e) e.stopPropagation(); const d = document.getElementById('profile-dropdown'); d.style.display = d.style.display === 'flex' ? 'none' : 'flex'; }
         function switchTab(id) { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); event.target.classList.add('active'); document.getElementById(id).classList.add('active'); }
         function filtrarMisiones(cat) { categoriaMisionActual = cat; document.querySelectorAll('.mission-tab-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); renderMisiones(); }
-        function registrarUsuario() { alert("Función de registro."); }
-        function iniciarSesion() { alert("Función de inicio de sesión."); }
-        function cerrarSesion() { auth.signOut(); location.reload(); }
     </script>
 </body>
 </html>
