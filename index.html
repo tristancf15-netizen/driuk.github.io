@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Meta etiquetas SEO actualizadas a Creador de Videojuegos / Gaming General -->
     <meta name="description" content="Sitio web oficial de Driuk. Creador de contenido de videojuegos, Rocket League, gaming, gameplays, setup gamer y canal de YouTube.">
     <meta name="keywords" content="Driuk, Videojuegos, Gaming, Creador de Contenido, Rocket League, Fortnite, Gameplay Español, Setup Gamer, YouTube Gaming">
     <title>Driuk | Youtuber & Gaming Creator</title>
@@ -18,7 +17,6 @@
             --text-gray: #b0b0b0;
         }
 
-        /* Animación de fondo dinámico */
         body {
             background: radial-gradient(circle at 50% 10%, #1a0306 0%, var(--bg-color) 70%);
             color: var(--text-white);
@@ -36,7 +34,6 @@
             padding: 50px 20px 20px 20px;
         }
 
-        /* Animación de Texto en Título */
         h1 {
             color: var(--primary-red);
             font-size: 3.8em;
@@ -76,7 +73,6 @@
             margin: 20px auto 50px auto;
         }
 
-        /* Secciones Principales */
         section {
             background-color: var(--card-bg);
             border: 1px solid #222;
@@ -316,13 +312,13 @@
             box-shadow: 0 5px 20px rgba(0,0,0,0.7);
         }
 
-        /* 6. Chat de Comunidad */
+        /* 6. Chat de Comunidad Interactivo */
         .chat-box {
             background: #0a0a0a;
             border-radius: 12px;
             border: 1px solid #222;
             padding: 18px;
-            height: 260px;
+            height: 280px;
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
@@ -336,6 +332,7 @@
             flex-direction: column;
             gap: 10px;
             text-align: left;
+            padding-right: 5px;
         }
 
         .chat-msg {
@@ -344,6 +341,7 @@
             border-radius: 8px;
             font-size: 0.92em;
             border-left: 3px solid var(--primary-red);
+            word-break: break-word;
         }
 
         .chat-input-area {
@@ -359,6 +357,12 @@
             border-radius: 8px;
             color: white;
             outline: none;
+            font-size: 0.95em;
+        }
+
+        .chat-input-area input:focus {
+            border-color: var(--primary-red);
+            box-shadow: 0 0 8px var(--neon-glow);
         }
 
         .chat-input-area button {
@@ -426,7 +430,6 @@
         <section>
             <h2>🎬 3. ÚLTIMO CONTENIDO DESTACADO</h2>
             <div class="video-grid">
-                <!-- Sub-apartado 3.1 -->
                 <div class="video-card">
                     <a href="https://youtu.be/DuFB_bxeAAg?si=fFzFck0RNGWR4q1Q" target="_blank">
                         <img src="https://img.youtube.com/vi/DuFB_bxeAAg/hqdefault.jpg" alt="Jugué Rocket League SIN BALL CAM">
@@ -434,7 +437,6 @@
                     <h3>3.1. Jugué Rocket League SIN BALL CAM: ¿Es posible ganar?</h3>
                     <a href="https://youtu.be/DuFB_bxeAAg?si=fFzFck0RNGWR4q1Q" target="_blank">Ver Vídeo Completo 🔴</a>
                 </div>
-                <!-- Sub-apartado 3.2 -->
                 <div class="video-card">
                     <a href="https://youtube.com/shorts/NXKzgqY29o4?si=90ZmHhLNa4rrtqXv" target="_blank">
                         <img src="https://img.youtube.com/vi/NXKzgqY29o4/hqdefault.jpg" alt="Tengo una sorpresa para el canal">
@@ -491,21 +493,72 @@
             </div>
         </section>
 
-        <!-- Apartado 6. Comunidad y Chat -->
+        <!-- Apartado 6. Comunidad y Chat Funcional -->
         <section>
             <h2>💬 6. SALA DE CHAT Y COMUNIDAD</h2>
             <div class="chat-box">
-                <div class="chat-messages">
+                <div class="chat-messages" id="chat-messages">
                     <div class="chat-msg"><strong>6.1. Sistema:</strong> ¡Bienvenido a la comunidad oficial de Driuk!</div>
                     <div class="chat-msg"><strong>6.2. Driuk:</strong> ¡A por el rango Diamante en directo! 💎</div>
                 </div>
                 <div class="chat-input-area">
-                    <input type="text" placeholder="Escribe un mensaje en el chat..." disabled>
-                    <button onclick="alert('El módulo interactivo de chat estará disponible en la próxima actualización.')">Enviar</button>
+                    <input type="text" id="chat-input" placeholder="Escribe un mensaje en el chat...">
+                    <button id="chat-btn" onclick="enviarMensaje()">Enviar</button>
                 </div>
             </div>
         </section>
     </div>
 
+    <!-- Script de JavaScript para que el chat funcione en tiempo real -->
+    <script>
+        function enviarMensaje() {
+            const input = document.getElementById('chat-input');
+            const texto = input.value.trim();
+            if (texto === '') return; // No enviar mensajes vacíos
+
+            const messagesContainer = document.getElementById('chat-messages');
+            
+            // Crear el elemento visual del mensaje
+            const nuevoMsg = document.createElement('div');
+            nuevoMsg.className = 'chat-msg';
+            nuevoMsg.innerHTML = `<strong>Visitante:</strong> ${texto}`;
+            
+            messagesContainer.appendChild(nuevoMsg);
+            
+            // Guardar el mensaje en la memoria del navegador (localStorage)
+            let mensajesGuardados = JSON.parse(localStorage.getItem('chat_driuk') || '[]');
+            mensajesGuardados.push(texto);
+            localStorage.setItem('chat_driuk', JSON.stringify(mensajesGuardados));
+
+            // Limpiar la barra de texto y mover la vista del chat al último mensaje
+            input.value = '';
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Cargar los mensajes guardados automáticamente al abrir la página
+        window.onload = function() {
+            const messagesContainer = document.getElementById('chat-messages');
+            let mensajesGuardados = JSON.parse(localStorage.getItem('chat_driuk') || '[]');
+            mensajesGuardados.forEach(texto => {
+                const msg = document.createElement('div');
+                msg.className = 'chat-msg';
+                msg.innerHTML = `<strong>Visitante:</strong> ${texto}`;
+                messagesContainer.appendChild(msg);
+            });
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        };
+
+        // Permitir enviar el mensaje pulsando la tecla "Enter"
+        document.addEventListener("DOMContentLoaded", () => {
+            const input = document.getElementById('chat-input');
+            if(input) {
+                input.addEventListener("keypress", function(event) {
+                    if (event.key === "Enter") {
+                        enviarMensaje();
+                    }
+                });
+            }
+        });
+    </script>
 </body>
 </html>
