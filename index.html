@@ -219,16 +219,18 @@
         </div>
 
         <div class="tab-content" id="tab-ajustes">
-            <label style="font-size:0.8em; color:#888;">Foto de Perfil (URL o Archivo):</label>
+            <label style="font-size:0.8em; color:#888;">Foto de Perfil (URL Directa):</label>
             <input type="text" class="sidebar-input" id="avatar-url-input" placeholder="https://...">
-            <input type="file" id="avatar-file-input" accept="image/*" style="font-size:0.8em; color:#ccc;">
-            <button class="sidebar-btn-sub" onclick="guardarFotoPerfil()">Guardar Foto</button>
+            <input type="file" id="avatar-file-input" accept="image/*" style="font-size:0.8em; color:#ccc; margin-top:5px;">
+            <button class="sidebar-btn-sub" onclick="guardarFotoPerfil()" style="margin-top:8px;">Guardar Foto</button>
 
-            <label style="font-size:0.8em; color:#888; margin-top:10px;">Opción Guardar Cajas Automáticamente:</label>
-            <select id="auto-save-boxes" class="sidebar-input">
-                <option value="false">Preguntar al comprar</option>
-                <option value="true">Guardar siempre en Inventario</option>
-            </select>
+            <label style="font-size:0.8em; color:#888; margin-top:12px;">Cambiar Apodo Visible:</label>
+            <input type="text" class="sidebar-input" id="new-displayname-input" placeholder="Nuevo apodo...">
+            
+            <label style="font-size:0.8em; color:#888; margin-top:8px;">Cambiar Handle (@):</label>
+            <input type="text" class="sidebar-input" id="new-handle-input" placeholder="@driuk...">
+            
+            <button class="sidebar-btn-sub" onclick="actualizarPerfilYHandle()" style="margin-top:8px;">Actualizar Nombres</button>
 
             <button onclick="cerrarSesion()" style="background:#222; color:red; border:1px solid red; padding:8px; border-radius:6px; cursor:pointer; margin-top:15px;">🚪 Cerrar Sesión</button>
         </div>
@@ -296,7 +298,7 @@
                     <div class="shop-desc">Fuentes de letra, efectos neón y puntos bonus.</div>
                     <div class="shop-price">300 PTS</div>
                     <button class="btn-buy-item" onclick="comprarCajaOpcion()">Comprar Caja 🎁</button>
-                    <button onclick="openModal('box-odds-modal')" style="background:transparent; color:#00ff66; border:none; cursor:pointer; font-size:0.8em; margin-top:8px;">🔍 Ver Contenido / Probabilidades</button>
+                    <button onclick="openModal('box-odds-modal')" style="background:transparent; color:#00ff66; border:none; cursor:pointer; font-size:0.8em; margin-top:8px;">🔍 Ver Probabilidades</button>
                 </div>
 
                 <div class="shop-card">
@@ -349,17 +351,37 @@
         </div>
     </div>
 
-    <!-- Modal Publicar Studio -->
+    <!-- Modal Canal Estilo YouTube -->
+    <div class="modal" id="channel-modal">
+        <div class="modal-content" style="max-width:700px;">
+            <div style="background:linear-gradient(90deg, #330000, #990012); height:100px; border-radius:8px; display:flex; align-items:flex-end; padding:15px;">
+                <div id="chan-avatar" style="width:70px; height:70px; border-radius:50%; background:var(--primary-red); border:3px solid #121212; display:flex; align-items:center; justify-content:center; font-size:2em; font-weight:bold; background-size:cover; margin-bottom:-25px;">U</div>
+            </div>
+            <div style="margin-top:30px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h2 id="chan-title" style="margin:0; border:none;">Nombre del Canal</h2>
+                    <p id="chan-subs" style="color:#888; font-size:0.9em; margin:4px 0;">Tu canal personal</p>
+                </div>
+            </div>
+            <div id="chan-posts-list" style="margin-top:15px; max-height:300px; overflow-y:auto;"><p style="color:#888;">Sin publicaciones recientes.</p></div>
+            <button style="background:transparent; color:red; border:none; cursor:pointer; margin-top:15px;" onclick="closeModal('channel-modal')">Cerrar Canal</button>
+        </div>
+    </div>
+
+    <!-- Modal Publicar Studio (Opciones Completas) -->
     <div class="modal" id="studio-modal">
         <div class="modal-content">
             <h3>📹 Publicar en tu Canal</h3>
             <select id="studio-type" class="sidebar-input">
-                <option value="video">📹 Vídeo Largo MP4 / Link</option>
-                <option value="short">⚡ Short MP4 / Link</option>
+                <option value="video">📹 Vídeo Largo (MP4 o Link)</option>
+                <option value="short">⚡ Short (MP4 o Link)</option>
+                <option value="photo">📸 Foto / Comunidad</option>
+                <option value="live">🔴 Emisión en Directo (Link)</option>
             </select>
             <input type="text" id="studio-title" placeholder="Título...">
-            <input type="text" id="studio-url" placeholder="Enlace URL (Opcional)...">
+            <input type="text" id="studio-url" placeholder="Enlace URL (YouTube/Twitch)...">
             <input type="file" id="studio-file" accept="video/mp4,image/*" style="font-size:0.8em; color:#ccc;">
+            <textarea id="studio-desc" placeholder="Descripción opcional..." rows="2" class="sidebar-input"></textarea>
             <button class="btn-auth" onclick="publicarContenidoStudio()">Publicar Ahora 🚀</button>
             <button style="background:transparent; color:red; border:none; cursor:pointer;" onclick="closeModal('studio-modal')">Cancelar</button>
         </div>
@@ -397,6 +419,7 @@
         let usuarioActual = null;
         let allPostsData = [];
         let categoriaMisionActual = 'diarias';
+        let ultimoMensajeTiempo = 0; // Cooldown antispam chat
 
         const MISIONES_BASE = {
             diarias: [
@@ -467,15 +490,26 @@
         }
 
         auth.onAuthStateChanged(user => {
+            const loginBtn = document.getElementById('btn-login-modal');
+            const avatar = document.getElementById('user-avatar');
+            const chatInput = document.getElementById('chat-input');
+            const chatBtn = document.getElementById('chat-btn');
+
             if (user) {
                 usuarioActual = user;
-                const loginBtn = document.getElementById('btn-login-modal');
-                const avatar = document.getElementById('user-avatar');
-                const chatInput = document.getElementById('chat-input');
-                const chatBtn = document.getElementById('chat-btn');
-
                 if(loginBtn) loginBtn.style.display = 'none';
-                if(avatar) avatar.style.display = 'flex';
+                if(avatar) {
+                    avatar.style.display = 'flex';
+                    db.ref('users/' + user.uid).once('value', snap => {
+                        const d = snap.val() || {};
+                        if(d.photoURL) {
+                            avatar.style.backgroundImage = `url(${d.photoURL})`;
+                            avatar.innerText = '';
+                        } else {
+                            avatar.innerText = (d.displayName || 'U').charAt(0).toUpperCase();
+                        }
+                    });
+                }
                 if(chatInput) { chatInput.disabled = false; chatInput.placeholder = "Escribe un mensaje..."; }
                 if(chatBtn) chatBtn.disabled = false;
 
@@ -486,11 +520,6 @@
                 });
             } else {
                 usuarioActual = null;
-                const loginBtn = document.getElementById('btn-login-modal');
-                const avatar = document.getElementById('user-avatar');
-                const chatInput = document.getElementById('chat-input');
-                const chatBtn = document.getElementById('chat-btn');
-
                 if(loginBtn) loginBtn.style.display = 'block';
                 if(avatar) avatar.style.display = 'none';
                 if(chatInput) { chatInput.disabled = true; chatInput.placeholder = "Inicia sesión para chatear..."; }
@@ -506,24 +535,88 @@
             });
         }
 
+        /* AJUSTES DE PERFIL: FOTO URL Y NOMBRES */
+        function guardarFotoPerfil() {
+            if(!usuarioActual) return alert("Inicia sesión primero.");
+            const url = document.getElementById('avatar-url-input').value.trim();
+            const fileInput = document.getElementById('avatar-file-input');
+
+            if (fileInput && fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) { aplicarFotoURL(e.target.result); };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else if (url) {
+                aplicarFotoURL(url);
+            } else {
+                alert("Introduce una URL válida o selecciona un archivo de imagen.");
+            }
+        }
+
+        function aplicarFotoURL(url) {
+            db.ref('users/' + usuarioActual.uid).update({ photoURL: url }).then(() => {
+                const avatar = document.getElementById('user-avatar');
+                if(avatar) {
+                    avatar.style.backgroundImage = `url(${url})`;
+                    avatar.innerText = '';
+                }
+                alert("¡Foto de perfil actualizada con éxito!");
+            });
+        }
+
+        function actualizarPerfilYHandle() {
+            if(!usuarioActual) return alert("Inicia sesión primero.");
+            const newName = document.getElementById('new-displayname-input').value.trim();
+            let newHandle = document.getElementById('new-handle-input').value.trim().toLowerCase();
+
+            if(newHandle && !newHandle.startsWith('@')) newHandle = '@' + newHandle;
+
+            const updates = {};
+            if(newName) updates.displayName = newName;
+            if(newHandle) updates.handle = newHandle;
+
+            if(Object.keys(updates).length === 0) return alert("Introduce al menos un campo para actualizar.");
+
+            db.ref('users/' + usuarioActual.uid).update(updates).then(() => {
+                alert("¡Perfil actualizado correctamente!");
+                location.reload();
+            });
+        }
+
+        /* MI CANAL / STUDIO */
+        function verMiPropioCanal() {
+            toggleProfileDropdown();
+            if(!usuarioActual) return alert("Inicia sesión primero.");
+            openModal('channel-modal');
+            db.ref('users/' + usuarioActual.uid).once('value', snap => {
+                const d = snap.val() || {};
+                document.getElementById('chan-title').innerText = d.displayName || d.handle || 'Mi Canal';
+                const av = document.getElementById('chan-avatar');
+                if(d.photoURL) { av.style.backgroundImage = `url(${d.photoURL})`; av.innerText = ''; }
+                else { av.innerText = (d.displayName || 'U').charAt(0).toUpperCase(); }
+            });
+
+            db.ref('posts').orderByChild('uid').equalTo(usuarioActual.uid).on('value', snap => {
+                const list = document.getElementById('chan-posts-list');
+                list.innerHTML = '';
+                if(!snap.exists()) return list.innerHTML = '<p style="color:#888;">No has publicado nada todavía.</p>';
+                snap.forEach(c => {
+                    const p = c.val();
+                    list.innerHTML += `<div class="post-card"><strong>${p.titulo}</strong><p style="font-size:0.8em; color:#aaa; margin:4px 0;">${p.descripcion || ''}</p></div>`;
+                });
+            });
+        }
+
         function actualizarContadorMisiones() {
             const timerEl = document.getElementById('mission-timer');
             if(!timerEl) return;
             const now = new Date();
             let nextReset = new Date();
 
-            if (categoriaMisionActual === 'diarias') {
-                nextReset.setHours(24,0,0,0);
-            } else if (categoriaMisionActual === 'semanales') {
-                nextReset.setDate(now.getDate() + (7 - now.getDay()));
-                nextReset.setHours(24,0,0,0);
-            } else if (categoriaMisionActual === 'mensuales') {
-                nextReset = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-            } else if (categoriaMisionActual === 'cuatrimestrales') {
-                nextReset = new Date(now.getFullYear(), now.getMonth() + 4, 1);
-            } else {
-                nextReset = new Date(now.getFullYear() + 1, 0, 1);
-            }
+            if (categoriaMisionActual === 'diarias') nextReset.setHours(24,0,0,0);
+            else if (categoriaMisionActual === 'semanales') { nextReset.setDate(now.getDate() + (7 - now.getDay())); nextReset.setHours(24,0,0,0); }
+            else if (categoriaMisionActual === 'mensuales') nextReset = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+            else if (categoriaMisionActual === 'cuatrimestrales') nextReset = new Date(now.getFullYear(), now.getMonth() + 4, 1);
+            else nextReset = new Date(now.getFullYear() + 1, 0, 1);
 
             const diff = nextReset - now;
             const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
@@ -606,10 +699,7 @@
                 const pts = snap.val() || 0;
                 if(pts < 300) return alert("Necesitas 300 PUNTOS para comprar la caja.");
 
-                const autoSaveEl = document.getElementById('auto-save-boxes');
-                const autoSave = autoSaveEl ? autoSaveEl.value === 'true' : false;
-
-                if(autoSave || confirm("¿Quieres guardar la Caja en tu Inventario? (Aceptar = Guardar | Cancelar = Abrir Ahora)")) {
+                if(confirm("¿Quieres guardar la Caja en tu Inventario? (Aceptar = Guardar | Cancelar = Abrir Ahora)")) {
                     db.ref(`users/${usuarioActual.uid}/points`).set(pts - 300);
                     db.ref(`inventory/${usuarioActual.uid}`).push({
                         nombre: '📦 Caja Drop Misteriosa', rareza: 'Épico', tipo: 'caja_cerrada'
@@ -728,11 +818,19 @@
             if(chat) chat.classList.toggle('hidden');
         }
 
+        /* CHAT GLOBAL CON ANTISPAM (3 SEGUNDOS DE ESPERA) */
         function enviarMensajeFirebase() {
+            const ahora = Date.now();
+            if (ahora - ultimoMensajeTiempo < 3000) {
+                return alert("⚠️ Debes esperar 3 segundos entre mensaje y mensaje para evitar spam.");
+            }
+
             const input = document.getElementById('chat-input');
             if(!input) return;
             const texto = input.value.trim();
             if (!texto || !usuarioActual) return;
+
+            ultimoMensajeTiempo = ahora;
 
             db.ref('users/' + usuarioActual.uid).once('value', uSnap => {
                 const uData = uSnap.val() || {};
@@ -758,34 +856,39 @@
             container.scrollTop = container.scrollHeight;
         });
 
+        /* PUBLICAR CONTENIDO STUDIO CON CONTROL DE TAMAÑO */
         function publicarContenidoStudio() {
             if(!usuarioActual) return alert("Inicia sesión para publicar.");
-            const typeEl = document.getElementById('studio-type');
-            const titleEl = document.getElementById('studio-title');
-            const urlEl = document.getElementById('studio-url');
-            const fileEl = document.getElementById('studio-file');
-
-            const type = typeEl ? typeEl.value : 'video';
-            const title = titleEl ? titleEl.value.trim() : '';
-            const urlInput = urlEl ? urlEl.value.trim() : '';
+            const type = document.getElementById('studio-type').value;
+            const title = document.getElementById('studio-title').value.trim();
+            const urlInput = document.getElementById('studio-url').value.trim();
+            const fileInput = document.getElementById('studio-file');
+            const desc = document.getElementById('studio-desc').value.trim();
 
             if(!title) return alert("Escribe un título.");
 
             db.ref('users/' + usuarioActual.uid).once('value', uSnap => {
                 const authorName = (uSnap.val() || {}).displayName || 'Usuario';
-                if (fileEl && fileEl.files && fileEl.files[0]) {
+
+                if (fileInput && fileInput.files && fileInput.files[0]) {
+                    const file = fileInput.files[0];
+                    if (file.size > 5 * 1024 * 1024) {
+                        return alert("⚠️ El vídeo o archivo es muy pesado (máximo 5MB). Te recomendamos subirlo a YouTube/Twitch y pegar el enlace URL.");
+                    }
                     const reader = new FileReader();
-                    reader.onload = function(e) { guardarPostBD(authorName, type, title, e.target.result); };
-                    reader.readAsDataURL(fileEl.files[0]);
+                    reader.onload = function(e) { guardarPostBD(authorName, type, title, e.target.result, desc); };
+                    reader.readAsDataURL(file);
+                } else if (urlInput) {
+                    guardarPostBD(authorName, type, title, urlInput, desc);
                 } else {
-                    guardarPostBD(authorName, type, title, urlInput);
+                    alert("Proporciona un enlace URL o adjunta un archivo válido.");
                 }
             });
         }
 
-        function guardarPostBD(authorName, type, title, mediaUrl) {
+        function guardarPostBD(authorName, type, title, mediaUrl, desc) {
             db.ref('posts').push({
-                uid: usuarioActual.uid, authorName: authorName, tipo: type, titulo: title, url: mediaUrl, timestamp: Date.now()
+                uid: usuarioActual.uid, authorName: authorName, tipo: type, titulo: title, url: mediaUrl, descripcion: desc, timestamp: Date.now()
             });
             alert("¡Publicado en la web!");
             closeModal('studio-modal');
@@ -801,8 +904,7 @@
         }
 
         function filtrarFeedComunidad() {
-            const searchInput = document.getElementById('feed-search-input');
-            const query = searchInput ? searchInput.value.toLowerCase() : '';
+            const query = (document.getElementById('feed-search-input').value || '').toLowerCase();
             const container = document.getElementById('community-feed');
             if(!container) return;
             container.innerHTML = '';
@@ -813,19 +915,24 @@
             filtered.forEach(post => {
                 let mediaHtml = '';
                 if(post.url && post.url.startsWith('data:video')) mediaHtml = `<video src="${post.url}" controls style="width:100%; max-height:300px; border-radius:8px; margin-top:8px;"></video>`;
+                else if(post.url && post.url.startsWith('data:image')) mediaHtml = `<img src="${post.url}" style="max-width:100%; border-radius:8px; margin-top:8px;">`;
+                else if(post.url && (post.url.includes('youtube.com') || post.url.includes('youtu.be'))) {
+                    let embed = post.url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
+                    mediaHtml = `<iframe src="${embed}" style="width:100%; height:240px; border:none; border-radius:8px; margin-top:8px;" allowfullscreen></iframe>`;
+                }
 
                 const card = document.createElement('div');
                 card.className = 'post-card';
                 card.innerHTML = `
                     <strong style="color:var(--primary-red);">${post.authorName}</strong>
                     <h4 style="margin:5px 0;">${post.titulo}</h4>
+                    <p style="font-size:0.85em; color:#ccc; margin:0;">${post.descripcion || ''}</p>
                     ${mediaHtml}
                 `;
                 container.appendChild(card);
             });
         }
 
-        function verMiPropioCanal() { toggleProfileDropdown(); alert("Canal personal activo."); }
         function abrirModalPublicarStudio() { toggleProfileDropdown(); openModal('studio-modal'); }
         function abrirAmigosAjustesDesdePerfil() { toggleProfileDropdown(); toggleSidebar(); }
 
