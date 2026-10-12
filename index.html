@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sitio web oficial de Driuk. Creador de contenido de videojuegos, Rocket League, gaming y canal de YouTube.">
+    <meta name="description" content="Sitio web oficial de Driuk. Creador de contenido de videojuegos, Rocket League, Fortnite, gaming y canal de YouTube.">
     <title>Driuk | Youtuber & Gaming Creator</title>
 
     <!-- Firebase SDK v9 Compatibility -->
@@ -170,6 +170,12 @@
         .item-rarity-Raro { border-color: var(--rarity-rare); }
         .item-rarity-Épico { border-color: var(--rarity-epic); }
         .item-rarity-Legendario { border-color: var(--rarity-legendary); }
+
+        /* Estilos de las Nuevas Secciones Gaming & Setup */
+        .grid-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 15px; }
+        .info-card { background: #141414; border: 1px solid #2b2b2b; border-radius: 10px; padding: 15px; }
+        .info-card h3 { color: var(--gold-color); margin-top: 0; font-size: 1.1em; }
+        .tag-badge { background: var(--primary-red); color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.75em; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -245,6 +251,40 @@
     <div class="layout-container">
         <!-- Feed Principal a la Izquierda -->
         <div class="feed-main">
+
+            <!-- 🏆 SECCIÓN NUEVA: TORNEOS & COMPETICIONES -->
+            <section style="border-color:var(--gold-color);">
+                <h2 style="color:var(--gold-color);">🏆 TORNEOS DE LA COMUNIDAD</h2>
+                <p style="font-size:0.85em; color:#aaa; margin-bottom:12px;">Compite en los torneos oficiales organizados en la web y gana grandes premios en puntos.</p>
+                <div class="info-card" style="border-color:var(--gold-color); display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <span class="tag-badge">FORTNITE / CS2 / RL</span>
+                        <h3 style="margin:8px 0 4px 0;">Torneo Semanal Driuk Cup</h3>
+                        <p style="margin:0; font-size:0.8em; color:#aaa;">Inscripciones abiertas para todos los usuarios registrados.</p>
+                    </div>
+                    <div style="text-align:right;">
+                        <span style="color:var(--gold-color); font-weight:bold; font-size:1.1em;">+2,500 PTS</span>
+                        <br>
+                        <button onclick="alert('Inscripción registrada. ¡Te avisaremos por el chat!')" class="btn-claim-mission" style="margin-top:5px;">Inscribirme</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 💡 SECCIÓN NUEVA: PROPUESTAS DE LA COMUNIDAD (CON LÍMITE Y COOLDOWN) -->
+            <section>
+                <h2>💡 PROPUESTAS & IDEAS DE LA COMUNIDAD</h2>
+                <p style="font-size:0.85em; color:#aaa;">¡Escribe tu propuesta para mejorar la web o el canal! Ganarás <strong style="color:var(--gold-color);">+15 PTS</strong> por propuesta (Límite: 1 propuesta cada 5 minutos).</p>
+                
+                <div style="display:flex; gap:8px; margin-bottom:15px;">
+                    <input type="text" id="suggestion-input" placeholder="Escribe tu propuesta breve..." class="sidebar-input">
+                    <button class="btn-auth" onclick="enviarPropuesta()">Enviar (+15 PTS)</button>
+                </div>
+
+                <div id="suggestions-list" style="max-height:200px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
+                    <p style="color:#888; font-size:0.85em;">Cargando propuestas...</p>
+                </div>
+            </section>
+
             <!-- Misiones -->
             <section>
                 <h2>🎯 MISIONES Y DESAFÍOS DE LA WEB</h2>
@@ -258,6 +298,76 @@
                 <div id="mission-timer" style="font-size:0.85em; color:var(--gold-color); margin-bottom:12px; font-weight:bold;">Se reinician en: --:--:--</div>
                 <div id="missions-list">
                     <p style="color:#888;">Cargando misiones...</p>
+                </div>
+            </section>
+
+            <!-- 🖥️ SECCIÓN NUEVA: MI SETUP GAMING -->
+            <section>
+                <h2>🖥️ MI SETUP GAMING COMPLETO</h2>
+                <div class="grid-info">
+                    <div class="info-card">
+                        <h3>💻 Componentes PC</h3>
+                        <p style="font-size:0.85em; color:#ccc; margin:0;">
+                            • <strong>CPU:</strong> AMD Ryzen 7 5700X3D<br>
+                            • <strong>GPU:</strong> AMD Radeon RX 7800 XT<br>
+                            • <strong>RAM:</strong> 32 GB DDR4 3200 MHz<br>
+                            • <strong>Placa:</strong> B450 Plus<br>
+                            • <strong>SSD:</strong> 1 TB Kingston NVMe
+                        </p>
+                    </div>
+                    <div class="info-card">
+                        <h3>🖥️ Configuración de Monitores</h3>
+                        <p style="font-size:0.85em; color:#ccc; margin:0;">
+                            • <strong>Principal:</strong> AOC 25G3ZM 24.5" (240Hz)<br>
+                            • <strong>Secundario:</strong> Monitor 60Hz<br>
+                            • <strong>Superior:</strong> Pantalla TV Overhead
+                        </p>
+                    </div>
+                    <div class="info-card">
+                        <h3>🖱️ Periféricos Gaming</h3>
+                        <p style="font-size:0.85em; color:#ccc; margin:0;">
+                            • <strong>Ratones:</strong> VXE Dragonfly R1 Pro / Logitech G502 HERO<br>
+                            • <strong>Teclado:</strong> Irok MG75 Pro Wireless<br>
+                            • <strong>Auriculares:</strong> Logitech G PRO X Wireless<br>
+                            • <strong>Mando:</strong> GameSir G7 SE
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 🎮 SECCIÓN NUEVA: GUÍAS, BINDS Y TRUCOS FORTNITE -->
+            <section>
+                <h2>🎮 GUÍAS, OPTIMIZACIÓN & SETTINGS FORTNITE</h2>
+                <div class="grid-info">
+                    <div class="info-card">
+                        <h3>⌨️ Teclas con Menos Delay</h3>
+                        <p style="font-size:0.85em; color:#ccc;">Utiliza teclados con interruptores ópticos o magnéticos con **Rapid Trigger** (activación a 0.1mm). Binds recomendados para construir/editar cerca de `WASD`: **E, F, Q, C, V** y botones laterales del ratón.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>✏️ Mejor Tecla para Editar</h3>
+                        <p style="font-size:0.85em; color:#ccc;">• <strong>Teclado:</strong> La tecla <strong>F</strong> o <strong>E</strong> por cercanía natural al dedo índice.<br>• <strong>Mando:</strong> Palanca izquierda (L3) o Paddle trasero izquierdo para editar sin soltar los joysticks.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>⚡ Trucos para +FPS</h3>
+                        <p style="font-size:0.85em; color:#ccc;">1. Usa <strong>Modo Rendimiento (DirectX 12 Alpha)</strong>.<br>2. Desactiva "Texturas de Alta Resolución" e "Iluminación Global".<br>3. Pon las mallas en *Bajas* para máxima fluidez y menor Input Lag.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>🎯 Mejores DPI & Sensibilidad</h3>
+                        <p style="font-size:0.85em; color:#ccc;">• <strong>DPI recomendado:</strong> 800 DPI o 1600 DPI (menos latencia del sensor).<br>• <strong>Sensibilidad óptima:</strong> Entre 6.0% y 8.5% en X/Y a 800 DPI para equilibrio entre tracking y flicks.</p>
+                    </div>
+
+                    <div class="info-card">
+                        <h3>🎮 Ajustes Más Rápidos para Mando</h3>
+                        <p style="font-size:0.85em; color:#ccc;">• <strong>Curva:</strong> Lineal para respuesta instantánea.<br>• <strong>Deadzone:</strong> Entre 5% y 8% según tu mando.<br>• Usa <strong>Confirmar al Soltar</strong> o el triple bind con R1/L1 para reiniciar construcciones.</p>
+                    </div>
+
+                    <div class="info-card" style="border-color:var(--primary-red);">
+                        <h3 style="color:var(--primary-red);">🔥 Análisis: Cómo Jugar como Shark</h3>
+                        <p style="font-size:0.85em; color:#ccc;">1. <strong>Crosshair Placement:</strong> Mantén la retícula siempre a la altura de la cabeza previa a editar.<br>2. <strong>Piece Control Anticipado:</strong> Coloca paredes antes de picar la caja del enemigo.<br>3. <strong>Paciencia bajo presión:</strong> No fuerces el tradeo si no tienes ventaja de vida.</p>
+                    </div>
                 </div>
             </section>
 
@@ -368,7 +478,7 @@
         </div>
     </div>
 
-    <!-- Modal Publicar Studio (Opciones Completas) -->
+    <!-- Modal Publicar Studio -->
     <div class="modal" id="studio-modal">
         <div class="modal-content">
             <h3>📹 Publicar en tu Canal</h3>
@@ -419,7 +529,8 @@
         let usuarioActual = null;
         let allPostsData = [];
         let categoriaMisionActual = 'diarias';
-        let ultimoMensajeTiempo = 0; // Cooldown antispam chat
+        let ultimoMensajeTiempo = 0;
+        let ultimaPropuestaTiempo = 0; // Cooldown de 5 min para propuestas
 
         const MISIONES_BASE = {
             diarias: [
@@ -516,6 +627,7 @@
                 db.ref('users/' + user.uid).once('value', snapshot => {
                     escucharPuntosUsuario();
                     cargarInventario();
+                    cargarPropuestas();
                     renderMisiones();
                 });
             } else {
@@ -535,7 +647,48 @@
             });
         }
 
-        /* AJUSTES DE PERFIL: FOTO URL Y NOMBRES */
+        /* ENVÍO DE PROPUESTAS CON LÍMITE DE COOLDOWN (+15 PTS) */
+        function enviarPropuesta() {
+            if(!usuarioActual) return alert("Inicia sesión para enviar propuestas.");
+            const ahora = Date.now();
+            if (ahora - ultimaPropuestaTiempo < 5 * 60 * 1000) {
+                const restanteSec = Math.ceil((5 * 60 * 1000 - (ahora - ultimaPropuestaTiempo)) / 1000);
+                return alert(`⏳ Debes esperar ${Math.ceil(restanteSec/60)} minutos para enviar otra propuesta.`);
+            }
+
+            const input = document.getElementById('suggestion-input');
+            const texto = input.value.trim();
+            if(!texto) return alert("Escribe tu propuesta.");
+
+            ultimaPropuestaTiempo = ahora;
+
+            db.ref('users/' + usuarioActual.uid).once('value', uSnap => {
+                const myName = (uSnap.val() || {}).displayName || 'Usuario';
+                db.ref('suggestions').push({
+                    authorName: myName,
+                    texto: texto,
+                    timestamp: Date.now()
+                });
+                db.ref(`users/${usuarioActual.uid}/points`).transaction(c => (c || 0) + 15);
+                alert("¡Propuesta enviada! Has ganado +15 PTS.");
+                input.value = '';
+            });
+        }
+
+        function cargarPropuestas() {
+            db.ref('suggestions').limitToLast(20).on('value', snap => {
+                const container = document.getElementById('suggestions-list');
+                if(!container) return;
+                container.innerHTML = '';
+                if(!snap.exists()) return container.innerHTML = '<p style="color:#888; font-size:0.85em;">Aún no hay propuestas. ¡Sé el primero en aportar una!</p>';
+
+                snap.forEach(child => {
+                    const data = child.val();
+                    container.innerHTML += `<div class="chat-msg" style="border-left-color:var(--gold-color);"><strong>${data.authorName}:</strong> ${data.texto}</div>`;
+                });
+            });
+        }
+
         function guardarFotoPerfil() {
             if(!usuarioActual) return alert("Inicia sesión primero.");
             const url = document.getElementById('avatar-url-input').value.trim();
@@ -582,7 +735,6 @@
             });
         }
 
-        /* MI CANAL / STUDIO */
         function verMiPropioCanal() {
             toggleProfileDropdown();
             if(!usuarioActual) return alert("Inicia sesión primero.");
@@ -818,7 +970,6 @@
             if(chat) chat.classList.toggle('hidden');
         }
 
-        /* CHAT GLOBAL CON ANTISPAM (3 SEGUNDOS DE ESPERA) */
         function enviarMensajeFirebase() {
             const ahora = Date.now();
             if (ahora - ultimoMensajeTiempo < 3000) {
@@ -856,7 +1007,6 @@
             container.scrollTop = container.scrollHeight;
         });
 
-        /* PUBLICAR CONTENIDO STUDIO CON CONTROL DE TAMAÑO */
         function publicarContenidoStudio() {
             if(!usuarioActual) return alert("Inicia sesión para publicar.");
             const type = document.getElementById('studio-type').value;
@@ -873,7 +1023,7 @@
                 if (fileInput && fileInput.files && fileInput.files[0]) {
                     const file = fileInput.files[0];
                     if (file.size > 5 * 1024 * 1024) {
-                        return alert("⚠️ El vídeo o archivo es muy pesado (máximo 5MB). Te recomendamos subirlo a YouTube/Twitch y pegar el enlace URL.");
+                        return alert("⚠️ El archivo supera los 5MB. Te recomendamos usar enlaces de YouTube o comprimir el archivo.");
                     }
                     const reader = new FileReader();
                     reader.onload = function(e) { guardarPostBD(authorName, type, title, e.target.result, desc); };
