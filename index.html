@@ -160,7 +160,7 @@
         @keyframes pulseRarity {
             0% { transform: scale(1) rotate(0deg); border-color: var(--rarity-common); }
             25% { transform: scale(1.1) rotate(-5deg); border-color: var(--rarity-rare); }
-            50% { transform: scale(1.15) rotate(-5deg); border-color: var(--rarity-epic); }
+            50% { transform: scale(1.15) rotate(5deg); border-color: var(--rarity-epic); }
             75% { transform: scale(1.2) rotate(-5deg); border-color: var(--rarity-legendary); }
             100% { transform: scale(1) rotate(0deg); border-color: var(--gold-color); }
         }
@@ -251,46 +251,64 @@
         <!-- Feed Principal a la Izquierda -->
         <div class="feed-main">
 
-            <!-- 🏆 SECCIÓN ACTUALIZADA: TORNEOS TRYHARD POR RANGOS FORTNITE -->
+            <!-- 🏆 TORNEO FORTNITE -->
             <section style="border-color:var(--gold-color);">
-                <h2 style="color:var(--gold-color);">🏆 TORNEOS TRYHARDS POR RANGO (FORTNITE)</h2>
-                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Partidas equilibradas y competitivas divididas estrictamente por tu Rango Máximo alcanzado.</p>
+                <h2 style="color:var(--gold-color);">🏆 TORNEOS TRYHARDS — FORTNITE</h2>
+                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Partidas competitivas divididas por tu Rango Máximo. Introduce tu ID de juego para inscribirte.</p>
                 
-                <div style="margin-bottom:15px;">
-                    <label style="font-size:0.85em; color:var(--gold-color); font-weight:bold;">Selecciona tu Rango Máximo en Fortnite:</label>
-                    <select id="user-fortnite-rank" class="sidebar-input" style="margin-top:5px;">
-                        <option value="Bronce / Plata / Oro">🥉 Bronce / 🥈 Plata / 🥇 Oro</option>
-                        <option value="Platino / Diamante / Elite">💎 Platino / Diamante / Elite</option>
-                        <option value="Asendente / Unreal">🔥 Asendente / Unreal (Pro Tryhard)</option>
-                    </select>
-                </div>
-
-                <div class="grid-info">
-                    <div class="info-card" style="border-color:#cd7f32;">
-                        <span class="tag-badge" style="background:#cd7f32;">DIVISIÓN AMATEUR</span>
-                        <h3 style="margin:8px 0 4px 0;">Copa Bronce a Oro</h3>
-                        <p style="margin:0; font-size:0.8em; color:#aaa;">Ideal para mejorar mecánicas en entornos competitivos de nivel medio.</p>
-                        <div style="margin-top:10px; font-weight:bold; color:var(--gold-color);">Premio: +1,000 PTS</div>
+                <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:15px;">
+                    <div>
+                        <label style="font-size:0.85em; color:var(--gold-color); font-weight:bold;">Tu Rango Máximo en Fortnite:</label>
+                        <select id="user-fortnite-rank" class="sidebar-input" style="margin-top:5px;">
+                            <option value="Bronce / Plata / Oro">🥉 Bronce / 🥈 Plata / 🥇 Oro</option>
+                            <option value="Platino / Diamante / Elite">💎 Platino / Diamante / Elite</option>
+                            <option value="Asendente / Unreal">🔥 Asendente / Unreal (Pro Tryhard)</option>
+                        </select>
                     </div>
-
-                    <div class="info-card" style="border-color:#00ffff;">
-                        <span class="tag-badge" style="background:#0088ff;">DIVISIÓN AVANZADA</span>
-                        <h3 style="margin:8px 0 4px 0;">Copa Platino a Elite</h3>
-                        <p style="margin:0; font-size:0.8em; color:#aaa;">Partidas con endgames con más de 20 personas en la última zona.</p>
-                        <div style="margin-top:10px; font-weight:bold; color:var(--gold-color);">Premio: +2,500 PTS</div>
-                    </div>
-
-                    <div class="info-card" style="border-color:var(--primary-red);">
-                        <span class="tag-badge" style="background:var(--primary-red);">DIVISIÓN TOP TRYHARD</span>
-                        <h3 style="margin:8px 0 4px 0;">Copa Asendente & Unreal</h3>
-                        <p style="margin:0; font-size:0.8em; color:#aaa;">Nivel FNCS / Scrims de máxima exigencia. Piece control absoluto.</p>
-                        <div style="margin-top:10px; font-weight:bold; color:var(--gold-color);">Premio: +5,000 PTS + Título Exclusivo</div>
+                    <div>
+                        <label style="font-size:0.85em; color:var(--gold-color); font-weight:bold;">Tu ID de Juego / Usuario (Epic ID):</label>
+                        <input type="text" id="fn-game-id" placeholder="Ej: DriukYT_99..." class="sidebar-input" style="margin-top:5px;">
                     </div>
                 </div>
 
-                <button onclick="inscribirseTorneoRango()" class="btn-claim-mission" style="margin-top:15px; width:100%; padding:10px; font-size:0.95em;">
-                    🚀 Inscribirme en la División de mi Rango
-                </button>
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button onclick="inscribirseTorneo('fortnite')" class="btn-claim-mission" style="flex:1; padding:10px; font-size:0.95em;">
+                        🚀 Inscribirme en Fortnite
+                    </button>
+                    <button onclick="verInscritos('fortnite')" class="sidebar-btn-sub" style="flex:1; background:#222; border:1px solid var(--gold-color); color:var(--gold-color);">
+                        👥 Gente Inscrita y en qué Rango (Fortnite)
+                    </button>
+                </div>
+            </section>
+
+            <!-- 🚗 TORNEO ROCKET LEAGUE -->
+            <section style="border-color:#0088ff;">
+                <h2 style="color:#0088ff;">🚗 TORNEOS TRYHARDS — ROCKET LEAGUE</h2>
+                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Torneos de 1v1 y 2v2 organizados por rangos competitivos. Introduce tu ID.</p>
+                
+                <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:15px;">
+                    <div>
+                        <label style="font-size:0.85em; color:#0088ff; font-weight:bold;">Tu Rango Máximo en Rocket League:</label>
+                        <select id="user-rl-rank" class="sidebar-input" style="margin-top:5px;">
+                            <option value="Bronce a Platino">🥉 Bronce a Platino</option>
+                            <option value="Diamante a Campeón">💎 Diamante a Campeón</option>
+                            <option value="Gran Campeón / SSL">⚡ Gran Campeón / Supersonic Legend</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:0.85em; color:#0088ff; font-weight:bold;">Tu ID de Juego (Epic / Steam / Console):</label>
+                        <input type="text" id="rl-game-id" placeholder="Ej: DriukRL..." class="sidebar-input" style="margin-top:5px;">
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                    <button onclick="inscribirseTorneo('rocket_league')" class="btn-claim-mission" style="flex:1; padding:10px; font-size:0.95em; background:#0088ff; color:white;">
+                        🚀 Inscribirme en Rocket League
+                    </button>
+                    <button onclick="verInscritos('rocket_league')" class="sidebar-btn-sub" style="flex:1; background:#222; border:1px solid #0088ff; color:#0088ff;">
+                        👥 Gente Inscrita y en qué Rango (Rocket League)
+                    </button>
+                </div>
             </section>
 
             <!-- 💡 PROPUESTAS DE LA COMUNIDAD -->
@@ -484,6 +502,28 @@
         </div>
     </div>
 
+    <!-- Modal Inscritos Fortnite -->
+    <div class="modal" id="fn-enrolled-modal">
+        <div class="modal-content">
+            <h3 style="color:var(--gold-color);">👥 Participantes Inscritos — Fortnite</h3>
+            <div id="fn-enrolled-list" style="max-height:350px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
+                <p style="color:#888;">Cargando lista de inscritos...</p>
+            </div>
+            <button style="background:transparent; color:red; border:none; cursor:pointer; margin-top:10px;" onclick="closeModal('fn-enrolled-modal')">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Modal Inscritos Rocket League -->
+    <div class="modal" id="rl-enrolled-modal">
+        <div class="modal-content">
+            <h3 style="color:#0088ff;">👥 Participantes Inscritos — Rocket League</h3>
+            <div id="rl-enrolled-list" style="max-height:350px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;">
+                <p style="color:#888;">Cargando lista de inscritos...</p>
+            </div>
+            <button style="background:transparent; color:red; border:none; cursor:pointer; margin-top:10px;" onclick="closeModal('rl-enrolled-modal')">Cerrar</button>
+        </div>
+    </div>
+
     <!-- Modal Canal Estilo YouTube -->
     <div class="modal" id="channel-modal">
         <div class="modal-content" style="max-width:700px;">
@@ -670,18 +710,56 @@
             });
         }
 
-        /* INSCRIPCIÓN EN TORNEO POR RANGO */
-        function inscribirseTorneoRango() {
+        /* INSCRIPCIÓN EN TORNEOS CON ID DE JUEGO */
+        function inscribirseTorneo(juego) {
             if(!usuarioActual) return alert("Inicia sesión para inscribirte en el torneo.");
-            const rankSelect = document.getElementById('user-fortnite-rank');
-            const rankVal = rankSelect ? rankSelect.value : 'Sin Rango';
+            
+            const rankSelect = document.getElementById(juego === 'fortnite' ? 'user-fortnite-rank' : 'user-rl-rank');
+            const inputId = document.getElementById(juego === 'fortnite' ? 'fn-game-id' : 'rl-game-id');
+            
+            const rango = rankSelect ? rankSelect.value : 'General';
+            const gameId = inputId ? inputId.value.trim() : '';
 
-            db.ref(`tournament_enrollments/${usuarioActual.uid}`).set({
-                uid: usuarioActual.uid,
-                rango: rankVal,
-                timestamp: Date.now()
-            }).then(() => {
-                alert(`🏆 ¡Inscripción confirmada en la División: ${rankVal}! Revisa el chat de la web para la fecha y horario.`);
+            if(!gameId) return alert("⚠️ Por favor, introduce tu ID de juego o usuario para que Driuk pueda agregarte.");
+
+            db.ref('users/' + usuarioActual.uid).once('value', uSnap => {
+                const uData = uSnap.val() || {};
+                const displayName = uData.displayName || uData.handle || 'Usuario';
+
+                db.ref(`tournament_enrollments/${juego}/${usuarioActual.uid}`).set({
+                    uid: usuarioActual.uid,
+                    displayName: displayName,
+                    gameId: gameId,
+                    rango: rango,
+                    timestamp: Date.now()
+                }).then(() => {
+                    alert(`🏆 ¡Inscripción confirmada en ${juego === 'fortnite' ? 'Fortnite' : 'Rocket League'} (${rango}) con ID: ${gameId}!`);
+                    if(inputId) inputId.value = '';
+                });
+            });
+        }
+
+        /* VER LISTA DE INSCRITOS Y RANGOS */
+        function verInscritos(juego) {
+            openModal(juego === 'fortnite' ? 'fn-enrolled-modal' : 'rl-enrolled-modal');
+            db.ref(`tournament_enrollments/${juego}`).once('value', snap => {
+                const container = document.getElementById(juego === 'fortnite' ? 'fn-enrolled-list' : 'rl-enrolled-list');
+                if(!container) return;
+                container.innerHTML = '';
+                if(!snap.exists()) return container.innerHTML = '<p style="color:#888;">No hay participantes inscritos todavía.</p>';
+
+                snap.forEach(child => {
+                    const data = child.val();
+                    container.innerHTML += `
+                        <div class="item-card-inv" style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <strong style="color:var(--gold-color);">${data.displayName}</strong>
+                                <div style="font-size:0.8em; color:#aaa;">ID: <code style="color:#00ffff;">${data.gameId}</code></div>
+                            </div>
+                            <span class="tag-badge" style="background:var(--primary-red);">${data.rango}</span>
+                        </div>
+                    `;
+                });
             });
         }
 
