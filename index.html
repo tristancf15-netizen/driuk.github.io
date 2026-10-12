@@ -96,12 +96,12 @@
             background-position: center;
         }
 
-        /* Menú Lateral */
+        /* Menú Lateral Estético */
         .sidebar {
             position: fixed;
             top: 60px;
-            left: -280px;
-            width: 270px;
+            left: -320px;
+            width: 300px;
             height: calc(100vh - 60px);
             background: #0d0d0d;
             border-right: 1px solid #222;
@@ -111,7 +111,8 @@
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
         }
 
         .sidebar.active {
@@ -133,20 +134,70 @@
             box-shadow: 0 0 10px var(--neon-glow);
         }
 
-        .sidebar-section h3 {
-            color: var(--primary-red);
-            font-size: 1em;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #333;
-            padding-bottom: 5px;
+        /* Tabs para la Barra Lateral */
+        .sidebar-tabs {
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 10px;
         }
 
-        .friends-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            font-size: 0.9em;
+        .tab-btn {
+            flex: 1;
+            background: #141414;
             color: var(--text-gray);
+            border: 1px solid #222;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: var(--primary-red);
+            color: white;
+            border-color: var(--primary-red);
+            box-shadow: 0 0 8px var(--neon-glow);
+        }
+
+        .tab-content {
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        .sidebar-input {
+            width: 100%;
+            padding: 10px;
+            background: #141414;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 6px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .sidebar-input:focus {
+            border-color: var(--primary-red);
+        }
+
+        .sidebar-btn-sub {
+            width: 100%;
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 9px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
         }
 
         header {
@@ -166,6 +217,18 @@
             color: var(--text-gray);
             font-size: 1.25em;
             margin-top: 8px;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
+            color: white;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 15px;
+            box-shadow: 0 0 15px var(--neon-glow);
+            letter-spacing: 1px;
         }
 
         .container {
@@ -242,6 +305,119 @@
             color: var(--text-gray);
             font-size: 0.9em;
             margin-top: 5px;
+        }
+
+        /* Vídeos Destacados */
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 650px) {
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .video-card {
+            background: #0a0a0a;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #222;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .video-card img {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+        }
+
+        .video-card h3 {
+            font-size: 1.05em;
+            margin: 15px;
+            color: var(--text-white);
+        }
+
+        .video-card a.play-btn {
+            display: block;
+            margin: 0 15px 15px 15px;
+            background-color: var(--primary-red);
+            color: white;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        /* Setup Gamer */
+        .setup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+        }
+
+        .setup-card {
+            background: #0a0a0a;
+            border: 1px solid #222;
+            border-radius: 10px;
+            padding: 18px;
+        }
+
+        .setup-title {
+            color: var(--primary-red);
+            font-weight: bold;
+            font-size: 0.85em;
+            text-transform: uppercase;
+        }
+
+        .setup-value {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-top: 6px;
+        }
+
+        /* Configuración Cámara */
+        .config-flex {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .config-list {
+            flex: 1;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            line-height: 2em;
+        }
+
+        .config-list li {
+            background: #0a0a0a;
+            margin-bottom: 8px;
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid #1a1a1a;
+        }
+
+        .config-list li strong {
+            color: var(--primary-red);
+        }
+
+        .config-img {
+            flex: 1;
+            text-align: center;
+        }
+
+        .config-img img {
+            max-width: 100%;
+            border-radius: 12px;
+            border: 2px solid #333;
         }
 
         /* Chat Interactivo */
@@ -350,28 +526,39 @@
     <!-- Botón Menú Lateral -->
     <button class="toggle-sidebar-btn" onclick="toggleSidebar()">☰ Amigos & Ajustes</button>
 
-    <!-- Menú Lateral -->
+    <!-- Menú Lateral Ordenado con Pestañas -->
     <div class="sidebar" id="sidebar">
-        <div class="sidebar-section">
-            <h3>⚙️ Ajustes de Perfil</h3>
-            <p style="font-size:0.85em; color:#888;">Cambia tu foto de perfil pegando un enlace de imagen:</p>
-            <input type="text" id="avatar-url-input" placeholder="URL de la imagen" style="width:100%; padding:6px; background:#1e1e1e; border:1px solid #333; color:white; border-radius:4px; margin-top:5px;">
-            <button onclick="guardarFotoPerfil()" style="margin-top:6px; width:100%; background:var(--primary-red); color:white; border:none; padding:6px; border-radius:4px; cursor:pointer;">Guardar Foto</button>
+        <div class="sidebar-tabs">
+            <button class="tab-btn active" onclick="switchTab('tab-amigos')">👥 Amigos</button>
+            <button class="tab-btn" onclick="switchTab('tab-ajustes')">⚙️ Ajustes</button>
         </div>
 
-        <div class="sidebar-section">
-            <h3>👥 Lista de Amigos</h3>
-            <ul class="friends-list">
-                <li>Próximamente: Amigos agregados</li>
-            </ul>
+        <!-- Pestaña 1: Amigos -->
+        <div class="tab-content active" id="tab-amigos">
+            <p style="font-size:0.85em; color:#888; margin:0;">Añade amigos por su apodo o correo:</p>
+            <input type="text" class="sidebar-input" id="friend-username" placeholder="Apodo de tu amigo...">
+            <button class="sidebar-btn-sub" onclick="enviarSolicitudAmigo()">Enviar Solicitud</button>
+            
+            <h4 style="color:var(--primary-red); margin: 15px 0 5px 0;">Lista de Amigos</h4>
+            <div id="friends-list" style="font-size:0.9em; color:var(--text-gray);">
+                No tienes amigos agregados aún.
+            </div>
         </div>
 
-        <button onclick="cerrarSesion()" style="background:#333; color:white; border:none; padding:8px; border-radius:6px; cursor:pointer; margin-top:auto;">Cerrar Sesión</button>
+        <!-- Pestaña 2: Ajustes de Perfil -->
+        <div class="tab-content" id="tab-ajustes">
+            <p style="font-size:0.85em; color:#888; margin:0;">Foto de Perfil (Pegar enlace URL):</p>
+            <input type="text" class="sidebar-input" id="avatar-url-input" placeholder="https://...">
+            <button class="sidebar-btn-sub" onclick="guardarFotoPerfil()">Guardar Foto</button>
+
+            <button onclick="cerrarSesion()" style="background:#333; color:white; border:none; padding:10px; border-radius:6px; cursor:pointer; margin-top:20px; font-weight:bold;">Cerrar Sesión</button>
+        </div>
     </div>
 
     <header>
         <h1>DRIUK</h1>
         <p class="subtitle">Creador de Contenido & Gaming 🚀</p>
+        <div class="badge">💎 RANGO MÁXIMO: DIAMANTE 1</div>
     </header>
 
     <div class="container">
@@ -384,26 +571,93 @@
 
         <!-- Estadísticas en Tiempo Real con YouTube API -->
         <section>
-            <h2>🏆 ESTADÍSTICAS EN TIEMPO REAL (YOUTUBE API)</h2>
+            <h2>🏆 2. LOGROS Y HITOS DE LA COMUNIDAD (YOUTUBE API)</h2>
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-number" id="yt-subs">Cargando...</div>
-                    <div class="stat-label">Suscriptores Reales</div>
+                    <div class="stat-label">2.1. Suscriptores Reales</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="yt-views">Cargando...</div>
-                    <div class="stat-label">Visualizaciones Totales</div>
+                    <div class="stat-label">2.2. Visualizaciones Totales</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number">Diamante 1 💎</div>
-                    <div class="stat-label">Rango Máximo</div>
+                    <div class="stat-label">2.3. Rango Máximo Alcanzado</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Último Contenido Multimedia -->
+        <section>
+            <h2>🎬 3. ÚLTIMO CONTENIDO DESTACADO</h2>
+            <div class="video-grid">
+                <div class="video-card">
+                    <a href="https://youtu.be/DuFB_bxeAAg?si=fFzFck0RNGWR4q1Q" target="_blank">
+                        <img src="https://img.youtube.com/vi/DuFB_bxeAAg/hqdefault.jpg" alt="Jugué Rocket League SIN BALL CAM">
+                    </a>
+                    <h3>3.1. Jugué Rocket League SIN BALL CAM: ¿Es posible ganar?</h3>
+                    <a class="play-btn" href="https://youtu.be/DuFB_bxeAAg?si=fFzFck0RNGWR4q1Q" target="_blank">Ver Vídeo Completo 🔴</a>
+                </div>
+                <div class="video-card">
+                    <a href="https://youtube.com/shorts/NXKzgqY29o4?si=90ZmHhLNa4rrtqXv" target="_blank">
+                        <img src="https://img.youtube.com/vi/NXKzgqY29o4/hqdefault.jpg" alt="Tengo una sorpresa para el canal">
+                    </a>
+                    <h3>3.2. Tengo una sorpresa para el canal 👀</h3>
+                    <a class="play-btn" href="https://youtube.com/shorts/NXKzgqY29o4?si=90ZmHhLNa4rrtqXv" target="_blank">Ver Short Épico 🔥</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hardware y Periféricos -->
+        <section>
+            <h2>🖥️ 4. MI SETUP COMPETITIVO</h2>
+            <div class="setup-grid">
+                <div class="setup-card">
+                    <div class="setup-title">4.1. Mando Gamer</div>
+                    <div class="setup-value">GameSir G7 SE</div>
+                </div>
+                <div class="setup-card">
+                    <div class="setup-title">4.2. Monitor 240Hz</div>
+                    <div class="setup-value">AOC 25G3ZM</div>
+                </div>
+                <div class="setup-card">
+                    <div class="setup-title">4.3. Auriculares</div>
+                    <div class="setup-value">Logitech G PRO X LIGHTSPEED</div>
+                </div>
+                <div class="setup-card">
+                    <div class="setup-title">4.4. Tarjeta Gráfica</div>
+                    <div class="setup-value">AMD Radeon RX 7800 XT</div>
+                </div>
+                <div class="setup-card">
+                    <div class="setup-title">4.5. Procesador</div>
+                    <div class="setup-value">AMD Ryzen 7 5700X3D</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Configuración Cámara Rocket League -->
+        <section>
+            <h2>⚙️ 5. CONFIGURACIÓN DE CÁMARA (ROCKET LEAGUE)</h2>
+            <div class="config-flex">
+                <ul class="config-list">
+                    <li><strong>5.1. FOV (Campo de visión):</strong> 110</li>
+                    <li><strong>5.2. Distancia:</strong> 270</li>
+                    <li><strong>5.3. Altura:</strong> 100</li>
+                    <li><strong>5.4. Ángulo:</strong> -4.0</li>
+                    <li><strong>5.5. Rigidez:</strong> 0.45</li>
+                    <li><strong>5.6. Velocidad de giro:</strong> 4.20</li>
+                </ul>
+                <div class="config-img">
+                    <img src="camara.jpg" alt="Configuración de cámara real de Driuk en Rocket League">
+                    <p style="font-size: 0.85em; color: #888; margin-top: 8px;">Perspectiva real in-game</p>
                 </div>
             </div>
         </section>
 
         <!-- Chat Global Sincronizado en Tiempo Real -->
         <section>
-            <h2>💬 CHAT GLOBAL DE LA COMUNIDAD</h2>
+            <h2>💬 6. SALA DE CHAT Y COMUNIDAD</h2>
             <div class="chat-box">
                 <div class="chat-messages" id="chat-messages">
                     <div class="chat-msg"><strong>Sistema:</strong> ¡Bienvenido al chat global en vivo!</div>
@@ -543,7 +797,7 @@
             input.value = '';
         }
 
-        // Escuchar mensajes entrantes en vivo
+        // Escuchar mensajes en vivo desde Firebase
         db.ref('chat_global').limitToLast(50).on('child_added', snapshot => {
             const data = snapshot.val();
             const container = document.getElementById('chat-messages');
@@ -555,6 +809,18 @@
             container.appendChild(msgDiv);
             container.scrollTop = container.scrollHeight;
         });
+
+        // Enviar solicitudes de amistad
+        function enviarSolicitudAmigo() {
+            const friendName = document.getElementById('friend-username').value.trim();
+            if(!friendName) return;
+            if(!usuarioActual) {
+                alert("Inicia sesión primero.");
+                return;
+            }
+            alert(`Solicitud enviada a ${friendName}`);
+            document.getElementById('friend-username').value = '';
+        }
 
         // YouTube API v3 (Consulta automática)
         const YT_API_KEY = "AIzaSyCKbpL_H5jrqsuoWv0EKEIJ3TB9lvN3kCo";
@@ -589,11 +855,19 @@
             }
         });
 
-        // Modales y Menú
+        // Modales, Tabs y Sidebar
         function openModal() { document.getElementById('auth-modal').style.display = 'flex'; }
         function closeModal() { document.getElementById('auth-modal').style.display = 'none'; }
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
         
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+
         function guardarFotoPerfil() {
             const url = document.getElementById('avatar-url-input').value;
             if(url && usuarioActual) {
