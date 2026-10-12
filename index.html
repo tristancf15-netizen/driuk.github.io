@@ -38,23 +38,11 @@
             min-height: 100vh;
         }
 
-        /* Fuentes equipables */
         .font-orbitron { font-family: 'Orbitron', sans-serif !important; }
         .font-arcade { font-family: 'Press Start 2P', cursive !important; font-size: 0.8em !important; }
         .font-rajdhani { font-family: 'Rajdhani', sans-serif !important; font-weight: 700 !important; }
         .glow-name { text-shadow: 0 0 8px var(--gold-color), 0 0 15px var(--primary-red); }
         .cyan-name { color: #00ffff !important; text-shadow: 0 0 8px #00ffff; }
-
-        .toast-notification {
-            position: fixed; top: 75px; right: 20px; background: #181818; border-left: 4px solid var(--primary-red); color: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 5px 20px rgba(255, 30, 56, 0.4); z-index: 300; display: none; animation: fadeInOut 3s forwards; font-size: 0.9em;
-        }
-
-        @keyframes fadeInOut {
-            0% { opacity: 0; transform: translateY(-10px); }
-            10% { opacity: 1; transform: translateY(0); }
-            90% { opacity: 1; transform: translateY(0); }
-            100% { opacity: 0; transform: translateY(-10px); }
-        }
 
         .points-widget {
             position: fixed; bottom: 20px; right: 20px; background: #121212; border: 2px solid var(--gold-color); border-radius: 30px; padding: 10px 18px; display: flex; align-items: center; gap: 10px; box-shadow: 0 0 15px var(--gold-glow); z-index: 180;
@@ -191,8 +179,6 @@
         <button class="btn-widget" onclick="openModal('shop-modal')">🛒 Tienda</button>
         <button class="btn-widget" onclick="openModal('inventory-modal')">🎒 Inventario</button>
     </div>
-
-    <div class="toast-notification" id="toast-notif"></div>
 
     <!-- Barra Superior -->
     <div class="top-bar">
@@ -352,7 +338,7 @@
         </div>
     </div>
 
-    <!-- Modal INVENTARIO (CON BOTÓN EQUIPAR) -->
+    <!-- Modal INVENTARIO -->
     <div class="modal" id="inventory-modal">
         <div class="modal-content">
             <h3>🎒 Mi Inventario (Equipar Fuentes o Abrir Cajas)</h3>
@@ -379,7 +365,7 @@
         </div>
     </div>
 
-    <!-- Modal Autenticación REAL de Firebase -->
+    <!-- Modal Autenticación -->
     <div class="modal" id="auth-modal">
         <div class="modal-content">
             <h3>Acceso de Usuario</h3>
@@ -416,16 +402,13 @@
             diarias: [
                 { id: 'm_d1', titulo: '💬 Escribe 1 mensaje en el Chat Global', pts: 50, req: 1, type: 'chat_count' },
                 { id: 'm_d2', titulo: '❤️ Da Like a una publicación', pts: 30, req: 1, type: 'likes_given' },
-                { id: 'm_d3', titulo: '👥 Ten al menos 1 amigo agregado', pts: 40, req: 1, type: 'friends_count' },
-                { id: 'm_d4', titulo: '💬 Escribe 3 mensajes en el Chat Global', pts: 80, req: 3, type: 'chat_count' }
+                { id: 'm_d3', titulo: '👥 Ten al menos 1 amigo agregado', pts: 40, req: 1, type: 'friends_count' }
             ],
             semanales: [
-                { id: 'm_s1', titulo: '🌐 Publica 1 contenido en la web', pts: 150, req: 1, type: 'posts_created' },
-                { id: 'm_s2', titulo: '💬 Escribe 5 mensajes en el Chat', pts: 100, req: 5, type: 'chat_count' }
+                { id: 'm_s1', titulo: '🌐 Publica 1 contenido en la web', pts: 150, req: 1, type: 'posts_created' }
             ],
             mensuales: [
-                { id: 'm_m1', titulo: '🔔 Suscríbete a 3 usuarios', pts: 300, req: 3, type: 'subscriptions_count' },
-                { id: 'm_m2', titulo: '🌐 Publica 3 contenidos en la web', pts: 400, req: 3, type: 'posts_created' }
+                { id: 'm_m1', titulo: '🔔 Suscríbete a 3 usuarios', pts: 300, req: 3, type: 'subscriptions_count' }
             ],
             cuatrimestrales: [
                 { id: 'm_c1', titulo: '🏆 Consigue 5 amigos agregados', pts: 1000, req: 5, type: 'friends_count' }
@@ -442,7 +425,6 @@
             { nombre: '🎨 Nombre Color Cian Neón', rareza: 'Legendario', valor: 800, tipo: 'glow', class: 'cyan-name', prob: 10 }
         ];
 
-        /* AUTENTICACIÓN REAL EN FIREBASE */
         function registrarUsuario() {
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value.trim();
@@ -457,7 +439,7 @@
                     const uid = userCredential.user.uid;
                     const userObj = { uid: uid, displayName: name, handle: handle, email: email, points: 0 };
                     db.ref('users/' + uid).set(userObj);
-                    alert("¡Cuenta creada e inicio de sesión correcto!");
+                    alert("¡Cuenta creada con éxito!");
                     closeModal('auth-modal');
                 })
                 .catch(err => alert("Error al registrarse: " + err.message));
@@ -487,11 +469,15 @@
         auth.onAuthStateChanged(user => {
             if (user) {
                 usuarioActual = user;
-                document.getElementById('btn-login-modal').style.display = 'none';
-                document.getElementById('user-avatar').style.display = 'flex';
-                document.getElementById('chat-input').disabled = false;
-                document.getElementById('chat-btn').disabled = false;
-                document.getElementById('chat-input').placeholder = "Escribe un mensaje...";
+                const loginBtn = document.getElementById('btn-login-modal');
+                const avatar = document.getElementById('user-avatar');
+                const chatInput = document.getElementById('chat-input');
+                const chatBtn = document.getElementById('chat-btn');
+
+                if(loginBtn) loginBtn.style.display = 'none';
+                if(avatar) avatar.style.display = 'flex';
+                if(chatInput) { chatInput.disabled = false; chatInput.placeholder = "Escribe un mensaje..."; }
+                if(chatBtn) chatBtn.disabled = false;
 
                 db.ref('users/' + user.uid).once('value', snapshot => {
                     escucharPuntosUsuario();
@@ -500,22 +486,26 @@
                 });
             } else {
                 usuarioActual = null;
-                document.getElementById('btn-login-modal').style.display = 'block';
-                document.getElementById('user-avatar').style.display = 'none';
-                document.getElementById('chat-input').disabled = true;
-                document.getElementById('chat-btn').disabled = true;
-                document.getElementById('chat-input').placeholder = "Inicia sesión para chatear...";
+                const loginBtn = document.getElementById('btn-login-modal');
+                const avatar = document.getElementById('user-avatar');
+                const chatInput = document.getElementById('chat-input');
+                const chatBtn = document.getElementById('chat-btn');
+
+                if(loginBtn) loginBtn.style.display = 'block';
+                if(avatar) avatar.style.display = 'none';
+                if(chatInput) { chatInput.disabled = true; chatInput.placeholder = "Inicia sesión para chatear..."; }
+                if(chatBtn) chatBtn.disabled = true;
             }
         });
 
         function escucharPuntosUsuario() {
             if(!usuarioActual) return;
             db.ref(`users/${usuarioActual.uid}/points`).on('value', snap => {
-                document.getElementById('widget-points').innerText = `${(snap.val() || 0).toLocaleString()} PUNTOS`;
+                const el = document.getElementById('widget-points');
+                if(el) el.innerText = `${(snap.val() || 0).toLocaleString()} PUNTOS`;
             });
         }
 
-        /* TIMER REAL EN VIVO */
         function actualizarContadorMisiones() {
             const timerEl = document.getElementById('mission-timer');
             if(!timerEl) return;
@@ -546,6 +536,7 @@
 
         async function renderMisiones() {
             const container = document.getElementById('missions-list');
+            if(!container) return;
             container.innerHTML = '<p style="color:#888;">Verificando misiones...</p>';
             const misiones = MISIONES_BASE[categoriaMisionActual] || [];
             actualizarContadorMisiones();
@@ -609,15 +600,16 @@
             });
         }
 
-        /* COMPRA Y ABRIR DROPS */
         function comprarCajaOpcion() {
             if(!usuarioActual) return alert("Inicia sesión para comprar una caja.");
             db.ref(`users/${usuarioActual.uid}/points`).once('value', snap => {
                 const pts = snap.val() || 0;
                 if(pts < 300) return alert("Necesitas 300 PUNTOS para comprar la caja.");
 
-                const autoSave = document.getElementById('auto-save-boxes').value === 'true';
-                if(autoSave || confirm("¿Quieres guardar la Caja en tu Inventario para abrirla cuando quieras? (Aceptar = Guardar en Inventario | Cancelar = Abrir Ahora)")) {
+                const autoSaveEl = document.getElementById('auto-save-boxes');
+                const autoSave = autoSaveEl ? autoSaveEl.value === 'true' : false;
+
+                if(autoSave || confirm("¿Quieres guardar la Caja en tu Inventario? (Aceptar = Guardar | Cancelar = Abrir Ahora)")) {
                     db.ref(`users/${usuarioActual.uid}/points`).set(pts - 300);
                     db.ref(`inventory/${usuarioActual.uid}`).push({
                         nombre: '📦 Caja Drop Misteriosa', rareza: 'Épico', tipo: 'caja_cerrada'
@@ -647,10 +639,10 @@
             const descElem = document.getElementById('drop-result-desc');
             const btnClose = document.getElementById('btn-close-drop');
 
-            dropElem.className = 'drop-box-anim drop-opening';
-            titleElem.style.display = 'none';
-            descElem.style.display = 'none';
-            btnClose.style.display = 'none';
+            if(dropElem) dropElem.className = 'drop-box-anim drop-opening';
+            if(titleElem) titleElem.style.display = 'none';
+            if(descElem) descElem.style.display = 'none';
+            if(btnClose) btnClose.style.display = 'none';
 
             setTimeout(() => {
                 const rand = Math.random() * 100;
@@ -661,30 +653,30 @@
                     if(rand <= cum) { itemObtenido = item; break; }
                 }
 
-                dropElem.className = 'drop-box-anim';
+                if(dropElem) dropElem.className = 'drop-box-anim';
                 
                 if(itemObtenido.tipo === 'pts') {
                     db.ref(`users/${usuarioActual.uid}/points`).transaction(c => (c || 0) + itemObtenido.cantidad);
-                    titleElem.innerText = `¡${itemObtenido.nombre}!`;
-                    descElem.innerText = `Has recibido +${itemObtenido.cantidad} puntos en tu cuenta.`;
+                    if(titleElem) titleElem.innerText = `¡${itemObtenido.nombre}!`;
+                    if(descElem) descElem.innerText = `Has recibido +${itemObtenido.cantidad} puntos.`;
                 } else {
                     db.ref(`inventory/${usuarioActual.uid}`).push(itemObtenido);
-                    titleElem.innerText = `¡${itemObtenido.nombre}!`;
-                    descElem.innerText = `Rareza: ${itemObtenido.rareza} | Guardado en tu Inventario.`;
+                    if(titleElem) titleElem.innerText = `¡${itemObtenido.nombre}!`;
+                    if(descElem) descElem.innerText = `Rareza: ${itemObtenido.rareza} | Guardado en Inventario.`;
                 }
 
-                titleElem.style.display = 'block';
-                descElem.style.display = 'block';
-                btnClose.style.display = 'block';
+                if(titleElem) titleElem.style.display = 'block';
+                if(descElem) descElem.style.display = 'block';
+                if(btnClose) btnClose.style.display = 'block';
                 cargarInventario();
             }, 2500);
         }
 
-        /* INVENTARIO Y EQUIPAR */
         function cargarInventario() {
             if(!usuarioActual) return;
             db.ref(`inventory/${usuarioActual.uid}`).on('value', snap => {
                 const container = document.getElementById('inventory-list');
+                if(!container) return;
                 container.innerHTML = '';
                 if(!snap.exists()) return container.innerHTML = '<p style="color:#888;">Inventario vacío.</p>';
 
@@ -709,7 +701,7 @@
                         </div>
                         <div>
                             ${actionBtn}
-                            <button onclick="venderItem('${itemId}', 100)" style="background:#222; color:var(--gold-color); border:1px solid var(--gold-color); padding:5px 10px; border-radius:4px; cursor:pointer;">Vender (+100 PTS)</button>
+                            <button onclick="venderItem('${itemId}', 100)" style="background:#222; color:var(--gold-color); border:1px solid var(--gold-color); padding:5px 10px; border-radius:4px; cursor:pointer;">Vender</button>
                         </div>
                     `;
                     container.appendChild(div);
@@ -720,7 +712,7 @@
         function equiparEfecto(clase) {
             if(!usuarioActual) return;
             db.ref(`users/${usuarioActual.uid}/customClass`).set(clase);
-            alert("¡Estilo y fuente equipada en tu nombre con éxito!");
+            alert("¡Estilo y fuente equipada en tu nombre!");
             closeModal('inventory-modal');
         }
 
@@ -728,16 +720,17 @@
             if(!usuarioActual) return;
             db.ref(`inventory/${usuarioActual.uid}/${itemId}`).remove();
             db.ref(`users/${usuarioActual.uid}/points`).transaction(c => (c || 0) + valor);
-            alert(`Objeto vendido por +${valor} PTS.`);
+            alert(`Vendido por +${valor} PTS.`);
         }
 
-        /* CHAT Y FUNCIONES GENERALES */
         function toggleChatRight() {
-            document.getElementById('chat-sidebar-right').classList.toggle('hidden');
+            const chat = document.getElementById('chat-sidebar-right');
+            if(chat) chat.classList.toggle('hidden');
         }
 
         function enviarMensajeFirebase() {
             const input = document.getElementById('chat-input');
+            if(!input) return;
             const texto = input.value.trim();
             if (!texto || !usuarioActual) return;
 
@@ -753,6 +746,7 @@
 
         db.ref('chat_global').limitToLast(40).on('value', snapshot => {
             const container = document.getElementById('chat-messages');
+            if(!container) return;
             container.innerHTML = '';
             snapshot.forEach(child => {
                 const data = child.val();
@@ -766,19 +760,23 @@
 
         function publicarContenidoStudio() {
             if(!usuarioActual) return alert("Inicia sesión para publicar.");
-            const type = document.getElementById('studio-type').value;
-            const title = document.getElementById('studio-title').value.trim();
-            const urlInput = document.getElementById('studio-url').value.trim();
-            const fileInput = document.getElementById('studio-file');
+            const typeEl = document.getElementById('studio-type');
+            const titleEl = document.getElementById('studio-title');
+            const urlEl = document.getElementById('studio-url');
+            const fileEl = document.getElementById('studio-file');
 
-            if(!title) return alert("Escribe un título para tu contenido.");
+            const type = typeEl ? typeEl.value : 'video';
+            const title = titleEl ? titleEl.value.trim() : '';
+            const urlInput = urlEl ? urlEl.value.trim() : '';
+
+            if(!title) return alert("Escribe un título.");
 
             db.ref('users/' + usuarioActual.uid).once('value', uSnap => {
                 const authorName = (uSnap.val() || {}).displayName || 'Usuario';
-                if (fileInput.files && fileInput.files[0]) {
+                if (fileEl && fileEl.files && fileEl.files[0]) {
                     const reader = new FileReader();
                     reader.onload = function(e) { guardarPostBD(authorName, type, title, e.target.result); };
-                    reader.readAsDataURL(fileInput.files[0]);
+                    reader.readAsDataURL(fileEl.files[0]);
                 } else {
                     guardarPostBD(authorName, type, title, urlInput);
                 }
@@ -803,12 +801,14 @@
         }
 
         function filtrarFeedComunidad() {
-            const query = (document.getElementById('feed-search-input').value || '').toLowerCase();
+            const searchInput = document.getElementById('feed-search-input');
+            const query = searchInput ? searchInput.value.toLowerCase() : '';
             const container = document.getElementById('community-feed');
+            if(!container) return;
             container.innerHTML = '';
 
             const filtered = allPostsData.filter(p => (p.titulo || '').toLowerCase().includes(query));
-            if(filtered.length === 0) return container.innerHTML = '<p style="color:#888;">Sin publicaciones en el feed.</p>';
+            if(filtered.length === 0) return container.innerHTML = '<p style="color:#888;">Sin publicaciones.</p>';
 
             filtered.forEach(post => {
                 let mediaHtml = '';
@@ -825,18 +825,29 @@
             });
         }
 
-        function verMiPropioCanal() { toggleProfileDropdown(); alert("Página de canal activa."); }
+        function verMiPropioCanal() { toggleProfileDropdown(); alert("Canal personal activo."); }
         function abrirModalPublicarStudio() { toggleProfileDropdown(); openModal('studio-modal'); }
         function abrirAmigosAjustesDesdePerfil() { toggleProfileDropdown(); toggleSidebar(); }
 
         window.onload = function() { cargarFeedComunidad(); };
 
-        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
-        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
-        function toggleProfileDropdown(e) { if(e) e.stopPropagation(); const d = document.getElementById('profile-dropdown'); d.style.display = d.style.display === 'flex' ? 'none' : 'flex'; }
-        function switchTab(id) { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); event.target.classList.add('active'); document.getElementById(id).classList.add('active'); }
-        function filtrarMisiones(cat) { categoriaMisionActual = cat; document.querySelectorAll('.mission-tab-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); renderMisiones(); }
+        function openModal(id) { const m = document.getElementById(id); if(m) m.style.display = 'flex'; }
+        function closeModal(id) { const m = document.getElementById(id); if(m) m.style.display = 'none'; }
+        function toggleSidebar() { const s = document.getElementById('sidebar'); if(s) s.classList.toggle('active'); }
+        function toggleProfileDropdown(e) { if(e) e.stopPropagation(); const d = document.getElementById('profile-dropdown'); if(d) d.style.display = d.style.display === 'flex' ? 'none' : 'flex'; }
+        function switchTab(id) { 
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); 
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); 
+            if(event && event.target) event.target.classList.add('active'); 
+            const t = document.getElementById(id); 
+            if(t) t.classList.add('active'); 
+        }
+        function filtrarMisiones(cat) { 
+            categoriaMisionActual = cat; 
+            document.querySelectorAll('.mission-tab-btn').forEach(b => b.classList.remove('active')); 
+            if(event && event.target) event.target.classList.add('active'); 
+            renderMisiones(); 
+        }
     </script>
 </body>
 </html>
