@@ -34,7 +34,7 @@
             min-height: 100vh;
         }
 
-        /* Notificación Flotante In-App */
+        /* Pop-up Notificación In-App */
         .toast-notification {
             position: fixed;
             top: 75px;
@@ -105,7 +105,7 @@
             width: 38px; height: 38px; border-radius: 50%; background: var(--primary-red); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1em; cursor: pointer; border: 2px solid #fff; box-shadow: 0 0 10px var(--neon-glow); background-size: cover; background-position: center;
         }
 
-        /* Menú Desplegable de Perfil */
+        /* Menú Desplegable Perfil */
         .profile-dropdown {
             display: none; position: absolute; top: 50px; right: 0; background: #121212; border: 1px solid var(--primary-red); border-radius: 8px; width: 220px; box-shadow: 0 0 15px rgba(0,0,0,0.8); z-index: 150; flex-direction: column; overflow: hidden;
         }
@@ -116,7 +116,7 @@
 
         .profile-dropdown button:hover { background: var(--primary-red); }
 
-        /* Desplegable de Campanita en Suscripción */
+        /* Desplegable Campanita */
         .sub-dropdown-container { position: relative; display: inline-block; }
         .sub-dropdown-menu {
             display: none; position: absolute; top: 100%; right: 0; background: #181818; border: 1px solid #333; border-radius: 8px; width: 170px; box-shadow: 0 5px 15px rgba(0,0,0,0.8); z-index: 160; flex-direction: column; margin-top: 5px;
@@ -126,7 +126,7 @@
         }
         .sub-dropdown-menu button:hover { background: #222; color: var(--primary-red); }
 
-        /* Menú Lateral y Neón */
+        /* Menú Lateral */
         .sidebar {
             position: fixed; top: 60px; left: -330px; width: 320px; height: calc(100vh - 60px); background: #0d0d0d; border-right: 1px solid #222; transition: left 0.3s ease; z-index: 90; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 15px; box-shadow: 5px 0 15px rgba(0,0,0,0.5);
         }
@@ -495,7 +495,7 @@
         </div>
     </div>
 
-    <!-- Modal Canal Estilo YouTube con Desplegable de Campanita -->
+    <!-- Modal Canal Estilo YouTube -->
     <div class="modal" id="channel-modal">
         <div class="modal-content" style="max-width:700px;">
             <div style="background:linear-gradient(90deg, #330000, #990012); height:100px; border-radius:8px; display:flex; align-items:flex-end; padding:15px;">
@@ -507,7 +507,6 @@
                     <p id="chan-subs" style="color:#888; font-size:0.9em; margin:4px 0;">0 Suscriptores</p>
                 </div>
                 <div style="display:flex; gap:10px; align-items:center;">
-                    <!-- Botón y Desplegable de Suscripción -->
                     <div class="sub-dropdown-container" id="sub-btn-wrapper">
                         <button class="btn-auth" id="btn-subscribe-main" onclick="clickSubscriptorBotonPrincipal()">Suscribirse</button>
                         <div class="sub-dropdown-menu" id="sub-dropdown-menu">
@@ -534,7 +533,7 @@
         </div>
     </div>
 
-    <!-- Modal Publicar en Studio -->
+    <!-- Modal Publicar Studio -->
     <div class="modal" id="studio-modal">
         <div class="modal-content">
             <h3>📹 Publicar en tu Canal</h3>
@@ -598,7 +597,6 @@
         let allPostsData = [];
         let perfilSeleccionadoUid = null;
 
-        // Cierre de menús desplegables al hacer clic fuera
         document.addEventListener('click', function(e) {
             const drop = document.getElementById('profile-dropdown');
             const avatar = document.getElementById('user-avatar');
@@ -613,7 +611,7 @@
             }
         });
 
-        // Estado Auth & Presencia
+        // Auth & Estado
         auth.onAuthStateChanged(user => {
             const btnModal = document.getElementById('btn-login-modal');
             const avatar = document.getElementById('user-avatar');
@@ -625,14 +623,12 @@
                 btnModal.style.display = 'none';
                 avatar.style.display = 'flex';
                 
-                // Guardado/Sincronización dual por UID y Handle para no perder datos
                 const defaultHandle = '@' + (user.email.split('@')[0]).toLowerCase();
-                const dName = user.displayName || defaultHandle;
 
                 db.ref('users/' + user.uid).once('value', snapshot => {
                     const data = snapshot.val() || {};
                     const finalHandle = data.handle || defaultHandle;
-                    const finalName = data.displayName || dName;
+                    const finalName = data.displayName || user.displayName || finalHandle;
 
                     if (data.photoURL || user.photoURL) {
                         avatar.style.backgroundImage = `url(${data.photoURL || user.photoURL})`;
@@ -655,7 +651,7 @@
                         }
                     });
 
-                    // Guardar datos en ambas estructuras
+                    // Guardado estrictamente por UID
                     const userObj = {
                         uid: user.uid,
                         displayName: finalName,
@@ -667,6 +663,7 @@
                     db.ref('users/' + user.uid).update(userObj);
                     db.ref('users_by_handle/' + finalHandle.replace('@', '').toLowerCase()).set(userObj);
 
+                    migrarPublicacionesYMensajesAntiguos(user.uid, finalName);
                     escucharNotificacionesMensajes();
                     escucharNotificacionesSuscripciones();
                     cargarSolicitudesYAmigos();
@@ -684,7 +681,20 @@
             }
         });
 
-        // Notificación emergente
+        // Migrador Automático para recuperarlo TODO
+        function migrarPublicacionesYMensajesAntiguos(myUid, myName) {
+            db.ref('posts').once('value', snapshot => {
+                if(snapshot.exists()) {
+                    snapshot.forEach(child => {
+                        const post = child.val();
+                        if (!post.uid && (post.usuario === myUid || post.authorName === myName)) {
+                            db.ref('posts/' + child.key).update({ uid: myUid, authorName: myName });
+                        }
+                    });
+                }
+            });
+        }
+
         function mostrarToastNotificacion(texto) {
             const toast = document.getElementById('toast-notif');
             toast.innerText = texto;
@@ -724,7 +734,6 @@
             });
         }
 
-        // Auth
         function registrarUsuario() {
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value.trim();
@@ -778,7 +787,7 @@
                         uid: usuarioActual.uid, displayName: newName || 'Usuario', handle: newHandle, email: usuarioActual.email
                     });
                 }
-                alert("¡Perfil actualizado correctamente!");
+                alert("¡Perfil actualizado con éxito!");
                 location.reload();
             });
         }
@@ -901,7 +910,6 @@
             if(!inputVal || !usuarioActual) return;
             const searchKey = inputVal.replace('@', '');
 
-            // Búsqueda dual (por Handle o por Nombre Antiguo)
             db.ref('users_by_handle/' + searchKey).once('value', snapshot => {
                 if (snapshot.exists()) {
                     procesarSolicitudAmigo(snapshot.val().uid, snapshot.val().handle);
@@ -910,7 +918,7 @@
                         if (snap2.exists()) {
                             snap2.forEach(c => procesarSolicitudAmigo(c.key, c.val().handle || inputVal));
                         } else {
-                            alert("No existe ningún usuario registrado con ese apodo o @handle.");
+                            alert("No se encontró a nadie con ese apodo o handle.");
                         }
                     });
                 }
@@ -1023,7 +1031,8 @@
                     <button onclick="eliminarMensajeGlobal('${child.key}')">🗑️</button>
                 </div>` : '';
 
-                const author = data.authorName || data.usuario || 'Usuario';
+                // Detección inteligente de nombres antiguos para que NO salga "Usuario desconocido"
+                const author = data.authorName || data.usuario || 'Amigo';
                 const targetUid = data.uid || data.usuario;
 
                 msgDiv.innerHTML = `<strong style="cursor:pointer;" onclick="abrirCanalUsuarioPorUid('${targetUid}')">${author}:</strong> ${data.mensaje} ${actions}`;
@@ -1053,7 +1062,6 @@
             const subWrapper = document.getElementById('sub-btn-wrapper');
             const publishBtn = document.getElementById('btn-publish-channel');
 
-            // No permitir suscribirse a tu propio canal
             if (usuarioActual && usuarioActual.uid === targetUid) {
                 subWrapper.style.display = 'none';
                 publishBtn.style.display = 'inline-block';
@@ -1075,12 +1083,13 @@
                 document.getElementById('chan-subs').innerText = `${snap.numChildren()} Suscriptores`;
             });
 
+            // Muestra todas las publicaciones vinculadas a este UID (nuevas y migradas)
             db.ref('posts').on('value', snapshot => {
                 allPostsData = [];
                 if(snapshot.exists()) {
                     snapshot.forEach(child => {
                         const val = child.val();
-                        if (val.uid === targetUid || val.usuario === targetUid) {
+                        if (val.uid === targetUid) {
                             allPostsData.push({ id: child.key, ...val });
                         }
                     });
@@ -1094,11 +1103,7 @@
         function clickSubscriptorBotonPrincipal() {
             if(!usuarioActual) return alert("Inicia sesión para suscribirte.");
             const menu = document.getElementById('sub-dropdown-menu');
-            if (menu.style.display === 'flex') {
-                menu.style.display = 'none';
-            } else {
-                menu.style.display = 'flex';
-            }
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
         }
 
         function comprobarEstadoSuscripcion() {
@@ -1145,7 +1150,7 @@
             container.innerHTML = '';
             const filtered = typeFilter === 'all' ? allPostsData : allPostsData.filter(p => p.tipo === typeFilter);
 
-            if(filtered.length === 0) return container.innerHTML = '<p style="color:#888;">Sin publicaciones.</p>';
+            if(filtered.length === 0) return container.innerHTML = '<p style="color:#888;">Sin publicaciones en esta categoría.</p>';
             filtered.forEach(post => container.appendChild(crearCardPost(post, post.id)));
         }
 
@@ -1157,11 +1162,7 @@
         function actualizarModoCamposStudio() {
             const type = document.getElementById('studio-type').value;
             const uploadBlock = document.getElementById('file-upload-block');
-            if (type === 'live') {
-                uploadBlock.style.display = 'none';
-            } else {
-                uploadBlock.style.display = 'block';
-            }
+            uploadBlock.style.display = type === 'live' ? 'none' : 'block';
         }
 
         function publicarContenidoStudio() {
@@ -1187,7 +1188,7 @@
                 } else if (urlInput) {
                     guardarPostBaseDatos(authorName, type, title, urlInput, desc);
                 } else {
-                    alert("Proporciona una URL o un archivo.");
+                    alert("Proporciona una URL o un archivo de vídeo/imagen.");
                 }
             });
         }
@@ -1204,13 +1205,13 @@
                 timestamp: Date.now()
             });
 
-            alert("¡Publicado en tu canal con éxito!");
+            alert("¡Publicado con éxito!");
             closeModal('studio-modal');
         }
 
         // Feed Comunidad
         function cargarFeedComunidad() {
-            db.ref('posts').limitToLast(30).on('value', snapshot => {
+            db.ref('posts').limitToLast(50).on('value', snapshot => {
                 allPostsData = [];
                 if(snapshot.exists()) {
                     snapshot.forEach(child => allPostsData.unshift({ id: child.key, ...child.val() }));
@@ -1301,7 +1302,7 @@
 
         window.onload = function() { cargarEstadisticasYouTube(); };
 
-        // UI Helpers
+        // Helpers UI
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
