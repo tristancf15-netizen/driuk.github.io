@@ -34,12 +34,12 @@
             min-height: 100vh;
         }
 
-        /* Barra Superior */
+        /* Barra Superior Integrada y Ordenada */
         .top-bar {
             width: 100%;
             background: #0d0d0d;
             border-bottom: 1px solid #222;
-            padding: 12px 25px 12px 70px;
+            padding: 12px 25px;
             box-sizing: border-box;
             display: flex;
             justify-content: space-between;
@@ -47,6 +47,28 @@
             position: sticky;
             top: 0;
             z-index: 100;
+        }
+
+        .top-left-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .toggle-sidebar-btn {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 0 10px var(--neon-glow);
+            transition: background 0.2s;
+        }
+
+        .toggle-sidebar-btn:hover {
+            background: var(--dark-red);
         }
 
         .top-bar .brand {
@@ -60,6 +82,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            position: relative;
         }
 
         .btn-auth {
@@ -96,20 +119,35 @@
             background-position: center;
         }
 
-        /* Botón Abrir Menú Lateral */
-        .toggle-sidebar-btn {
-            position: fixed;
-            top: 10px;
-            left: 12px;
-            z-index: 110;
-            background: var(--primary-red);
+        /* Menú desplegable del Perfil arriba a la derecha */
+        .profile-dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: #121212;
+            border: 1px solid var(--primary-red);
+            border-radius: 8px;
+            width: 200px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.8);
+            z-index: 150;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .profile-dropdown button {
+            background: transparent;
             color: white;
             border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
+            padding: 12px 15px;
+            text-align: left;
             cursor: pointer;
             font-weight: bold;
-            box-shadow: 0 0 10px var(--neon-glow);
+            border-bottom: 1px solid #222;
+        }
+
+        .profile-dropdown button:hover {
+            background: var(--primary-red);
         }
 
         /* Menú Lateral Limpio */
@@ -216,28 +254,32 @@
             text-transform: uppercase;
         }
 
-        .req-item {
+        .friend-item {
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            font-size: 0.88em;
-            padding: 4px 0;
-            border-bottom: 1px dashed #222;
-        }
-
-        .req-actions button {
-            background: #222;
-            border: none;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
+            justify-content: space-between;
+            background: #1e1e1e;
+            padding: 8px;
+            border-radius: 6px;
+            margin-bottom: 6px;
             cursor: pointer;
-            font-size: 0.75em;
+            user-select: none;
         }
 
-        .req-actions button.accept {
-            background: #00aa44;
+        .friend-item:hover {
+            border: 1px solid var(--primary-red);
         }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        .status-dot.online { background: #00ff66; box-shadow: 0 0 8px #00ff66; }
+        .status-dot.offline { background: #ff3333; }
 
         header {
             text-align: center;
@@ -459,7 +501,7 @@
             border: 2px solid #333;
         }
 
-        /* Chat Interactivo */
+        /* Chat Interactivo Global y Privado */
         .chat-box {
             background: #0a0a0a;
             border-radius: 12px;
@@ -513,7 +555,7 @@
             cursor: pointer;
         }
 
-        /* Modal Autenticación */
+        /* Modales */
         .modal {
             display: none;
             position: fixed;
@@ -530,7 +572,9 @@
             border-radius: 12px;
             border: 1px solid var(--primary-red);
             width: 90%;
-            max-width: 400px;
+            max-width: 500px;
+            max-height: 85vh;
+            overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -542,26 +586,42 @@
             color: var(--primary-red);
         }
 
-        .modal-content input {
+        .modal-content input, .modal-content select, .modal-content textarea {
             background: #0a0a0a;
             border: 1px solid #333;
             padding: 12px;
             border-radius: 6px;
             color: white;
         }
+
+        /* Studio Post Item */
+        .post-card {
+            background: #181818;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Botón Abrir Menú Lateral -->
-    <button class="toggle-sidebar-btn" onclick="toggleSidebar()">☰ Menú</button>
-
-    <!-- Barra Superior -->
+    <!-- Barra Superior Súper Ordenada -->
     <div class="top-bar">
-        <div class="brand">DRIUK WEB</div>
+        <div class="top-left-group">
+            <button class="toggle-sidebar-btn" onclick="toggleSidebar()">☰ Menú</button>
+            <div class="brand">DRIUK WEB</div>
+        </div>
         <div class="user-nav">
-            <button class="btn-auth" id="btn-login-modal" onclick="openModal()">Iniciar Sesión / Registro</button>
-            <div class="user-avatar" id="user-avatar" style="display:none;" onclick="toggleSidebar()">U</div>
+            <button class="btn-auth" id="btn-login-modal" onclick="openModal('auth-modal')">Iniciar Sesión / Registro</button>
+            <div class="user-avatar" id="user-avatar" style="display:none;" onclick="toggleProfileDropdown()">U</div>
+            
+            <!-- Menú Desplegable de Perfil -->
+            <div class="profile-dropdown" id="profile-dropdown">
+                <button onclick="abrirMiStudio()">📹 Mi Canal / Studio</button>
+                <button onclick="toggleSidebar()">👥 Amigos y Ajustes</button>
+                <button onclick="cerrarSesion()" style="color:var(--primary-red);">🚪 Cerrar Sesión</button>
+            </div>
         </div>
     </div>
 
@@ -572,28 +632,28 @@
             <button class="tab-btn" onclick="switchTab('tab-ajustes')">⚙️ Ajustes</button>
         </div>
 
-        <!-- Pestaña 1: Amigos y Solicitudes estilo Discord -->
+        <!-- Pestaña 1: Amigos y Presencia Real -->
         <div class="tab-content active" id="tab-amigos">
             <label style="font-size:0.8em; color:#888;">Añadir amigo por apodo exacto:</label>
             <input type="text" class="sidebar-input" id="friend-username" placeholder="Escribe apodo exacto...">
             <button class="sidebar-btn-sub" onclick="enviarSolicitudAmigo()">Enviar Solicitud</button>
+
+            <!-- Lista de Amigos con Doble Click & Presencia -->
+            <div class="req-box">
+                <div class="req-title">Mis Amigos (1 Click = Perfil | 2 Clicks = Chat):</div>
+                <div id="friends-list" style="font-size:0.85em; color:#888;">No tienes amigos agregados.</div>
+            </div>
             
             <!-- Solicitudes Recibidas -->
             <div class="req-box">
                 <div class="req-title">Solicitudes de Amistad:</div>
-                <div id="incoming-requests" style="font-size:0.85em; color:#888;">No tienes solicitudes pendientes.</div>
+                <div id="incoming-requests" style="font-size:0.85em; color:#888;">No tienes solicitudes.</div>
             </div>
 
             <!-- Solicitudes Enviadas -->
             <div class="req-box">
                 <div class="req-title">Solicitudes Enviadas:</div>
                 <div id="outgoing-requests" style="font-size:0.85em; color:#888;">Sin solicitudes enviadas.</div>
-            </div>
-
-            <!-- Lista de Amigos -->
-            <div class="req-box">
-                <div class="req-title">Mis Amigos:</div>
-                <div id="friends-list" style="font-size:0.85em; color:#888;">No tienes amigos aceptados.</div>
             </div>
         </div>
 
@@ -615,8 +675,6 @@
 
             <button onclick="verificarCorreo()" style="background:#222; color:white; border:1px solid #444; padding:8px; border-radius:6px; cursor:pointer; margin-top:10px; font-size:0.8em;">📧 Verificar Correo Electrónico</button>
             <button onclick="recuperarPassword()" style="background:#222; color:white; border:1px solid #444; padding:8px; border-radius:6px; cursor:pointer; font-size:0.8em;">🔑 Cambiar Contraseña</button>
-
-            <button onclick="cerrarSesion()" style="background:var(--dark-red); color:white; border:none; padding:10px; border-radius:6px; cursor:pointer; margin-top:15px; font-weight:bold;">Cerrar Sesión</button>
         </div>
     </div>
 
@@ -720,9 +778,17 @@
             </div>
         </section>
 
+        <!-- Feed Social de Creadores y Usuarios -->
+        <section>
+            <h2>🌐 6. PUBLICACIONES Y VIDEOS DE LA COMUNIDAD</h2>
+            <div id="community-feed">
+                <p style="color:#888;">Cargando feed de publicaciones...</p>
+            </div>
+        </section>
+
         <!-- Chat Global Sincronizado en Tiempo Real -->
         <section>
-            <h2>💬 6. SALA DE CHAT Y COMUNIDAD</h2>
+            <h2>💬 7. SALA DE CHAT Y COMUNIDAD</h2>
             <div class="chat-box">
                 <div class="chat-messages" id="chat-messages">
                     <div class="chat-msg"><strong>Sistema:</strong> ¡Bienvenido al chat global en vivo!</div>
@@ -738,7 +804,7 @@
     <!-- Modal de Autenticación (Login / Registro) -->
     <div class="modal" id="auth-modal">
         <div class="modal-content">
-            <h3 id="modal-title">Acceso de Usuario</h3>
+            <h3>Acceso de Usuario</h3>
             <input type="text" id="auth-username" placeholder="Apodo (Nombre de usuario)">
             <input type="email" id="auth-email" placeholder="Correo Electrónico">
             <input type="password" id="auth-password" placeholder="Contraseña">
@@ -746,7 +812,58 @@
             <button class="btn-auth" onclick="iniciarSesion()">Iniciar Sesión</button>
             <button class="btn-auth" style="background:#333;" onclick="registrarUsuario()">Crear Cuenta Nueva</button>
             <button style="background:transparent; color:#aaa; border:none; cursor:pointer; font-size:0.8em;" onclick="recuperarPassword()">¿Olvidaste tu contraseña?</button>
-            <button style="background:transparent; color:red; border:none; cursor:pointer;" onclick="closeModal()">Cancelar</button>
+            <button style="background:transparent; color:red; border:none; cursor:pointer;" onclick="closeModal('auth-modal')">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Modal de Perfil de Usuario/Amigo -->
+    <div class="modal" id="profile-modal">
+        <div class="modal-content" style="text-align:center;">
+            <div id="prof-avatar" style="width:70px; height:70px; border-radius:50%; background:var(--primary-red); margin:0 auto; display:flex; align-items:center; justify-content:center; font-size:2em; font-weight:bold; background-size:cover;">U</div>
+            <h3 id="prof-username" style="margin-top:10px;">Usuario</h3>
+            <p id="prof-subs" style="color:#888; font-size:0.9em;">0 Suscriptores</p>
+            <button class="btn-auth" id="btn-subscribe" onclick="toggleSuscripcion()">Suscribirse</button>
+            
+            <h4 style="color:var(--primary-red); text-align:left; margin-top:20px;">Publicaciones del Creador:</h4>
+            <div id="prof-posts" style="text-align:left;">Sin publicaciones.</div>
+
+            <button style="background:transparent; color:red; border:none; cursor:pointer; margin-top:15px;" onclick="closeModal('profile-modal')">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Modal Mi Studio (Publicar Vídeos, Shorts, Fotos, Directos) -->
+    <div class="modal" id="studio-modal">
+        <div class="modal-content">
+            <h3>📹 Mi Studio & Publicaciones</h3>
+            <label style="font-size:0.8em; color:#888;">Tipo de Publicación:</label>
+            <select id="studio-type" class="sidebar-input">
+                <option value="video">📹 Vídeo Largo</option>
+                <option value="short">⚡ Short</option>
+                <option value="photo">📸 Foto / Imagen</option>
+                <option value="live">🔴 Directo (Twitch/YouTube)</option>
+            </select>
+
+            <input type="text" id="studio-title" placeholder="Título de la publicación...">
+            <input type="text" id="studio-url" placeholder="Enlace URL (YouTube, Twitch, Imagen)...">
+            <textarea id="studio-desc" placeholder="Descripción opcional..." rows="3"></textarea>
+
+            <button class="btn-auth" onclick="publicarContenidoStudio()">Publicar Ahora 🚀</button>
+            <button style="background:transparent; color:red; border:none; cursor:pointer;" onclick="closeModal('studio-modal')">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Modal Chat Privado DM -->
+    <div class="modal" id="dm-modal">
+        <div class="modal-content">
+            <h3 id="dm-title">Chat Privado</h3>
+            <div class="chat-box" style="height:250px;">
+                <div class="chat-messages" id="dm-messages"></div>
+                <div class="chat-input-area">
+                    <input type="text" id="dm-input" placeholder="Escribe un mensaje privado...">
+                    <button onclick="enviarMensajePrivadoDM()">Enviar</button>
+                </div>
+            </div>
+            <button style="background:transparent; color:red; border:none; cursor:pointer; margin-top:10px;" onclick="closeModal('dm-modal')">Cerrar Chat</button>
         </div>
     </div>
 
@@ -767,8 +884,11 @@
         const db = firebase.database();
 
         let usuarioActual = null;
+        let perfilSeleccionado = null;
+        let dmFriendUser = null;
+        let clickTimer = null;
 
-        // Estado de autenticación
+        // Estado de autenticación y Presencia en Tiempo Real
         auth.onAuthStateChanged(user => {
             const btnModal = document.getElementById('btn-login-modal');
             const avatar = document.getElementById('user-avatar');
@@ -780,7 +900,7 @@
                 btnModal.style.display = 'none';
                 avatar.style.display = 'flex';
                 
-                const username = user.displayName || user.email.split('@')[0];
+                const username = (user.displayName || user.email.split('@')[0]).toLowerCase();
                 if (user.photoURL) {
                     avatar.style.backgroundImage = `url(${user.photoURL})`;
                     avatar.innerText = '';
@@ -793,15 +913,30 @@
                 chatBtn.disabled = false;
                 chatInput.placeholder = `Escribe como ${username}...`;
                 
-                // Registrar o actualizar usuario en la base de datos pública
-                db.ref('users/' + username.toLowerCase()).set({
+                // Sistema de Presencia Real (Verde/Rojo)
+                const myConnectionsRef = db.ref(`users/${username}/online`);
+                const lastOnlineRef = db.ref(`users/${username}/lastOnline`);
+                const connectedRef = db.ref('.info/connected');
+
+                connectedRef.on('value', snap => {
+                    if (snap.val() === true) {
+                        myConnectionsRef.set(true);
+                        myConnectionsRef.onDisconnect().set(false);
+                        lastOnlineRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
+                    }
+                });
+
+                // Registrar datos básicos
+                db.ref('users/' + username).update({
                     uid: user.uid,
                     displayName: username,
-                    email: user.email
+                    email: user.email,
+                    photoURL: user.photoURL || ''
                 });
 
                 cargarSolicitudesYAmigos();
-                closeModal();
+                cargarFeedComunidad();
+                closeModal('auth-modal');
             } else {
                 usuarioActual = null;
                 btnModal.style.display = 'block';
@@ -809,24 +944,24 @@
                 chatInput.disabled = true;
                 chatBtn.disabled = true;
                 chatInput.placeholder = "Inicia sesión para escribir...";
+                cargarFeedComunidad();
             }
         });
 
-        // Registro con validación
+        // Autenticación
         function registrarUsuario() {
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value.trim();
-            const username = document.getElementById('auth-username').value.trim();
+            const username = document.getElementById('auth-username').value.trim().toLowerCase();
 
             if(!email || !password || !username) {
                 alert("Rellena Apodo, Correo y Contraseña.");
                 return;
             }
 
-            // Comprobar si el apodo ya existe
-            db.ref('users/' + username.toLowerCase()).once('value', snapshot => {
+            db.ref('users/' + username).once('value', snapshot => {
                 if (snapshot.exists()) {
-                    alert("Ese apodo ya está en uso por otro usuario. Por favor elige otro.");
+                    alert("Ese apodo ya está registrado.");
                 } else {
                     auth.createUserWithEmailAndPassword(email, password)
                         .then(userCredential => {
@@ -841,35 +976,24 @@
         function iniciarSesion() {
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value.trim();
-
-            auth.signInWithEmailAndPassword(email, password)
-                .catch(err => alert("Error al entrar: " + err.message));
+            auth.signInWithEmailAndPassword(email, password).catch(err => alert("Error: " + err.message));
         }
 
         function recuperarPassword() {
             const email = document.getElementById('auth-email').value.trim();
-            if(!email) {
-                alert("Introduce tu correo para enviarte el enlace.");
-                return;
-            }
-            auth.sendPasswordResetEmail(email)
-                .then(() => alert("Enlace enviado a tu correo."))
-                .catch(err => alert("Error: " + err.message));
+            if(!email) return alert("Introduce tu correo.");
+            auth.sendPasswordResetEmail(email).then(() => alert("Enlace enviado.")).catch(err => alert("Error: " + err.message));
         }
 
         function verificarCorreo() {
-            if(usuarioActual) {
-                usuarioActual.sendEmailVerification()
-                    .then(() => alert("Correo de verificación enviado a " + usuarioActual.email))
-                    .catch(err => alert("Error: " + err.message));
-            }
+            if(usuarioActual) usuarioActual.sendEmailVerification().then(() => alert("Correo enviado.")).catch(err => alert("Error: " + err.message));
         }
 
         function cambiarApodo() {
-            const nuevoApodo = document.getElementById('new-username-input').value.trim();
+            const nuevoApodo = document.getElementById('new-username-input').value.trim().toLowerCase();
             if(!nuevoApodo || !usuarioActual) return;
 
-            db.ref('users/' + nuevoApodo.toLowerCase()).once('value', snapshot => {
+            db.ref('users/' + nuevoApodo).once('value', snapshot => {
                 if (snapshot.exists()) {
                     alert("Ese apodo ya pertenece a otra cuenta.");
                 } else {
@@ -881,78 +1005,27 @@
             });
         }
 
-        function cerrarSesion() {
-            auth.signOut();
-        }
+        function cerrarSesion() { auth.signOut(); location.reload(); }
 
-        // Sistema de Solicitudes de Amistad (Validando que la cuenta exista)
-        function enviarSolicitudAmigo() {
-            const targetUsername = document.getElementById('friend-username').value.trim().toLowerCase();
-            if(!targetUsername || !usuarioActual) return;
-
-            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
-
-            if (targetUsername === myUsername) {
-                alert("No puedes enviarte una solicitud a ti mismo.");
-                return;
+        // Presencia y Clicks en Amigos (1 Click = Perfil | 2 Clicks = Chat DM)
+        function handleFriendClick(friendUser) {
+            if (clickTimer == null) {
+                clickTimer = setTimeout(() => {
+                    clickTimer = null;
+                    abrirPerfilUsuario(friendUser); // Single click
+                }, 250);
+            } else {
+                clearTimeout(clickTimer);
+                clickTimer = null;
+                abrirChatPrivadoDM(friendUser); // Double click
             }
-
-            // Verificar si el usuario destino existe en la base de datos
-            db.ref('users/' + targetUsername).once('value', snapshot => {
-                if (!snapshot.exists()) {
-                    alert("La cuenta que buscas NO existe.");
-                } else {
-                    // Enviar la solicitud en la base de datos
-                    db.ref('friend_requests/' + targetUsername + '/received/' + myUsername).set(true);
-                    db.ref('friend_requests/' + myUsername + '/sent/' + targetUsername).set(true);
-                    alert("Solicitud de amistad enviada a " + targetUsername);
-                    document.getElementById('friend-username').value = '';
-                }
-            });
         }
 
         function cargarSolicitudesYAmigos() {
             if(!usuarioActual) return;
             const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
 
-            // Cargar solicitudes recibidas
-            db.ref('friend_requests/' + myUsername + '/received').on('value', snapshot => {
-                const container = document.getElementById('incoming-requests');
-                container.innerHTML = '';
-                if (!snapshot.exists()) {
-                    container.innerText = "No tienes solicitudes pendientes.";
-                    return;
-                }
-                snapshot.forEach(child => {
-                    const fromUser = child.key;
-                    const item = document.createElement('div');
-                    item.className = 'req-item';
-                    item.innerHTML = `<span>${fromUser}</span>
-                        <div class="req-actions">
-                            <button class="accept" onclick="aceptarAmigo('${fromUser}')">Aceptar</button>
-                        </div>`;
-                    container.appendChild(item);
-                });
-            });
-
-            // Cargar solicitudes enviadas
-            db.ref('friend_requests/' + myUsername + '/sent').on('value', snapshot => {
-                const container = document.getElementById('outgoing-requests');
-                container.innerHTML = '';
-                if (!snapshot.exists()) {
-                    container.innerText = "Sin solicitudes enviadas.";
-                    return;
-                }
-                snapshot.forEach(child => {
-                    const toUser = child.key;
-                    const item = document.createElement('div');
-                    item.className = 'req-item';
-                    item.innerHTML = `<span>${toUser}</span><span style="color:#888; font-size:0.8em;">Pendiente</span>`;
-                    container.appendChild(item);
-                });
-            });
-
-            // Cargar Amigos aceptados
+            // Escuchar lista de amigos con indicador verde/rojo en tiempo real
             db.ref('friends/' + myUsername).on('value', snapshot => {
                 const container = document.getElementById('friends-list');
                 container.innerHTML = '';
@@ -962,11 +1035,71 @@
                 }
                 snapshot.forEach(child => {
                     const friendName = child.key;
+                    db.ref('users/' + friendName + '/online').on('value', onlineSnap => {
+                        const isOnline = onlineSnap.val() === true;
+                        let item = document.getElementById('friend-item-' + friendName);
+                        if(!item) {
+                            item = document.createElement('div');
+                            item.id = 'friend-item-' + friendName;
+                            item.className = 'friend-item';
+                            item.onclick = () => handleFriendClick(friendName);
+                            container.appendChild(item);
+                        }
+                        item.innerHTML = `
+                            <div>
+                                <span class="status-dot ${isOnline ? 'online' : 'offline'}"></span>
+                                <strong>${friendName}</strong>
+                            </div>
+                            <span style="font-size:0.75em; color:#888;">${isOnline ? 'En línea' : 'Desconectado'}</span>
+                        `;
+                    });
+                });
+            });
+
+            // Solicitudes recibidas y enviadas
+            db.ref('friend_requests/' + myUsername + '/received').on('value', snapshot => {
+                const container = document.getElementById('incoming-requests');
+                container.innerHTML = '';
+                if (!snapshot.exists()) { container.innerText = "No tienes solicitudes."; return; }
+                snapshot.forEach(child => {
+                    const fromUser = child.key;
                     const item = document.createElement('div');
                     item.className = 'req-item';
-                    item.innerHTML = `<span>🟢 ${friendName}</span>`;
+                    item.innerHTML = `<span>${fromUser}</span><button class="accept" onclick="aceptarAmigo('${fromUser}')" style="background:#00aa44; color:white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Aceptar</button>`;
                     container.appendChild(item);
                 });
+            });
+
+            db.ref('friend_requests/' + myUsername + '/sent').on('value', snapshot => {
+                const container = document.getElementById('outgoing-requests');
+                container.innerHTML = '';
+                if (!snapshot.exists()) { container.innerText = "Sin solicitudes enviadas."; return; }
+                snapshot.forEach(child => {
+                    const toUser = child.key;
+                    const item = document.createElement('div');
+                    item.className = 'req-item';
+                    item.innerHTML = `<span>${toUser}</span><span style="color:#888; font-size:0.8em;">Pendiente</span>`;
+                    container.appendChild(item);
+                });
+            });
+        }
+
+        function enviarSolicitudAmigo() {
+            const targetUsername = document.getElementById('friend-username').value.trim().toLowerCase();
+            if(!targetUsername || !usuarioActual) return;
+            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
+
+            if (targetUsername === myUsername) return alert("No puedes agregarte a ti mismo.");
+
+            db.ref('users/' + targetUsername).once('value', snapshot => {
+                if (!snapshot.exists()) {
+                    alert("La cuenta NO existe.");
+                } else {
+                    db.ref('friend_requests/' + targetUsername + '/received/' + myUsername).set(true);
+                    db.ref('friend_requests/' + myUsername + '/sent/' + targetUsername).set(true);
+                    alert("Solicitud enviada a " + targetUsername);
+                    document.getElementById('friend-username').value = '';
+                }
             });
         }
 
@@ -974,23 +1107,195 @@
             if(!usuarioActual) return;
             const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
 
-            // Guardar en la lista de amigos de ambos
             db.ref('friends/' + myUsername + '/' + friendUser).set(true);
             db.ref('friends/' + friendUser + '/' + myUsername).set(true);
-
-            // Eliminar la solicitud
             db.ref('friend_requests/' + myUsername + '/received/' + friendUser).remove();
             db.ref('friend_requests/' + friendUser + '/sent/' + myUsername).remove();
             alert("¡Ahora eres amigo de " + friendUser + "!");
         }
 
-        // Chat global en tiempo real
+        // Chat Privado DM
+        function abrirChatPrivadoDM(friendUser) {
+            dmFriendUser = friendUser;
+            document.getElementById('dm-title').innerText = "Chat Privado con " + friendUser;
+            openModal('dm-modal');
+
+            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
+            const chatId = myUsername < friendUser ? `${myUsername}_${friendUser}` : `${friendUser}_${myUsername}`;
+
+            db.ref('direct_messages/' + chatId).limitToLast(30).on('value', snapshot => {
+                const container = document.getElementById('dm-messages');
+                container.innerHTML = '';
+                if(snapshot.exists()) {
+                    snapshot.forEach(child => {
+                        const data = child.val();
+                        const msgDiv = document.createElement('div');
+                        msgDiv.className = 'chat-msg';
+                        msgDiv.innerHTML = `<strong>${data.usuario}:</strong> ${data.mensaje}`;
+                        container.appendChild(msgDiv);
+                    });
+                    container.scrollTop = container.scrollHeight;
+                }
+            });
+        }
+
+        function enviarMensajePrivadoDM() {
+            const input = document.getElementById('dm-input');
+            const texto = input.value.trim();
+            if(!texto || !usuarioActual || !dmFriendUser) return;
+
+            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
+            const chatId = myUsername < dmFriendUser ? `${myUsername}_${dmFriendUser}` : `${dmFriendUser}_${myUsername}`;
+
+            db.ref('direct_messages/' + chatId).push({
+                usuario: myUsername,
+                mensaje: texto,
+                timestamp: Date.now()
+            });
+
+            input.value = '';
+        }
+
+        // Perfil y Sistema de Suscripciones estilo YouTube
+        function abrirPerfilUsuario(username) {
+            perfilSeleccionado = username;
+            document.getElementById('prof-username').innerText = username;
+            
+            db.ref('users/' + username).once('value', snapshot => {
+                const data = snapshot.val() || {};
+                const avatar = document.getElementById('prof-avatar');
+                if(data.photoURL) {
+                    avatar.style.backgroundImage = `url(${data.photoURL})`;
+                    avatar.innerText = '';
+                } else {
+                    avatar.style.backgroundImage = 'none';
+                    avatar.innerText = username.charAt(0).toUpperCase();
+                }
+            });
+
+            // Cargar suscriptores del perfil
+            db.ref('subscribers/' + username).on('value', snapshot => {
+                const count = snapshot.numChildren();
+                document.getElementById('prof-subs').innerText = `${count} Suscriptores`;
+            });
+
+            // Cargar publicaciones del usuario
+            db.ref('posts').orderByChild('usuario').equalTo(username).on('value', snapshot => {
+                const container = document.getElementById('prof-posts');
+                container.innerHTML = '';
+                if (!snapshot.exists()) { container.innerText = "Sin publicaciones."; return; }
+                snapshot.forEach(child => {
+                    const post = child.val();
+                    container.appendChild(crearCardPost(post, child.key));
+                });
+            });
+
+            openModal('profile-modal');
+        }
+
+        function toggleSuscripcion() {
+            if(!usuarioActual || !perfilSeleccionado) return alert("Inicia sesión para suscribirte.");
+            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
+
+            const subRef = db.ref('subscribers/' + perfilSeleccionado + '/' + myUsername);
+            subRef.once('value', snapshot => {
+                if(snapshot.exists()) {
+                    subRef.remove();
+                    alert("Suscripción cancelada.");
+                } else {
+                    subRef.set(true);
+                    alert("¡Te has suscrito a " + perfilSeleccionado + "!");
+                }
+            });
+        }
+
+        // Studio y Publicaciones en el Feed
+        function abrirMiStudio() {
+            if(!usuarioActual) return alert("Inicia sesión para entrar a tu Studio.");
+            toggleProfileDropdown();
+            openModal('studio-modal');
+        }
+
+        function publicarContenidoStudio() {
+            if(!usuarioActual) return;
+            const type = document.getElementById('studio-type').value;
+            const title = document.getElementById('studio-title').value.trim();
+            const url = document.getElementById('studio-url').value.trim();
+            const desc = document.getElementById('studio-desc').value.trim();
+            const username = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
+
+            if(!title) return alert("Escribe un título.");
+
+            db.ref('posts').push({
+                usuario: username,
+                tipo: type,
+                titulo: title,
+                url: url,
+                descripcion: desc,
+                likes: 0,
+                timestamp: Date.now()
+            });
+
+            alert("¡Publicación realizada con éxito!");
+            closeModal('studio-modal');
+            document.getElementById('studio-title').value = '';
+            document.getElementById('studio-url').value = '';
+            document.getElementById('studio-desc').value = '';
+        }
+
+        function cargarFeedComunidad() {
+            db.ref('posts').limitToLast(20).on('value', snapshot => {
+                const container = document.getElementById('community-feed');
+                container.innerHTML = '';
+                if (!snapshot.exists()) {
+                    container.innerHTML = '<p style="color:#888;">No hay publicaciones comunitarias aún.</p>';
+                    return;
+                }
+                snapshot.forEach(child => {
+                    container.prepend(crearCardPost(child.val(), child.key));
+                });
+            });
+        }
+
+        function crearCardPost(post, postId) {
+            const card = document.createElement('div');
+            card.className = 'post-card';
+
+            let previewHtml = '';
+            if (post.tipo === 'photo' && post.url) {
+                previewHtml = `<img src="${post.url}" style="max-width:100%; border-radius:8px; margin-top:8px;">`;
+            } else if (post.url && (post.url.includes('youtube.com') || post.url.includes('youtu.be'))) {
+                previewHtml = `<a href="${post.url}" target="_blank" style="color:var(--primary-red); font-weight:bold; display:block; margin-top:8px;">Ver en YouTube 🔴</a>`;
+            }
+
+            card.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <strong style="color:var(--primary-red); cursor:pointer;" onclick="abrirPerfilUsuario('${post.usuario}')">@${post.usuario}</strong>
+                    <span style="font-size:0.75em; color:#888;">${post.tipo.toUpperCase()}</span>
+                </div>
+                <h4 style="margin:8px 0 4px 0;">${post.titulo}</h4>
+                <p style="font-size:0.9em; color:#ccc; margin:0;">${post.descripcion || ''}</p>
+                ${previewHtml}
+                <div style="margin-top:10px;">
+                    <button onclick="darLikePost('${postId}')" style="background:#222; color:white; border:1px solid #444; padding:4px 10px; border-radius:4px; cursor:pointer; font-size:0.8em;">❤️ Like (${post.likes || 0})</button>
+                </div>
+            `;
+            return card;
+        }
+
+        function darLikePost(postId) {
+            if(!usuarioActual) return alert("Inicia sesión para dar Like.");
+            const postRef = db.ref('posts/' + postId + '/likes');
+            postRef.transaction(currentLikes => (currentLikes || 0) + 1);
+        }
+
+        // Chat Global en Vivo
         function enviarMensajeFirebase() {
             const input = document.getElementById('chat-input');
             const texto = input.value.trim();
             if (texto === '' || !usuarioActual) return;
 
-            const username = usuarioActual.displayName || usuarioActual.email.split('@')[0];
+            const username = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
 
             db.ref('chat_global').push({
                 usuario: username,
@@ -1007,7 +1312,7 @@
             
             const msgDiv = document.createElement('div');
             msgDiv.className = 'chat-msg';
-            msgDiv.innerHTML = `<strong>${data.usuario}:</strong> ${data.mensaje}`;
+            msgDiv.innerHTML = `<strong style="cursor:pointer;" onclick="abrirPerfilUsuario('${data.usuario}')">${data.usuario}:</strong> ${data.mensaje}`;
             
             container.appendChild(msgDiv);
             container.scrollTop = container.scrollHeight;
@@ -1021,40 +1326,30 @@
             try {
                 const res = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&forHandle=${YT_HANDLE}&key=${YT_API_KEY}`);
                 const data = await res.json();
-                
                 if (data.items && data.items.length > 0) {
                     const stats = data.items[0].statistics;
                     document.getElementById('yt-subs').innerText = Number(stats.subscriberCount).toLocaleString();
                     document.getElementById('yt-views').innerText = Number(stats.viewCount).toLocaleString();
                 }
             } catch (e) {
-                console.error("Error al conectar con la API de YouTube", e);
+                console.error("Error API YouTube", e);
             }
         }
 
-        window.onload = function() {
-            cargarEstadisticasYouTube();
-        };
-
-        // Escuchar Enter en Chat
-        document.addEventListener("DOMContentLoaded", () => {
-            const input = document.getElementById('chat-input');
-            if(input) {
-                input.addEventListener("keypress", (e) => {
-                    if (e.key === "Enter") enviarMensajeFirebase();
-                });
-            }
-        });
+        window.onload = function() { cargarEstadisticasYouTube(); };
 
         // Controles de interfaz
-        function openModal() { document.getElementById('auth-modal').style.display = 'flex'; }
-        function closeModal() { document.getElementById('auth-modal').style.display = 'none'; }
+        function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
-        
+        function toggleProfileDropdown() {
+            const drop = document.getElementById('profile-dropdown');
+            drop.style.display = drop.style.display === 'flex' ? 'none' : 'flex';
+        }
+
         function switchTab(tabId) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
             event.target.classList.add('active');
             document.getElementById(tabId).classList.add('active');
         }
@@ -1066,14 +1361,14 @@
                     const avatar = document.getElementById('user-avatar');
                     avatar.style.backgroundImage = `url(${url})`;
                     avatar.innerText = '';
-                    alert("¡Foto de perfil actualizada!");
+                    alert("¡Foto actualizada!");
                 });
             }
         }
 
         function guardarPrivacidad() {
             const val = document.getElementById('privacy-select').value;
-            alert("Preferencia de privacidad guardada: " + val);
+            alert("Privacidad guardada: " + val);
         }
     </script>
 </body>
