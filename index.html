@@ -160,7 +160,7 @@
         @keyframes pulseRarity {
             0% { transform: scale(1) rotate(0deg); border-color: var(--rarity-common); }
             25% { transform: scale(1.1) rotate(-5deg); border-color: var(--rarity-rare); }
-            50% { transform: scale(1.15) rotate(5deg); border-color: var(--rarity-epic); }
+            50% { transform: scale(1.15) rotate(-5deg); border-color: var(--rarity-epic); }
             75% { transform: scale(1.2) rotate(-5deg); border-color: var(--rarity-legendary); }
             100% { transform: scale(1) rotate(0deg); border-color: var(--gold-color); }
         }
@@ -171,7 +171,6 @@
         .item-rarity-Épico { border-color: var(--rarity-epic); }
         .item-rarity-Legendario { border-color: var(--rarity-legendary); }
 
-        /* Estilos de las Nuevas Secciones Gaming & Setup */
         .grid-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-top: 15px; }
         .info-card { background: #141414; border: 1px solid #2b2b2b; border-radius: 10px; padding: 15px; }
         .info-card h3 { color: var(--gold-color); margin-top: 0; font-size: 1.1em; }
@@ -252,25 +251,49 @@
         <!-- Feed Principal a la Izquierda -->
         <div class="feed-main">
 
-            <!-- 🏆 SECCIÓN NUEVA: TORNEOS & COMPETICIONES -->
+            <!-- 🏆 SECCIÓN ACTUALIZADA: TORNEOS TRYHARD POR RANGOS FORTNITE -->
             <section style="border-color:var(--gold-color);">
-                <h2 style="color:var(--gold-color);">🏆 TORNEOS DE LA COMUNIDAD</h2>
-                <p style="font-size:0.85em; color:#aaa; margin-bottom:12px;">Compite en los torneos oficiales organizados en la web y gana grandes premios en puntos.</p>
-                <div class="info-card" style="border-color:var(--gold-color); display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                        <span class="tag-badge">FORTNITE / CS2 / RL</span>
-                        <h3 style="margin:8px 0 4px 0;">Torneo Semanal Driuk Cup</h3>
-                        <p style="margin:0; font-size:0.8em; color:#aaa;">Inscripciones abiertas para todos los usuarios registrados.</p>
+                <h2 style="color:var(--gold-color);">🏆 TORNEOS TRYHARDS POR RANGO (FORTNITE)</h2>
+                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Partidas equilibradas y competitivas divididas estrictamente por tu Rango Máximo alcanzado.</p>
+                
+                <div style="margin-bottom:15px;">
+                    <label style="font-size:0.85em; color:var(--gold-color); font-weight:bold;">Selecciona tu Rango Máximo en Fortnite:</label>
+                    <select id="user-fortnite-rank" class="sidebar-input" style="margin-top:5px;">
+                        <option value="Bronce / Plata / Oro">🥉 Bronce / 🥈 Plata / 🥇 Oro</option>
+                        <option value="Platino / Diamante / Elite">💎 Platino / Diamante / Elite</option>
+                        <option value="Asendente / Unreal">🔥 Asendente / Unreal (Pro Tryhard)</option>
+                    </select>
+                </div>
+
+                <div class="grid-info">
+                    <div class="info-card" style="border-color:#cd7f32;">
+                        <span class="tag-badge" style="background:#cd7f32;">DIVISIÓN AMATEUR</span>
+                        <h3 style="margin:8px 0 4px 0;">Copa Bronce a Oro</h3>
+                        <p style="margin:0; font-size:0.8em; color:#aaa;">Ideal para mejorar mecánicas en entornos competitivos de nivel medio.</p>
+                        <div style="margin-top:10px; font-weight:bold; color:var(--gold-color);">Premio: +1,000 PTS</div>
                     </div>
-                    <div style="text-align:right;">
-                        <span style="color:var(--gold-color); font-weight:bold; font-size:1.1em;">+2,500 PTS</span>
-                        <br>
-                        <button onclick="alert('Inscripción registrada. ¡Te avisaremos por el chat!')" class="btn-claim-mission" style="margin-top:5px;">Inscribirme</button>
+
+                    <div class="info-card" style="border-color:#00ffff;">
+                        <span class="tag-badge" style="background:#0088ff;">DIVISIÓN AVANZADA</span>
+                        <h3 style="margin:8px 0 4px 0;">Copa Platino a Elite</h3>
+                        <p style="margin:0; font-size:0.8em; color:#aaa;">Partidas con endgames con más de 20 personas en la última zona.</p>
+                        <div style="margin-top:10px; font-weight:bold; color:var(--gold-color);">Premio: +2,500 PTS</div>
+                    </div>
+
+                    <div class="info-card" style="border-color:var(--primary-red);">
+                        <span class="tag-badge" style="background:var(--primary-red);">DIVISIÓN TOP TRYHARD</span>
+                        <h3 style="margin:8px 0 4px 0;">Copa Asendente & Unreal</h3>
+                        <p style="margin:0; font-size:0.8em; color:#aaa;">Nivel FNCS / Scrims de máxima exigencia. Piece control absoluto.</p>
+                        <div style="margin-top:10px; font-weight:bold; color:var(--gold-color);">Premio: +5,000 PTS + Título Exclusivo</div>
                     </div>
                 </div>
+
+                <button onclick="inscribirseTorneoRango()" class="btn-claim-mission" style="margin-top:15px; width:100%; padding:10px; font-size:0.95em;">
+                    🚀 Inscribirme en la División de mi Rango
+                </button>
             </section>
 
-            <!-- 💡 SECCIÓN NUEVA: PROPUESTAS DE LA COMUNIDAD (CON LÍMITE Y COOLDOWN) -->
+            <!-- 💡 PROPUESTAS DE LA COMUNIDAD -->
             <section>
                 <h2>💡 PROPUESTAS & IDEAS DE LA COMUNIDAD</h2>
                 <p style="font-size:0.85em; color:#aaa;">¡Escribe tu propuesta para mejorar la web o el canal! Ganarás <strong style="color:var(--gold-color);">+15 PTS</strong> por propuesta (Límite: 1 propuesta cada 5 minutos).</p>
@@ -301,7 +324,7 @@
                 </div>
             </section>
 
-            <!-- 🖥️ SECCIÓN NUEVA: MI SETUP GAMING -->
+            <!-- 🖥️ MI SETUP GAMING -->
             <section>
                 <h2>🖥️ MI SETUP GAMING COMPLETO</h2>
                 <div class="grid-info">
@@ -335,7 +358,7 @@
                 </div>
             </section>
 
-            <!-- 🎮 SECCIÓN NUEVA: GUÍAS, BINDS Y TRUCOS FORTNITE -->
+            <!-- 🎮 GUÍAS, BINDS Y TRUCOS FORTNITE -->
             <section>
                 <h2>🎮 GUÍAS, OPTIMIZACIÓN & SETTINGS FORTNITE</h2>
                 <div class="grid-info">
@@ -530,7 +553,7 @@
         let allPostsData = [];
         let categoriaMisionActual = 'diarias';
         let ultimoMensajeTiempo = 0;
-        let ultimaPropuestaTiempo = 0; // Cooldown de 5 min para propuestas
+        let ultimaPropuestaTiempo = 0;
 
         const MISIONES_BASE = {
             diarias: [
@@ -647,7 +670,21 @@
             });
         }
 
-        /* ENVÍO DE PROPUESTAS CON LÍMITE DE COOLDOWN (+15 PTS) */
+        /* INSCRIPCIÓN EN TORNEO POR RANGO */
+        function inscribirseTorneoRango() {
+            if(!usuarioActual) return alert("Inicia sesión para inscribirte en el torneo.");
+            const rankSelect = document.getElementById('user-fortnite-rank');
+            const rankVal = rankSelect ? rankSelect.value : 'Sin Rango';
+
+            db.ref(`tournament_enrollments/${usuarioActual.uid}`).set({
+                uid: usuarioActual.uid,
+                rango: rankVal,
+                timestamp: Date.now()
+            }).then(() => {
+                alert(`🏆 ¡Inscripción confirmada en la División: ${rankVal}! Revisa el chat de la web para la fecha y horario.`);
+            });
+        }
+
         function enviarPropuesta() {
             if(!usuarioActual) return alert("Inicia sesión para enviar propuestas.");
             const ahora = Date.now();
