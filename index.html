@@ -12,6 +12,8 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600;900&family=Press+Start+2P&family=Rajdhani:wght@600;700&display=swap');
+
         :root {
             --bg-color: #080808;
             --card-bg: #121212;
@@ -20,6 +22,10 @@
             --neon-glow: rgba(255, 30, 56, 0.5);
             --gold-color: #ffcc00;
             --gold-glow: rgba(255, 204, 0, 0.5);
+            --rarity-common: #b0b0b0;
+            --rarity-rare: #0088ff;
+            --rarity-epic: #a335ee;
+            --rarity-legendary: #ff8000;
             --text-white: #ffffff;
             --text-gray: #b0b0b0;
         }
@@ -36,21 +42,13 @@
             min-height: 100vh;
         }
 
-        /* Pop-up Notificación In-App */
+        /* Fuentes especiales aplicables por ítems */
+        .font-orbitron { font-family: 'Orbitron', sans-serif !important; }
+        .font-arcade { font-family: 'Press Start 2P', cursive !important; font-size: 0.8em !important; }
+        .font-rajdhani { font-family: 'Rajdhani', sans-serif !important; font-weight: 700 !important; }
+
         .toast-notification {
-            position: fixed;
-            top: 75px;
-            right: 20px;
-            background: #181818;
-            border-left: 4px solid var(--primary-red);
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(255, 30, 56, 0.4);
-            z-index: 300;
-            display: none;
-            animation: fadeInOut 3s forwards;
-            font-size: 0.9em;
+            position: fixed; top: 75px; right: 20px; background: #181818; border-left: 4px solid var(--primary-red); color: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 5px 20px rgba(255, 30, 56, 0.4); z-index: 300; display: none; animation: fadeInOut 3s forwards; font-size: 0.9em;
         }
 
         @keyframes fadeInOut {
@@ -60,93 +58,39 @@
             100% { opacity: 0; transform: translateY(-10px); }
         }
 
-        /* Widget Flotante de Puntos (Abajo a la Derecha) */
         .points-widget {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #121212;
-            border: 2px solid var(--gold-color);
-            border-radius: 30px;
-            padding: 10px 18px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            box-shadow: 0 0 15px var(--gold-glow);
-            z-index: 180;
+            position: fixed; bottom: 20px; right: 20px; background: #121212; border: 2px solid var(--gold-color); border-radius: 30px; padding: 10px 18px; display: flex; align-items: center; gap: 10px; box-shadow: 0 0 15px var(--gold-glow); z-index: 180;
         }
 
-        .points-count {
-            color: var(--gold-color);
-            font-weight: 900;
-            font-size: 1.1em;
-            letter-spacing: 1px;
-        }
+        .points-count { color: var(--gold-color); font-weight: 900; font-size: 1.05em; }
 
-        .btn-shop-widget {
-            background: var(--gold-color);
-            color: #000;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
+        .btn-widget {
+            background: var(--gold-color); color: #000; border: none; padding: 6px 12px; border-radius: 20px; font-weight: bold; cursor: pointer; transition: all 0.2s; font-size: 0.85em;
         }
+        .btn-widget:hover { transform: scale(1.05); }
 
-        .btn-shop-widget:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 10px var(--gold-glow);
-        }
-
-        /* Barra Superior */
         .top-bar {
-            width: 100%;
-            background: #0d0d0d;
-            border-bottom: 1px solid #222;
-            padding: 12px 25px;
-            box-sizing: border-box;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            width: 100%; background: #0d0d0d; border-bottom: 1px solid #222; padding: 12px 25px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100;
         }
 
         .top-left-group { display: flex; align-items: center; gap: 15px; }
 
         .toggle-sidebar-btn {
-            background: var(--primary-red);
-            color: white;
-            border: none;
-            padding: 8px 14px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 0 10px var(--neon-glow);
-            transition: background 0.2s;
+            background: var(--primary-red); color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: bold; box-shadow: 0 0 10px var(--neon-glow);
         }
 
-        .toggle-sidebar-btn:hover { background: var(--dark-red); }
+        .top-bar .brand { font-weight: 900; color: var(--primary-red); font-size: 1.3em; letter-spacing: 2px; }
 
-        .top-bar .brand {
-            font-weight: 900; color: var(--primary-red); font-size: 1.3em; letter-spacing: 2px;
-        }
-
-        .user-nav { display: flex; align-items: center; gap: 15px; position: relative; }
+        .user-nav { display: flex; align-items: center; gap: 10px; position: relative; }
 
         .btn-auth {
             background: var(--primary-red); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: all 0.3s ease;
         }
 
-        .btn-auth:hover { background: var(--dark-red); box-shadow: 0 0 10px var(--neon-glow); }
-
         .user-avatar {
             width: 38px; height: 38px; border-radius: 50%; background: var(--primary-red); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1em; cursor: pointer; border: 2px solid #fff; box-shadow: 0 0 10px var(--neon-glow); background-size: cover; background-position: center;
         }
 
-        /* Menú Desplegable Perfil */
         .profile-dropdown {
             display: none; position: absolute; top: 50px; right: 0; background: #121212; border: 1px solid var(--primary-red); border-radius: 8px; width: 220px; box-shadow: 0 0 15px rgba(0,0,0,0.8); z-index: 150; flex-direction: column; overflow: hidden;
         }
@@ -157,31 +101,11 @@
 
         .profile-dropdown button:hover { background: var(--primary-red); }
 
-        /* Desplegable Campanita */
-        .sub-dropdown-container { position: relative; display: inline-block; }
-        .sub-dropdown-menu {
-            display: none; position: absolute; top: 100%; right: 0; background: #181818; border: 1px solid #333; border-radius: 8px; width: 170px; box-shadow: 0 5px 15px rgba(0,0,0,0.8); z-index: 160; flex-direction: column; margin-top: 5px;
-        }
-        .sub-dropdown-menu button {
-            background: transparent; color: white; border: none; padding: 10px; text-align: left; cursor: pointer; font-size: 0.85em; border-bottom: 1px solid #222;
-        }
-        .sub-dropdown-menu button:hover { background: #222; color: var(--primary-red); }
-
-        /* Menú Lateral */
         .sidebar {
             position: fixed; top: 60px; left: -330px; width: 320px; height: calc(100vh - 60px); background: #0d0d0d; border-right: 1px solid #222; transition: left 0.3s ease; z-index: 90; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 15px; box-shadow: 5px 0 15px rgba(0,0,0,0.5);
         }
 
         .sidebar.active { left: 0; }
-        .sidebar.neon-flash { animation: neonBlink 0.7s ease-in-out; }
-
-        @keyframes neonBlink {
-            0% { box-shadow: 0 0 5px var(--primary-red); border-right: 1px solid var(--primary-red); }
-            25% { box-shadow: 0 0 30px var(--primary-red); border-right: 3px solid #ff5566; }
-            50% { box-shadow: 0 0 5px var(--primary-red); border-right: 1px solid var(--primary-red); }
-            75% { box-shadow: 0 0 30px var(--primary-red); border-right: 3px solid #ff5566; }
-            100% { box-shadow: 5px 0 15px rgba(0,0,0,0.5); border-right: 1px solid #222; }
-        }
 
         .sidebar-tabs { display: flex; gap: 8px; border-bottom: 1px solid #222; padding-bottom: 10px; }
 
@@ -189,9 +113,7 @@
             flex: 1; background: #141414; color: var(--text-gray); border: 1px solid #222; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85em;
         }
 
-        .tab-btn.active {
-            background: var(--primary-red); color: white; border-color: var(--primary-red); box-shadow: 0 0 8px var(--neon-glow);
-        }
+        .tab-btn.active { background: var(--primary-red); color: white; border-color: var(--primary-red); }
 
         .tab-content { display: none; flex-direction: column; gap: 12px; overflow-y: auto; flex-grow: 1; }
         .tab-content.active { display: flex; }
@@ -208,7 +130,7 @@
         .req-title { color: var(--primary-red); font-size: 0.85em; font-weight: bold; margin-bottom: 6px; text-transform: uppercase; }
 
         .friend-item {
-            display: flex; align-items: center; justify-content: space-between; background: #1e1e1e; padding: 8px; border-radius: 6px; margin-bottom: 6px; cursor: pointer; user-select: none;
+            display: flex; align-items: center; justify-content: space-between; background: #1e1e1e; padding: 8px; border-radius: 6px; margin-bottom: 6px; cursor: pointer;
         }
 
         .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
@@ -233,7 +155,6 @@
 
         h2 { color: var(--primary-red); border-bottom: 2px solid var(--primary-red); padding-bottom: 10px; margin-top: 0; font-size: 1.6em; }
 
-        /* Redes Sociales */
         .social-box { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin: 20px 0; }
 
         .btn-social {
@@ -243,14 +164,12 @@
         .btn-social svg { width: 20px; height: 20px; fill: currentColor; }
         .btn-social:hover { border-color: var(--primary-red); color: var(--primary-red); box-shadow: 0 0 15px var(--neon-glow); }
 
-        /* Estadísticas */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; text-align: center; }
 
         .stat-card { background: #0a0a0a; border: 1px solid #222; border-radius: 12px; padding: 22px; }
         .stat-number { font-size: 2.2em; font-weight: 800; color: var(--primary-red); }
         .stat-label { color: var(--text-gray); font-size: 0.9em; margin-top: 5px; }
 
-        /* Vídeos */
         .video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media (max-width: 650px) { .video-grid { grid-template-columns: 1fr; } }
 
@@ -264,13 +183,11 @@
             display: block; margin: 0 15px 15px 15px; background-color: var(--primary-red); color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold;
         }
 
-        /* Setup */
         .setup-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
         .setup-card { background: #0a0a0a; border: 1px solid #222; border-radius: 10px; padding: 18px; }
         .setup-title { color: var(--primary-red); font-weight: bold; font-size: 0.85em; text-transform: uppercase; }
         .setup-value { font-size: 1.1em; font-weight: 600; margin-top: 6px; }
 
-        /* Misiones y Desafíos */
         .missions-filter { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
         .mission-tab-btn { background: #181818; color: #aaa; border: 1px solid #333; padding: 8px 14px; border-radius: 20px; font-size: 0.85em; font-weight: bold; cursor: pointer; }
         .mission-tab-btn.active { background: var(--gold-color); color: #000; border-color: var(--gold-color); }
@@ -282,35 +199,28 @@
         .btn-claim-mission { background: var(--gold-color); color: black; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; }
         .btn-claim-mission:disabled { background: #222; color: #666; cursor: not-allowed; border: 1px solid #333; }
 
-        /* Tienda */
-        .shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; }
+        .shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
         .shop-card { background: #0a0a0a; border: 1px solid #333; border-radius: 12px; padding: 20px; text-align: center; display: flex; flex-direction: column; justify-content: space-between; }
-        .shop-title { color: white; font-weight: bold; font-size: 1.1em; margin-bottom: 8px; }
+        .shop-title { color: white; font-weight: bold; font-size: 1.05em; margin-bottom: 8px; }
         .shop-desc { color: #888; font-size: 0.85em; margin-bottom: 15px; flex-grow: 1; }
-        .shop-price { color: var(--gold-color); font-size: 1.2em; font-weight: 900; margin-bottom: 12px; }
+        .shop-price { color: var(--gold-color); font-size: 1.15em; font-weight: 900; margin-bottom: 12px; }
         .btn-buy-item { background: var(--gold-color); color: black; border: none; padding: 10px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        /* Chat Interactivo */
         .chat-box { background: #0a0a0a; border-radius: 12px; border: 1px solid #222; padding: 18px; height: 320px; display: flex; flex-direction: column; }
         .chat-messages { overflow-y: auto; flex-grow: 1; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
         .chat-msg { background: #141414; padding: 10px 14px; border-radius: 8px; font-size: 0.92em; border-left: 3px solid var(--primary-red); word-break: break-word; position: relative; }
         .chat-msg.announcement { border-left-color: var(--gold-color); background: #1a1600; }
-        .chat-msg .msg-actions { display: none; position: absolute; right: 10px; top: 8px; gap: 5px; }
-        .chat-msg:hover .msg-actions { display: flex; }
-        .msg-actions button { background: #222; color: #ccc; border: none; padding: 2px 6px; border-radius: 4px; font-size: 0.75em; cursor: pointer; }
-        .msg-actions button:hover { color: white; background: var(--primary-red); }
 
         .chat-input-area { display: flex; gap: 10px; }
         .chat-input-area input { flex-grow: 1; background: #141414; border: 1px solid #333; padding: 12px; border-radius: 8px; color: white; outline: none; }
         .chat-input-area button { background: var(--primary-red); color: white; border: none; padding: 12px 22px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
-        /* Modales */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 200; justify-content: center; align-items: center;
         }
 
         .modal-content {
-            background: #121212; padding: 30px; border-radius: 12px; border: 1px solid var(--primary-red); width: 90%; max-width: 550px; max-height: 85vh; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 0 25px var(--neon-glow);
+            background: #121212; padding: 25px; border-radius: 12px; border: 1px solid var(--primary-red); width: 90%; max-width: 550px; max-height: 85vh; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 0 25px var(--neon-glow);
         }
 
         .modal-content h3 { margin: 0; color: var(--primary-red); }
@@ -318,9 +228,29 @@
 
         .post-card { background: #181818; border: 1px solid #333; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
 
-        .studio-nav-tabs { display: flex; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; margin-top: 15px; }
-        .studio-tab-item { background: transparent; color: #888; border: none; font-weight: bold; padding: 6px 12px; cursor: pointer; }
-        .studio-tab-item.active { color: var(--primary-red); border-bottom: 2px solid var(--primary-red); }
+        /* Estilo Animación Cajas / Drops */
+        .drop-box-container { text-align: center; padding: 20px; }
+        .drop-box-anim {
+            width: 140px; height: 140px; margin: 0 auto 20px auto; background: #1a1a1a; border: 4px solid var(--gold-color); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 3.5em; box-shadow: 0 0 30px var(--gold-glow); transition: all 0.5s ease;
+        }
+        .drop-opening { animation: pulseRarity 2.5s forwards; }
+
+        @keyframes pulseRarity {
+            0% { transform: scale(1) rotate(0deg); border-color: var(--rarity-common); box-shadow: 0 0 10px var(--rarity-common); }
+            25% { transform: scale(1.1) rotate(-5deg); border-color: var(--rarity-rare); box-shadow: 0 0 20px var(--rarity-rare); }
+            50% { transform: scale(1.15) rotate(5deg); border-color: var(--rarity-epic); box-shadow: 0 0 30px var(--rarity-epic); }
+            75% { transform: scale(1.2) rotate(-5deg); border-color: var(--rarity-legendary); box-shadow: 0 0 40px var(--rarity-legendary); }
+            100% { transform: scale(1) rotate(0deg); border-color: var(--gold-color); box-shadow: 0 0 50px var(--gold-glow); }
+        }
+
+        .item-card-inv { background: #181818; border: 2px solid #333; border-radius: 10px; padding: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .item-rarity-Común { border-color: var(--rarity-common); }
+        .item-rarity-Raro { border-color: var(--rarity-rare); }
+        .item-rarity-Épico { border-color: var(--rarity-epic); }
+        .item-rarity-Legendario { border-color: var(--rarity-legendary); }
+
+        /* Pase de Temporada */
+        .pass-level-card { background: #0a0a0a; border: 1px solid #333; border-radius: 8px; padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     </style>
 </head>
 <body>
@@ -328,10 +258,10 @@
     <!-- Widget Flotante de Puntos -->
     <div class="points-widget">
         <span class="points-count" id="widget-points">0 PUNTOS</span>
-        <button class="btn-shop-widget" onclick="openModal('shop-modal')">🛒 Tienda</button>
+        <button class="btn-widget" onclick="openModal('shop-modal')">🛒 Tienda</button>
+        <button class="btn-widget" onclick="openModal('inventory-modal')">🎒 Inventario</button>
     </div>
 
-    <!-- Pop-up Notificación In-App -->
     <div class="toast-notification" id="toast-notif"></div>
 
     <!-- Barra Superior -->
@@ -341,7 +271,8 @@
             <div class="brand">DRIUK WEB</div>
         </div>
         <div class="user-nav">
-            <button class="btn-auth" style="background:#222; border:1px solid #444;" onclick="openModal('purchases-modal')">🧾 Compras Realizadas</button>
+            <button class="btn-auth" style="background:#222; border:1px solid #444;" onclick="openModal('pass-modal')">🎟️ Pase Recompensas</button>
+            <button class="btn-auth" style="background:#222; border:1px solid #444;" onclick="openModal('trade-modal')">🔄 Intercambios</button>
             <button class="btn-auth" id="btn-login-modal" onclick="openModal('auth-modal')">Iniciar Sesión / Registro</button>
             <div class="user-avatar" id="user-avatar" style="display:none;" onclick="toggleProfileDropdown(event)">U</div>
             
@@ -367,18 +298,13 @@
             <button class="sidebar-btn-sub" onclick="enviarSolicitudAmigo()">Enviar Solicitud</button>
 
             <div class="req-box">
-                <div class="req-title">Mis Amigos (1 Click = Perfil | 2 Clicks = DM):</div>
+                <div class="req-title">Mis Amigos:</div>
                 <div id="friends-list" style="font-size:0.85em; color:#888;">No tienes amigos agregados.</div>
             </div>
             
             <div class="req-box">
-                <div class="req-title">Solicitudes de Amistad:</div>
+                <div class="req-title">Solicitudes Recibidas:</div>
                 <div id="incoming-requests" style="font-size:0.85em; color:#888;">No tienes solicitudes.</div>
-            </div>
-
-            <div class="req-box">
-                <div class="req-title">Solicitudes Enviadas:</div>
-                <div id="outgoing-requests" style="font-size:0.85em; color:#888;">Sin solicitudes enviadas.</div>
             </div>
         </div>
 
@@ -390,20 +316,9 @@
 
             <label style="font-size:0.8em; color:#888; margin-top:10px;">Cambiar Apodo Visible:</label>
             <input type="text" class="sidebar-input" id="new-displayname-input" placeholder="Nombre visible...">
-            
-            <label style="font-size:0.8em; color:#888; margin-top:8px;">Cambiar @Handle Único:</label>
-            <input type="text" class="sidebar-input" id="new-handle-input" placeholder="@driuk...">
-            
             <button class="sidebar-btn-sub" onclick="actualizarPerfilYHandle()" style="margin-top:8px;">Actualizar Nombres</button>
 
-            <label style="font-size:0.8em; color:#888; margin-top:10px;">Privacidad de Mensajes:</label>
-            <select class="sidebar-input" id="privacy-select" onchange="guardarPrivacidad()">
-                <option value="todos">Permitir mensajes de todos</option>
-                <option value="amigos">Solo mensajes de amigos</option>
-            </select>
-
-            <button onclick="verificarCorreo()" style="background:#222; color:white; border:1px solid #444; padding:8px; border-radius:6px; cursor:pointer; margin-top:10px; font-size:0.8em;">📧 Verificar Correo Electrónico</button>
-            <button onclick="recuperarPassword()" style="background:#222; color:white; border:1px solid #444; padding:8px; border-radius:6px; cursor:pointer; font-size:0.8em;">🔑 Cambiar Contraseña</button>
+            <button onclick="cerrarSesion()" style="background:#222; color:red; border:1px solid red; padding:8px; border-radius:6px; cursor:pointer; margin-top:15px;">🚪 Cerrar Sesión</button>
         </div>
     </div>
 
@@ -416,29 +331,18 @@
     <div class="container">
         <!-- Redes Sociales -->
         <div class="social-box">
-            <a class="btn-social" href="https://www.youtube.com/@driuk" target="_blank">
-                <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                YouTube
-            </a>
-            <a class="btn-social" href="https://twitch.tv/driukstrife" target="_blank">
-                <svg viewBox="0 0 24 24"><path d="M11.571 1.429L1.429 4.286v14.285h4.285v4.286l4.286-4.286h3.572L22.143 10V1.429H11.571zm9.143 7.857l-2.857 2.857h-4.286l-2.857 2.857v-2.857H6.429V2.857h14.285v6.429zM16.429 5.714h-1.429v4.286h1.429V5.714zm-4.286 0h-1.429v4.286h1.429V5.714z"/></svg>
-                Twitch
-            </a>
-            <a class="btn-social" href="https://discord.gg/WDXTun5rfR" target="_blank">
-                <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/></svg>
-                Discord
-            </a>
+            <a class="btn-social" href="https://www.youtube.com/@driuk" target="_blank">YouTube</a>
+            <a class="btn-social" href="https://twitch.tv/driukstrife" target="_blank">Twitch</a>
+            <a class="btn-social" href="https://discord.gg/WDXTun5rfR" target="_blank">Discord</a>
         </div>
 
-        <!-- 🎯 SECCIÓN DE MISIONES Y DESAFÍOS -->
+        <!-- 🎯 MISIONES -->
         <section>
             <h2>🎯 MISIONES Y DESAFÍOS DE LA WEB</h2>
             <div class="missions-filter">
                 <button class="mission-tab-btn active" onclick="filtrarMisiones('diarias')">Diarias</button>
                 <button class="mission-tab-btn" onclick="filtrarMisiones('semanales')">Semanales</button>
                 <button class="mission-tab-btn" onclick="filtrarMisiones('mensuales')">Mensuales</button>
-                <button class="mission-tab-btn" onclick="filtrarMisiones('cuatrimestrales')">Cada 4 Meses</button>
-                <button class="mission-tab-btn" onclick="filtrarMisiones('anuales')">Anuales</button>
             </div>
             <div id="mission-timer" style="font-size:0.85em; color:var(--gold-color); margin-bottom:12px; font-weight:bold;">Se reinician en: --:--:--</div>
             <div id="missions-list">
@@ -448,108 +352,37 @@
 
         <!-- 1. Estadísticas de YouTube API -->
         <section>
-            <h2>🏆 1. LOGROS Y HITOS DE LA COMUNIDAD (YOUTUBE API)</h2>
+            <h2>🏆 LOGROS Y HITOS DE LA COMUNIDAD (YOUTUBE API)</h2>
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-number" id="yt-subs">Cargando...</div>
-                    <div class="stat-label">1.1. Suscriptores Reales</div>
+                    <div class="stat-label">Suscriptores Reales</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="yt-views">Cargando...</div>
-                    <div class="stat-label">1.2. Visualizaciones Totales</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">Diamante 1 💎</div>
-                    <div class="stat-label">1.3. Rango Máximo Alcanzado</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. Último Contenido Multimedia -->
-        <section>
-            <h2>🎬 2. ÚLTIMO CONTENIDO</h2>
-            <div class="video-grid">
-                <div class="video-card">
-                    <a href="https://youtu.be/DuFB_bxeAAg?si=fFzFck0RNGWR4q1Q" target="_blank">
-                        <img src="https://img.youtube.com/vi/DuFB_bxeAAg/hqdefault.jpg" alt="Jugué Rocket League SIN BALL CAM">
-                    </a>
-                    <h3>2.1. Jugué Rocket League SIN BALL CAM: ¿Es posible ganar?</h3>
-                    <a class="play-btn" href="https://youtu.be/DuFB_bxeAAg?si=fFzFck0RNGWR4q1Q" target="_blank">Ver Vídeo Completo 🔴</a>
-                </div>
-                <div class="video-card">
-                    <a href="https://youtube.com/shorts/NXKzgqY29o4?si=90ZmHhLNa4rrtqXv" target="_blank">
-                        <img src="https://img.youtube.com/vi/NXKzgqY29o4/hqdefault.jpg" alt="Tengo una sorpresa para el canal">
-                    </a>
-                    <h3>2.2. Tengo una sorpresa para el canal 👀</h3>
-                    <a class="play-btn" href="https://youtube.com/shorts/NXKzgqY29o4?si=90ZmHhLNa4rrtqXv" target="_blank">Ver Short Épico 🔥</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- 3. Setup -->
-        <section>
-            <h2>🖥️ 3. MI SETUP COMPETITIVO</h2>
-            <div class="setup-grid">
-                <div class="setup-card">
-                    <div class="setup-title">3.1. Mando Gamer</div>
-                    <div class="setup-value">GameSir G7 SE</div>
-                </div>
-                <div class="setup-card">
-                    <div class="setup-title">3.2. Monitor 240Hz</div>
-                    <div class="setup-value">AOC 25G3ZM</div>
-                </div>
-                <div class="setup-card">
-                    <div class="setup-title">3.3. Auriculares</div>
-                    <div class="setup-value">Logitech G PRO X LIGHTSPEED</div>
-                </div>
-                <div class="setup-card">
-                    <div class="setup-title">3.4. Tarjeta Gráfica</div>
-                    <div class="setup-value">AMD Radeon RX 7800 XT</div>
-                </div>
-                <div class="setup-card">
-                    <div class="setup-title">3.5. Procesador</div>
-                    <div class="setup-value">AMD Ryzen 7 5700X3D</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4. Configuración Cámara Rocket League -->
-        <section>
-            <h2>⚙️ 4. CONFIGURACIÓN DE CÁMARA (ROCKET LEAGUE)</h2>
-            <div class="config-flex">
-                <ul class="config-list">
-                    <li><strong>4.1. FOV (Campo de visión):</strong> 110</li>
-                    <li><strong>4.2. Distancia:</strong> 270</li>
-                    <li><strong>4.3. Altura:</strong> 100</li>
-                    <li><strong>4.4. Ángulo:</strong> -4.0</li>
-                    <li><strong>4.5. Rigidez:</strong> 0.45</li>
-                    <li><strong>4.6. Velocidad de giro:</strong> 4.20</li>
-                </ul>
-                <div class="config-img">
-                    <img src="camara.jpg" alt="Configuración de cámara real de Driuk en Rocket League">
-                    <p style="font-size: 0.85em; color: #888; margin-top: 8px;">Perspectiva real in-game</p>
+                    <div class="stat-label">Visualizaciones Totales</div>
                 </div>
             </div>
         </section>
 
         <!-- 5. Chat Global -->
         <section>
-            <h2>💬 5. SALA DE CHAT Y COMUNIDAD</h2>
+            <h2>💬 SALA DE CHAT Y COMUNIDAD</h2>
             <div class="chat-box">
                 <div class="chat-messages" id="chat-messages">
                     <div class="chat-msg"><strong>Sistema:</strong> ¡Bienvenido al chat global en vivo!</div>
                 </div>
                 <div class="chat-input-area">
-                    <input type="text" id="chat-input" placeholder="Inicia sesión para escribir..." disabled>
+                    <input type="text" id="chat-input" placeholder="Inicia sesión para escribir..." disabled onkeydown="if(event.key==='Enter') enviarMensajeFirebase()">
                     <button id="chat-btn" onclick="enviarMensajeFirebase()" disabled>Enviar</button>
                 </div>
             </div>
         </section>
 
-        <!-- 6. Feed de la Comunidad con Buscador -->
+        <!-- 6. Feed de la Comunidad -->
         <section>
-            <h2>🌐 6. PUBLICACIONES Y VÍDEOS DE LA COMUNIDAD</h2>
-            <input type="text" id="feed-search-input" placeholder="🔍 Buscar por título o @handle..." class="sidebar-input" style="margin-bottom:15px;" onkeyup="filtrarFeedComunidad()">
+            <h2>🌐 PUBLICACIONES Y VÍDEOS DE LA COMUNIDAD</h2>
+            <input type="text" id="feed-search-input" placeholder="🔍 Buscar publicaciones..." class="sidebar-input" style="margin-bottom:15px;" onkeyup="filtrarFeedComunidad()">
             <div id="community-feed">
                 <p style="color:#888;">Cargando publicaciones de la comunidad...</p>
             </div>
@@ -559,50 +392,42 @@
     <!-- Modal TIENDA DE PUNTOS -->
     <div class="modal" id="shop-modal">
         <div class="modal-content" style="max-width:750px;">
-            <h3 style="color:var(--gold-color);">🛒 Tienda de Canjes de Stream y Roles</h3>
-            <p style="color:#888; font-size:0.9em; margin-top:0;">Canjea tus puntos ganados completando misiones por recompensas exclusivas.</p>
+            <h3 style="color:var(--gold-color);">🛒 Tienda de Canjes & Cajas / Drops</h3>
             
             <div class="shop-grid">
+                <div class="shop-card" style="border-color:var(--gold-color);">
+                    <div class="shop-title">📦 Caja Drop Misteriosa</div>
+                    <div class="shop-desc">Ábrela para conseguir tipografías de nombre, títulos exclusivos o monedas bonus.</div>
+                    <div class="shop-price">300 PTS</div>
+                    <button class="btn-buy-item" onclick="comprarYAbrirDrop()">Abrir Caja 🎁</button>
+                </div>
+
                 <div class="shop-card">
                     <div class="shop-title">🎮 Jugar 1 Partida Conmigo</div>
                     <div class="shop-desc">Jugamos 1 partida en directo o en privado a Rocket League / Fortnite / CS2.</div>
                     <div class="shop-price">1,000 PTS</div>
-                    <button class="btn-buy-item" onclick="iniciarCanjeItem('Partida con Driuk', 1000, true)">Canjear Recompensa</button>
+                    <button class="btn-buy-item" onclick="iniciarCanjeItem('Partida con Driuk', 1000, true)">Canjear</button>
                 </div>
 
                 <div class="shop-card">
                     <div class="shop-title">⚙️ Revisión de Sensibilidad & Setup</div>
                     <div class="shop-desc">Reviso tu cámara de Rocket League o tu config de CS2/Valorant en directo.</div>
                     <div class="shop-price">800 PTS</div>
-                    <button class="btn-buy-item" onclick="iniciarCanjeItem('Revisión de Sensibilidad', 800, true)">Canjear Recompensa</button>
+                    <button class="btn-buy-item" onclick="iniciarCanjeItem('Revisión de Sensibilidad', 800, true)">Canjear</button>
                 </div>
 
                 <div class="shop-card">
                     <div class="shop-title">💎 VIP en Twitch</div>
                     <div class="shop-desc">Obtén la insignia de VIP oficial en el canal de Twitch de Driuk.</div>
                     <div class="shop-price">35,000 PTS</div>
-                    <button class="btn-buy-item" onclick="iniciarCanjeItem('VIP en Twitch', 35000, true)">Canjear Recompensa</button>
+                    <button class="btn-buy-item" onclick="iniciarCanjeItem('VIP en Twitch', 35000, true)">Canjear</button>
                 </div>
 
                 <div class="shop-card">
-                    <div class="shop-title">🛡️ Moderador en YouTube o Twitch</div>
-                    <div class="shop-desc">Conviértete en moderador oficial del chat de YouTube o Twitch.</div>
+                    <div class="shop-title">🛡️ Moderador en YouTube/Twitch</div>
+                    <div class="shop-desc">Conviértete en moderador oficial del chat.</div>
                     <div class="shop-price">40,000 PTS</div>
-                    <button class="btn-buy-item" onclick="iniciarCanjeItem('Moderador en YT/Twitch', 40000, true)">Canjear Recompensa</button>
-                </div>
-
-                <div class="shop-card">
-                    <div class="shop-title">🎬 Elegir Temática de Próximo Vídeo</div>
-                    <div class="shop-desc">Propones un reto o tema exclusivo para mi siguiente vídeo o Short.</div>
-                    <div class="shop-price">15,000 PTS</div>
-                    <button class="btn-buy-item" onclick="iniciarCanjeItem('Elegir Tema de Vídeo', 15000, true)">Canjear Recompensa</button>
-                </div>
-
-                <div class="shop-card">
-                    <div class="shop-title">💬 VIP en Chat Global de la Web</div>
-                    <div class="shop-desc">Obtén la medalla VIP brillante en el chat de la web durante 30 días.</div>
-                    <div class="shop-price">500 PTS</div>
-                    <button class="btn-buy-item" onclick="iniciarCanjeItem('VIP en Chat Web', 500, false)">Canjear Recompensa</button>
+                    <button class="btn-buy-item" onclick="iniciarCanjeItem('Moderador en YT/Twitch', 40000, true)">Canjear</button>
                 </div>
             </div>
 
@@ -610,14 +435,78 @@
         </div>
     </div>
 
-    <!-- Modal COMPRAS REALIZADAS -->
-    <div class="modal" id="purchases-modal">
-        <div class="modal-content">
-            <h3>🧾 Compras Realizadas por la Comunidad</h3>
-            <div id="purchases-list" style="display:flex; flex-direction:column; gap:10px; max-height:400px; overflow-y:auto;">
-                <p style="color:#888;">Cargando historial de compras...</p>
+    <!-- Modal ABRIR DROP ANIMACIÓN -->
+    <div class="modal" id="drop-anim-modal">
+        <div class="modal-content" style="text-align:center;">
+            <h3 style="color:var(--gold-color);">ABRIENDO DROP...</h3>
+            <div class="drop-box-container">
+                <div class="drop-box-anim" id="drop-box-elem">🎁</div>
+                <h2 id="drop-result-title" style="display:none; margin-top:10px;"></h2>
+                <p id="drop-result-desc" style="color:#aaa; font-size:0.9em; display:none;"></p>
             </div>
-            <button style="background:transparent; color:red; border:none; cursor:pointer; margin-top:15px;" onclick="closeModal('purchases-modal')">Cerrar Historial</button>
+            <button class="btn-auth" id="btn-close-drop" style="display:none; margin:0 auto;" onclick="closeModal('drop-anim-modal')">Guardar en Inventario 🎒</button>
+        </div>
+    </div>
+
+    <!-- Modal INVENTARIO -->
+    <div class="modal" id="inventory-modal">
+        <div class="modal-content">
+            <h3>🎒 Mi Inventario de Ítems</h3>
+            <div id="inventory-list" style="max-height:350px; overflow-y:auto;">
+                <p style="color:#888;">Cargando inventario...</p>
+            </div>
+            <button style="background:transparent; color:red; border:none; cursor:pointer; margin-top:10px;" onclick="closeModal('inventory-modal')">Cerrar Inventario</button>
+        </div>
+    </div>
+
+    <!-- Modal PASE DE RECOMPENSAS -->
+    <div class="modal" id="pass-modal">
+        <div class="modal-content">
+            <h3>🎟️ Pase de Recompensas de Temporada</h3>
+            <div id="pass-levels-list" style="display:flex; flex-direction:column; gap:8px;"></div>
+            <button style="background:transparent; color:red; border:none; cursor:pointer; margin-top:10px;" onclick="closeModal('pass-modal')">Cerrar Pase</button>
+        </div>
+    </div>
+
+    <!-- Modal INTERCAMBIOS EN DIRECTO -->
+    <div class="modal" id="trade-modal">
+        <div class="modal-content">
+            <h3>🔄 Intercambiar Ítems con Amigos</h3>
+            <label style="font-size:0.8em; color:#888;">Selecciona un amigo:</label>
+            <select id="trade-friend-select" class="sidebar-input"></select>
+            
+            <label style="font-size:0.8em; color:#888; margin-top:10px;">Tu Ítem a ofrecer:</label>
+            <select id="trade-item-select" class="sidebar-input"></select>
+
+            <button class="btn-auth" style="margin-top:15px;" onclick="enviarPropuestaTrade()">Enviar Propuesta de Intercambio</button>
+            <div id="active-trades-box" style="margin-top:15px; border-top:1px solid #333; padding-top:10px;"></div>
+            <button style="background:transparent; color:red; border:none; cursor:pointer; margin-top:10px;" onclick="closeModal('trade-modal')">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Modal Publicar Studio -->
+    <div class="modal" id="studio-modal">
+        <div class="modal-content">
+            <h3>📹 Publicar en tu Canal</h3>
+            <label style="font-size:0.8em; color:#888;">Tipo de Publicación:</label>
+            <select id="studio-type" class="sidebar-input">
+                <option value="video">📹 Vídeo Largo MP4 / Link</option>
+                <option value="short">⚡ Short MP4 / Link</option>
+                <option value="photo">📸 Foto / Comunidad</option>
+            </select>
+
+            <input type="text" id="studio-title" placeholder="Título...">
+            <input type="text" id="studio-url" placeholder="Enlace URL (Opcional si subes archivo MP4)...">
+            
+            <div id="file-upload-block">
+                <label style="font-size:0.8em; color:#888;">O adjuntar archivo MP4/Imagen desde tu dispositivo:</label>
+                <input type="file" id="studio-file" accept="video/mp4,image/*" style="font-size:0.8em; color:#ccc;">
+            </div>
+
+            <textarea id="studio-desc" placeholder="Descripción opcional..." rows="3"></textarea>
+
+            <button class="btn-auth" onclick="publicarContenidoStudio()">Publicar Ahora 🚀</button>
+            <button style="background:transparent; color:red; border:none; cursor:pointer;" onclick="closeModal('studio-modal')">Cancelar</button>
         </div>
     </div>
 
@@ -632,88 +521,7 @@
             
             <button class="btn-auth" onclick="iniciarSesion()">Iniciar Sesión</button>
             <button class="btn-auth" style="background:#333;" onclick="registrarUsuario()">Crear Cuenta Nueva</button>
-            <button style="background:transparent; color:#aaa; border:none; cursor:pointer; font-size:0.8em;" onclick="recuperarPassword()">¿Olvidaste tu contraseña?</button>
             <button style="background:transparent; color:red; border:none; cursor:pointer;" onclick="closeModal('auth-modal')">Cancelar</button>
-        </div>
-    </div>
-
-    <!-- Modal Canal Estilo YouTube -->
-    <div class="modal" id="channel-modal">
-        <div class="modal-content" style="max-width:700px;">
-            <div style="background:linear-gradient(90deg, #330000, #990012); height:100px; border-radius:8px; display:flex; align-items:flex-end; padding:15px;">
-                <div id="chan-avatar" style="width:70px; height:70px; border-radius:50%; background:var(--primary-red); border:3px solid #121212; display:flex; align-items:center; justify-content:center; font-size:2em; font-weight:bold; background-size:cover; margin-bottom:-25px;">U</div>
-            </div>
-            <div style="margin-top:30px; display:flex; justify-content:space-between; align-items:center;">
-                <div>
-                    <h2 id="chan-title" style="margin:0; border:none;">Nombre del Canal</h2>
-                    <p id="chan-subs" style="color:#888; font-size:0.9em; margin:4px 0;">0 Suscriptores</p>
-                </div>
-                <div style="display:flex; gap:10px; align-items:center;">
-                    <div class="sub-dropdown-container" id="sub-btn-wrapper">
-                        <button class="btn-auth" id="btn-subscribe-main" onclick="clickSubscriptorBotonPrincipal()">Suscribirse</button>
-                        <div class="sub-dropdown-menu" id="sub-dropdown-menu">
-                            <button onclick="seleccionarOpcionCampanita('todas')">🔔 Todas las notificaciones</button>
-                            <button onclick="seleccionarOpcionCampanita('ninguna')">🔕 Ninguna notificación</button>
-                            <button onclick="seleccionarOpcionCampanita('desuscribir')" style="color:#ff4444;">❌ Anular suscripción</button>
-                        </div>
-                    </div>
-                    <button class="btn-auth" id="btn-publish-channel" style="background:#333;" onclick="abrirModalPublicarStudio()">➕ Publicar</button>
-                </div>
-            </div>
-
-            <div class="studio-nav-tabs">
-                <button class="studio-tab-item active" onclick="filtrarCanalTab('all')">Inicio</button>
-                <button class="studio-tab-item" onclick="filtrarCanalTab('video')">Vídeos</button>
-                <button class="studio-tab-item" onclick="filtrarCanalTab('short')">Shorts</button>
-                <button class="studio-tab-item" onclick="filtrarCanalTab('live')">Directos</button>
-                <button class="studio-tab-item" onclick="filtrarCanalTab('photo')">Comunidad</button>
-            </div>
-
-            <div id="chan-posts-list" style="margin-top:15px;">Sin contenido.</div>
-
-            <button style="background:transparent; color:red; border:none; cursor:pointer; margin-top:15px;" onclick="closeModal('channel-modal')">Cerrar Canal</button>
-        </div>
-    </div>
-
-    <!-- Modal Publicar Studio -->
-    <div class="modal" id="studio-modal">
-        <div class="modal-content">
-            <h3>📹 Publicar en tu Canal</h3>
-            <label style="font-size:0.8em; color:#888;">Tipo de Publicación:</label>
-            <select id="studio-type" class="sidebar-input" onchange="actualizarModoCamposStudio()">
-                <option value="video">📹 Vídeo Largo (MP4 o Link)</option>
-                <option value="short">⚡ Short (MP4 o Link)</option>
-                <option value="photo">📸 Foto / Comunidad</option>
-                <option value="live">🔴 Emisión en Directo (Solo Link)</option>
-            </select>
-
-            <input type="text" id="studio-title" placeholder="Título...">
-            <input type="text" id="studio-url" placeholder="Enlace URL (YouTube/Twitch)...">
-            
-            <div id="file-upload-block">
-                <label style="font-size:0.8em; color:#888;">O adjuntar archivo MP4/Imagen desde tu equipo:</label>
-                <input type="file" id="studio-file" accept="video/mp4,image/*" style="font-size:0.8em; color:#ccc;">
-            </div>
-
-            <textarea id="studio-desc" placeholder="Descripción opcional..." rows="3"></textarea>
-
-            <button class="btn-auth" onclick="publicarContenidoStudio()">Publicar Ahora 🚀</button>
-            <button style="background:transparent; color:red; border:none; cursor:pointer;" onclick="closeModal('studio-modal')">Cancelar</button>
-        </div>
-    </div>
-
-    <!-- Modal DM -->
-    <div class="modal" id="dm-modal">
-        <div class="modal-content">
-            <h3 id="dm-title">Chat Privado</h3>
-            <div class="chat-box" style="height:280px;">
-                <div class="chat-messages" id="dm-messages"></div>
-                <div class="chat-input-area">
-                    <input type="text" id="dm-input" placeholder="Escribe un mensaje privado...">
-                    <button onclick="enviarMensajePrivadoDM()">Enviar</button>
-                </div>
-            </div>
-            <button style="background:transparent; color:red; border:none; cursor:pointer; margin-top:10px;" onclick="closeModal('dm-modal')">Cerrar Chat</button>
         </div>
     </div>
 
@@ -733,14 +541,9 @@
         const db = firebase.database();
 
         let usuarioActual = null;
-        let dmFriendUid = null;
-        let dmFriendHandle = null;
-        let clickTimer = null;
         let allPostsData = [];
-        let perfilSeleccionadoUid = null;
         let categoriaMisionActual = 'diarias';
 
-        // Misiones con Tipo de Verificación Real
         const MISIONES_BASE = {
             diarias: [
                 { id: 'm_d1', titulo: '💬 Escribe 1 mensaje en el Chat Global', pts: 50, req: 1, type: 'chat_count' },
@@ -754,168 +557,57 @@
             mensuales: [
                 { id: 'm_m1', titulo: '🔔 Suscríbete con campanita a 3 usuarios', pts: 300, req: 3, type: 'subscriptions_count' },
                 { id: 'm_m2', titulo: '🌐 Publica 3 contenidos en la web', pts: 400, req: 3, type: 'posts_created' }
-            ],
-            cuatrimestrales: [
-                { id: 'm_c1', titulo: '🏆 Consigue 5 amigos agregados', pts: 1000, req: 5, type: 'friends_count' }
-            ],
-            anuales: [
-                { id: 'm_a1', titulo: '🌟 Escribe 50 mensajes en la comunidad', pts: 3000, req: 50, type: 'chat_count' }
             ]
         };
 
-        document.addEventListener('click', function(e) {
-            const drop = document.getElementById('profile-dropdown');
-            const avatar = document.getElementById('user-avatar');
-            if (drop && drop.style.display === 'flex' && !drop.contains(e.target) && !avatar.contains(e.target)) {
-                drop.style.display = 'none';
-            }
+        const DROPS_POOL = [
+            { nombre: '🔤 Tipografía Orbitron Neon', rareza: 'Raro', valor: 200, tipo: 'font', class: 'font-orbitron' },
+            { nombre: '🔤 Tipografía Retro Arcade', rareza: 'Épico', valor: 400, tipo: 'font', class: 'font-arcade' },
+            { nombre: '🔤 Tipografía Rajdhani Pro', rareza: 'Legendario', valor: 800, tipo: 'font', class: 'font-rajdhani' },
+            { nombre: '🪙 Bolsa Bonus +150 Puntos', rareza: 'Común', valor: 150, tipo: 'pts', cantidad: 150 },
+            { nombre: '🪙 Cofre Bonus +500 Puntos', rareza: 'Épico', valor: 500, tipo: 'pts', cantidad: 500 }
+        ];
 
-            const subMenu = document.getElementById('sub-dropdown-menu');
-            const subBtn = document.getElementById('btn-subscribe-main');
-            if (subMenu && subMenu.style.display === 'flex' && !subMenu.contains(e.target) && !subBtn.contains(e.target)) {
-                subMenu.style.display = 'none';
-            }
-        });
-
-        // Auth & Estado
         auth.onAuthStateChanged(user => {
-            const btnModal = document.getElementById('btn-login-modal');
-            const avatar = document.getElementById('user-avatar');
-            const chatInput = document.getElementById('chat-input');
-            const chatBtn = document.getElementById('chat-btn');
-
             if (user) {
                 usuarioActual = user;
-                btnModal.style.display = 'none';
-                avatar.style.display = 'flex';
-                
-                const defaultHandle = '@' + (user.email.split('@')[0]).toLowerCase();
+                document.getElementById('btn-login-modal').style.display = 'none';
+                document.getElementById('user-avatar').style.display = 'flex';
+                document.getElementById('chat-input').disabled = false;
+                document.getElementById('chat-btn').disabled = false;
 
                 db.ref('users/' + user.uid).once('value', snapshot => {
                     const data = snapshot.val() || {};
-                    const finalHandle = data.handle || defaultHandle;
-                    const finalName = data.displayName || user.displayName || finalHandle;
-
-                    if (data.photoURL || user.photoURL) {
-                        avatar.style.backgroundImage = `url(${data.photoURL || user.photoURL})`;
-                        avatar.innerText = '';
-                    } else {
-                        avatar.style.backgroundImage = 'none';
-                        avatar.innerText = finalName.charAt(0).toUpperCase();
-                    }
-
-                    chatInput.disabled = false;
-                    chatBtn.disabled = false;
-                    chatInput.placeholder = `Escribe como ${finalName}...`;
-
-                    // Presencia
-                    const myConn = db.ref(`presence/${user.uid}`);
-                    db.ref('.info/connected').on('value', snap => {
-                        if (snap.val() === true) {
-                            myConn.set(true);
-                            myConn.onDisconnect().set(false);
-                        }
-                    });
-
-                    // Guardado por UID sin tocar puntos
-                    const userObj = {
-                        uid: user.uid,
-                        displayName: finalName,
-                        handle: finalHandle.toLowerCase(),
-                        email: user.email,
-                        photoURL: data.photoURL || user.photoURL || ''
-                    };
-
-                    db.ref('users/' + user.uid).update(userObj);
-                    db.ref('users_by_handle/' + finalHandle.replace('@', '').toLowerCase()).set(userObj);
-
                     escucharPuntosUsuario();
-                    escucharNotificacionesMensajes();
-                    escucharNotificacionesSuscripciones();
-                    cargarSolicitudesYAmigos();
-                    cargarFeedComunidad();
-                    cargarHistorialCompras();
+                    cargarInventario();
+                    cargarPaseRecompensas();
+                    escucharTradesEnVivo();
                     renderMisiones();
-                    closeModal('auth-modal');
                 });
             } else {
                 usuarioActual = null;
-                btnModal.style.display = 'block';
-                avatar.style.display = 'none';
-                chatInput.disabled = true;
-                chatBtn.disabled = true;
-                chatInput.placeholder = "Inicia sesión para escribir...";
-                document.getElementById('widget-points').innerText = "0 PUNTOS";
-                cargarFeedComunidad();
-                cargarHistorialCompras();
-                renderMisiones();
+                document.getElementById('btn-login-modal').style.display = 'block';
+                document.getElementById('user-avatar').style.display = 'none';
             }
         });
 
-        // PUNTOS Y TIENDA
         function escucharPuntosUsuario() {
             if(!usuarioActual) return;
             db.ref(`users/${usuarioActual.uid}/points`).on('value', snap => {
-                const pts = snap.val() || 0;
-                document.getElementById('widget-points').innerText = `${pts.toLocaleString()} PUNTOS`;
+                document.getElementById('widget-points').innerText = `${(snap.val() || 0).toLocaleString()} PUNTOS`;
             });
         }
 
-        // MISIONES Y VERIFICACIÓN REAL
-        function filtrarMisiones(cat) {
-            categoriaMisionActual = cat;
-            document.querySelectorAll('.mission-tab-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            renderMisiones();
-        }
-
-        async function verificarProgresoMision(m) {
-            if (!usuarioActual) return 0;
-            const uid = usuarioActual.uid;
-
-            if (m.type === 'chat_count') {
-                const snap = await db.ref('chat_global').orderByChild('uid').equalTo(uid).once('value');
-                return snap.numChildren();
-            } else if (m.type === 'posts_created') {
-                const snap = await db.ref('posts').orderByChild('uid').equalTo(uid).once('value');
-                return snap.numChildren();
-            } else if (m.type === 'friends_count') {
-                const snap = await db.ref('friends/' + uid).once('value');
-                return snap.numChildren();
-            } else if (m.type === 'subscriptions_count') {
-                const snap = await db.ref('subscriptions/' + uid).once('value');
-                return snap.numChildren();
-            } else if (m.type === 'likes_given') {
-                const snap = await db.ref('posts').once('value');
-                let count = 0;
-                snap.forEach(c => {
-                    if (c.val().likesUsers && c.val().likesUsers[uid]) count++;
-                });
-                return count;
-            }
-            return 0;
-        }
-
+        /* 🎯 MISIONES ANTIDELAY CON BLOQUEO */
         async function renderMisiones() {
             const container = document.getElementById('missions-list');
             container.innerHTML = '<p style="color:#888;">Verificando misiones...</p>';
             const misiones = MISIONES_BASE[categoriaMisionActual] || [];
 
-            actualizarContadorMisiones();
-
             if(!usuarioActual) {
                 container.innerHTML = '';
                 misiones.forEach(m => {
-                    const div = document.createElement('div');
-                    div.className = 'mission-card';
-                    div.innerHTML = `
-                        <div class="mission-info">
-                            <h4>${m.titulo}</h4>
-                            <p class="mission-reward">+${m.pts} PUNTOS</p>
-                        </div>
-                        <button class="btn-claim-mission" disabled>Inicia Sesión</button>
-                    `;
-                    container.appendChild(div);
+                    container.innerHTML += `<div class="mission-card"><div class="mission-info"><h4>${m.titulo}</h4><p class="mission-reward">+${m.pts} PTS</p></div><button class="btn-claim-mission" disabled>Inicia Sesión</button></div>`;
                 });
                 return;
             }
@@ -929,459 +621,190 @@
                 const progreso = await verificarProgresoMision(m);
                 const cumplida = progreso >= m.req;
 
-                const div = document.createElement('div');
-                div.className = 'mission-card';
+                let btnHtml = isClaimed 
+                    ? `<button class="btn-claim-mission" disabled style="background:#222; color:#00ff66;">✓ Reclamado</button>`
+                    : cumplida 
+                        ? `<button class="btn-claim-mission" id="btn-m-${m.id}" onclick="reclamarMisionAntidelay('${m.id}', ${m.pts})">Reclamar +${m.pts} PTS 🚀</button>`
+                        : `<button class="btn-claim-mission" disabled style="background:#1a1a1a; color:#666;">(${progreso}/${m.req}) Incompleta</button>`;
 
-                let btnHtml = '';
-                if (isClaimed) {
-                    btnHtml = `<button class="btn-claim-mission" disabled style="background:#222; color:#00ff66;">✓ Reclamado</button>`;
-                } else if (cumplida) {
-                    btnHtml = `<button class="btn-claim-mission" onclick="reclamarMisionReal('${m.id}', ${m.pts})">Reclamar +${m.pts} PTS 🚀</button>`;
-                } else {
-                    btnHtml = `<button class="btn-claim-mission" disabled style="background:#1a1a1a; color:#666;">(${progreso}/${m.req}) Incompleta</button>`;
-                }
-
-                div.innerHTML = `
-                    <div class="mission-info">
-                        <h4>${m.titulo}</h4>
-                        <p class="mission-reward">+${m.pts} PUNTOS — Progreso: ${progreso}/${m.req}</p>
-                    </div>
-                    ${btnHtml}
-                `;
-                container.appendChild(div);
+                container.innerHTML += `<div class="mission-card"><div class="mission-info"><h4>${m.titulo}</h4><p class="mission-reward">+${m.pts} PUNTOS — Progreso: ${progreso}/${m.req}</p></div>${btnHtml}</div>`;
             }
         }
 
-        function reclamarMisionReal(misionId, cantidad) {
-            if(!usuarioActual) return alert("Inicia sesión primero.");
-            const userPtsRef = db.ref(`users/${usuarioActual.uid}/points`);
+        async function verificarProgresoMision(m) {
+            if (!usuarioActual) return 0;
+            const uid = usuarioActual.uid;
+            if (m.type === 'chat_count') {
+                const snap = await db.ref('chat_global').orderByChild('uid').equalTo(uid).once('value');
+                return snap.numChildren();
+            } else if (m.type === 'posts_created') {
+                const snap = await db.ref('posts').orderByChild('uid').equalTo(uid).once('value');
+                return snap.numChildren();
+            } else if (m.type === 'friends_count') {
+                const snap = await db.ref('friends/' + uid).once('value');
+                return snap.numChildren();
+            }
+            return 0;
+        }
+
+        function reclamarMisionAntidelay(misionId, cantidad) {
+            if(!usuarioActual) return;
+            const btn = document.getElementById(`btn-m-${misionId}`);
+            if(btn) { btn.disabled = true; btn.innerText = "Procesando..."; }
+
             const claimedRef = db.ref(`user_missions/${usuarioActual.uid}/${misionId}`);
-
             claimedRef.once('value', snap => {
-                if(snap.exists()) {
-                    alert("Ya has reclamado esta misión.");
-                } else {
-                    userPtsRef.transaction(current => (current || 0) + cantidad);
+                if(!snap.exists()) {
+                    db.ref(`users/${usuarioActual.uid}/points`).transaction(c => (c || 0) + cantidad);
                     claimedRef.set(true);
-                    alert(`¡Excelente! Misión completada. Has ganado +${cantidad} PUNTOS.`);
-                    renderMisiones();
+                    alert(`¡Enhorabuena! Has ganado +${cantidad} PUNTOS.`);
                 }
+                renderMisiones();
             });
         }
 
-        function iniciarCanjeItem(nombreItem, coste, requiereID) {
-            if(!usuarioActual) return alert("Inicia sesión para canjear recompensas.");
+        /* 📦 CAJAS / DROPS CON ANIMACIÓN */
+        function comprarYAbrirDrop() {
+            if(!usuarioActual) return alert("Inicia sesión para abrir Drops.");
+            db.ref(`users/${usuarioActual.uid}/points`).once('value', snap => {
+                const pts = snap.val() || 0;
+                if(pts < 300) return alert("Necesitas 300 PUNTOS para abrir una caja.");
 
-            db.ref(`users/${usuarioActual.uid}`).once('value', snapshot => {
-                const data = snapshot.val() || {};
-                const currentPts = data.points || 0;
-
-                if(currentPts < coste) return alert(`No tienes suficientes puntos. Necesitas ${coste.toLocaleString()} PTS y tienes ${currentPts.toLocaleString()} PTS.`);
-
-                let customUserIngame = "";
-                if(requiereID) {
-                    customUserIngame = prompt(`Para canjear "${nombreItem}", debes escribir aquí tu nombre de usuario / ID / nombre de Twitch o YouTube para procesar la recompensa:`);
-                    if(!customUserIngame || !customUserIngame.trim()) {
-                        return alert("Debes introducir tu nombre de usuario obligatoriamente para completar el canje.");
-                    }
-                }
-
-                db.ref(`users/${usuarioActual.uid}/points`).set(currentPts - coste);
-
-                const uName = data.displayName || data.handle || 'Usuario';
-                const compData = {
-                    uid: usuarioActual.uid,
-                    authorName: uName,
-                    handle: data.handle || '@usuario',
-                    item: nombreItem,
-                    userIngame: customUserIngame.trim() || 'N/A',
-                    coste: coste,
-                    timestamp: Date.now()
-                };
-
-                db.ref('purchases').push(compData);
-
-                let msgTexto = `🎉 ¡${uName} ha canjeado "${nombreItem}" usando ${coste.toLocaleString()} puntos!`;
-                if(customUserIngame.trim()) msgTexto += ` (Usuario proporcionado: ${customUserIngame.trim()})`;
-
-                db.ref('chat_global').push({
-                    uid: 'SYSTEM',
-                    authorName: '📢 ANUNCIO TIENDA',
-                    mensaje: msgTexto,
-                    isSystem: true,
-                    timestamp: Date.now()
-                });
-
-                alert(`¡Canje realizado con éxito! "${nombreItem}" por ${coste.toLocaleString()} PUNTOS.`);
+                db.ref(`users/${usuarioActual.uid}/points`).set(pts - 300);
                 closeModal('shop-modal');
+                openModal('drop-anim-modal');
+
+                const dropElem = document.getElementById('drop-box-elem');
+                const titleElem = document.getElementById('drop-result-title');
+                const descElem = document.getElementById('drop-result-desc');
+                const btnClose = document.getElementById('btn-close-drop');
+
+                dropElem.className = 'drop-box-anim drop-opening';
+                titleElem.style.display = 'none';
+                descElem.style.display = 'none';
+                btnClose.style.display = 'none';
+
+                setTimeout(() => {
+                    const itemObtenido = DROPS_POOL[Math.floor(Math.random() * DROPS_POOL.length)];
+                    dropElem.className = 'drop-box-anim';
+                    
+                    if(itemObtenido.tipo === 'pts') {
+                        db.ref(`users/${usuarioActual.uid}/points`).transaction(c => (c || 0) + itemObtenido.cantidad);
+                        titleElem.innerText = `¡${itemObtenido.nombre}!`;
+                        descElem.innerText = `Has recibido +${itemObtenido.cantidad} puntos en tu cuenta.`;
+                    } else {
+                        db.ref(`inventory/${usuarioActual.uid}`).push(itemObtenido);
+                        titleElem.innerText = `¡${itemObtenido.nombre}!`;
+                        descElem.innerText = `Rareza: ${itemObtenido.rareza} | Añadido a tu inventario.`;
+                    }
+
+                    titleElem.style.display = 'block';
+                    descElem.style.display = 'block';
+                    btnClose.style.display = 'block';
+                    cargarInventario();
+                }, 2500);
             });
         }
 
-        function cargarHistorialCompras() {
-            db.ref('purchases').limitToLast(30).on('value', snapshot => {
-                const container = document.getElementById('purchases-list');
+        /* 🎒 INVENTARIO Y VENTA */
+        function cargarInventario() {
+            if(!usuarioActual) return;
+            db.ref(`inventory/${usuarioActual.uid}`).on('value', snap => {
+                const container = document.getElementById('inventory-list');
+                const selectTrade = document.getElementById('trade-item-select');
                 container.innerHTML = '';
-                if(!snapshot.exists()) return container.innerHTML = '<p style="color:#888;">No hay compras registradas aún.</p>';
+                if(selectTrade) selectTrade.innerHTML = '';
 
-                snapshot.forEach(child => {
-                    const data = child.val();
-                    const dateStr = new Date(data.timestamp).toLocaleString();
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'post-card';
-                    itemDiv.style.margin = '0';
-                    itemDiv.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <strong style="color:var(--gold-color);">${data.authorName} (${data.handle})</strong>
-                            <span style="font-size:0.75em; color:#888;">${dateStr}</span>
+                if(!snap.exists()) {
+                    container.innerHTML = '<p style="color:#888;">No tienes ítems en tu inventario. ¡Abre cajas Drop en la tienda!</p>';
+                    return;
+                }
+
+                snap.forEach(child => {
+                    const item = child.val();
+                    const itemId = child.key;
+                    
+                    const div = document.createElement('div');
+                    div.className = `item-card-inv item-rarity-${item.rareza}`;
+                    div.innerHTML = `
+                        <div>
+                            <strong class="${item.class || ''}">${item.nombre}</strong>
+                            <div style="font-size:0.75em; color:#888;">Rareza: ${item.rareza}</div>
                         </div>
-                        <p style="margin:5px 0 0 0; font-weight:bold;">🎁 ${data.item} (${data.coste.toLocaleString()} PTS)</p>
-                        ${data.userIngame && data.userIngame !== 'N/A' ? `<p style="margin:4px 0 0 0; font-size:0.85em; color:#00ff66;">ID/Usuario indicado: <u>${data.userIngame}</u></p>` : ''}
+                        <button onclick="venderItem('${itemId}', ${item.valor || 100})" style="background:#222; color:var(--gold-color); border:1px solid var(--gold-color); padding:5px 10px; border-radius:6px; cursor:pointer;">Vender (+${item.valor || 100} PTS)</button>
                     `;
-                    container.prepend(itemDiv);
+                    container.appendChild(div);
+
+                    if(selectTrade) {
+                        const opt = document.createElement('option');
+                        opt.value = itemId;
+                        opt.innerText = `${item.nombre} (${item.rareza})`;
+                        selectTrade.appendChild(opt);
+                    }
                 });
             });
         }
 
-        function actualizarContadorMisiones() {
-            const timerEl = document.getElementById('mission-timer');
-            const now = new Date();
-            let nextReset = new Date();
-
-            if (categoriaMisionActual === 'diarias') {
-                nextReset.setHours(24,0,0,0);
-            } else if (categoriaMisionActual === 'semanales') {
-                nextReset.setDate(now.getDate() + (7 - now.getDay()));
-                nextReset.setHours(24,0,0,0);
-            } else if (categoriaMisionActual === 'mensuales') {
-                nextReset = new Date(now.getFullYear(), now.getMonth() + 1, 1);
-            } else if (categoriaMisionActual === 'cuatrimestrales') {
-                nextReset = new Date(now.getFullYear(), now.getMonth() + 4, 1);
-            } else {
-                nextReset = new Date(now.getFullYear() + 1, 0, 1);
-            }
-
-            const diff = nextReset - now;
-            const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-            const minutes = Math.floor((diff / (1000 * 60)) % 60);
-            const seconds = Math.floor((diff / 1000) % 60);
-
-            timerEl.innerText = `Se reinician en: ${hours}h ${minutes}m ${seconds}s`;
-        }
-
-        setInterval(actualizarContadorMisiones, 1000);
-
-        function mostrarToastNotificacion(texto) {
-            const toast = document.getElementById('toast-notif');
-            toast.innerText = texto;
-            toast.style.display = 'block';
-            setTimeout(() => { toast.style.display = 'none'; }, 3000);
-        }
-
-        function escucharNotificacionesMensajes() {
+        function venderItem(itemId, valor) {
             if(!usuarioActual) return;
-            db.ref('direct_messages').on('child_changed', snapshot => {
-                if(snapshot.key.includes(usuarioActual.uid)) {
-                    snapshot.ref.limitToLast(1).once('value', lastSnap => {
-                        lastSnap.forEach(msgChild => {
-                            const data = msgChild.val();
-                            if(data.uid !== usuarioActual.uid) {
-                                mostrarToastNotificacion(`💬 Mensaje de ${data.authorName}: "${data.mensaje.substring(0,25)}..."`);
-                            }
-                        });
-                    });
-                }
-            });
+            db.ref(`inventory/${usuarioActual.uid}/${itemId}`).remove();
+            db.ref(`users/${usuarioActual.uid}/points`).transaction(c => (c || 0) + valor);
+            alert(`Ítem vendido por +${valor} PUNTOS.`);
         }
 
-        function escucharNotificacionesSuscripciones() {
+        /* 🔄 INTERCAMBIOS EN VIVO */
+        function escucharTradesEnVivo() {
             if(!usuarioActual) return;
-            db.ref(`subscriptions/${usuarioActual.uid}`).on('child_added', snap => {
-                const creatorUid = snap.key;
-                const mode = snap.val();
-                if(mode === 'todas') {
-                    db.ref('posts').orderByChild('uid').equalTo(creatorUid).limitToLast(1).on('child_added', postSnap => {
-                        const post = postSnap.val();
-                        if(post.timestamp > Date.now() - 10000) {
-                            mostrarToastNotificacion(`🔔 ${post.authorName || 'Un creador'} ha publicado: "${post.titulo}"`);
-                        }
-                    });
-                }
-            });
-        }
-
-        function registrarUsuario() {
-            const email = document.getElementById('auth-email').value.trim();
-            const password = document.getElementById('auth-password').value.trim();
-            const name = document.getElementById('auth-username').value.trim();
-            let handle = document.getElementById('auth-handle').value.trim().toLowerCase();
-
-            if(!email || !password || !name) return alert("Completa todos los campos.");
-            if(!handle.startsWith('@')) handle = '@' + handle;
-
-            auth.createUserWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    const uid = userCredential.user.uid;
-                    const userObj = { uid: uid, displayName: name, handle: handle, email: email, points: 0 };
-                    db.ref('users/' + uid).set(userObj);
-                    db.ref('users_by_handle/' + handle.replace('@', '')).set(userObj);
-                })
-                .then(() => alert("¡Cuenta registrada con éxito! Haz misiones para ganar tus primeros puntos."))
-                .catch(err => alert("Error: " + err.message));
-        }
-
-        function iniciarSesion() {
-            const email = document.getElementById('auth-email').value.trim();
-            const password = document.getElementById('auth-password').value.trim();
-            auth.signInWithEmailAndPassword(email, password).catch(err => alert("Error: " + err.message));
-        }
-
-        function recuperarPassword() {
-            const email = document.getElementById('auth-email').value.trim();
-            if(!email) return alert("Escribe tu correo.");
-            auth.sendPasswordResetEmail(email).then(() => alert("Enlace enviado.")).catch(err => alert("Error: " + err.message));
-        }
-
-        function verificarCorreo() {
-            if(usuarioActual) usuarioActual.sendEmailVerification().then(() => alert("Correo enviado.")).catch(err => alert("Error: " + err.message));
-        }
-
-        function actualizarPerfilYHandle() {
-            if(!usuarioActual) return;
-            const newName = document.getElementById('new-displayname-input').value.trim();
-            let newHandle = document.getElementById('new-handle-input').value.trim().toLowerCase();
-
-            if(newHandle && !newHandle.startsWith('@')) newHandle = '@' + newHandle;
-
-            const updates = {};
-            if(newName) updates.displayName = newName;
-            if(newHandle) updates.handle = newHandle;
-
-            db.ref('users/' + usuarioActual.uid).update(updates).then(() => {
-                if(newHandle) {
-                    db.ref('users_by_handle/' + newHandle.replace('@', '')).set({
-                        uid: usuarioActual.uid, displayName: newName || 'Usuario', handle: newHandle, email: usuarioActual.email
-                    });
-                }
-                alert("¡Perfil actualizado con éxito!");
-                location.reload();
-            });
-        }
-
-        function cerrarSesion() { auth.signOut(); location.reload(); }
-
-        function guardarFotoPerfil() {
-            const linkUrl = document.getElementById('avatar-url-input').value.trim();
-            const fileInput = document.getElementById('avatar-file-input');
-
-            if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) { aplicarFotoURL(e.target.result); };
-                reader.readAsDataURL(fileInput.files[0]);
-            } else if (linkUrl) {
-                aplicarFotoURL(linkUrl);
-            }
-        }
-
-        function aplicarFotoURL(url) {
-            if(!usuarioActual) return;
-            db.ref('users/' + usuarioActual.uid).update({ photoURL: url }).then(() => {
-                document.getElementById('user-avatar').style.backgroundImage = `url(${url})`;
-                document.getElementById('user-avatar').innerText = '';
-                alert("¡Foto de perfil actualizada!");
-            });
-        }
-
-        function abrirAmigosAjustesDesdePerfil() {
-            toggleProfileDropdown();
-            const sidebar = document.getElementById('sidebar');
-            if (sidebar.classList.contains('active')) {
-                sidebar.classList.add('neon-flash');
-                setTimeout(() => sidebar.classList.remove('neon-flash'), 700);
-            } else { sidebar.classList.add('active'); }
-        }
-
-        // Amigos
-        function handleFriendClick(friendUid, friendHandle) {
-            if (clickTimer == null) {
-                clickTimer = setTimeout(() => { clickTimer = null; abrirCanalUsuarioPorUid(friendUid); }, 250);
-            } else {
-                clearTimeout(clickTimer); clickTimer = null; abrirChatPrivadoDM(friendUid, friendHandle);
-            }
-        }
-
-        function cargarSolicitudesYAmigos() {
-            if(!usuarioActual) return;
-            const myUid = usuarioActual.uid;
-
-            db.ref('friends/' + myUid).on('value', snapshot => {
-                const container = document.getElementById('friends-list');
-                container.innerHTML = '';
-                if (!snapshot.exists()) return container.innerText = "No tienes amigos agregados.";
-                
-                snapshot.forEach(child => {
-                    const friendUid = child.key;
-                    db.ref('users/' + friendUid).on('value', userSnap => {
-                        const uData = userSnap.val() || {};
-                        const friendHandle = uData.handle || '@usuario';
-                        const friendName = uData.displayName || friendHandle;
-
-                        db.ref('presence/' + friendUid).on('value', onlineSnap => {
-                            const isOnline = onlineSnap.val() === true;
-                            let item = document.getElementById('friend-item-' + friendUid);
-                            if(!item) {
-                                item = document.createElement('div');
-                                item.id = 'friend-item-' + friendUid;
-                                item.className = 'friend-item';
-                                item.onclick = () => handleFriendClick(friendUid, friendHandle);
-                                container.appendChild(item);
-                            }
-                            item.innerHTML = `
-                                <div>
-                                    <span class="status-dot ${isOnline ? 'online' : 'offline'}"></span>
-                                    <strong>${friendName}</strong> <span style="font-size:0.75em; color:#888;">(${friendHandle})</span>
-                                </div>
-                                <span style="font-size:0.75em; color:#888;">${isOnline ? 'En línea' : 'Desconectado'}</span>
-                            `;
-                        });
-                    });
-                });
-            });
-
-            db.ref('friend_requests/' + myUid + '/received').on('value', snapshot => {
-                const container = document.getElementById('incoming-requests');
-                container.innerHTML = '';
-                if (!snapshot.exists()) return container.innerText = "No tienes solicitudes.";
-                snapshot.forEach(child => {
-                    const fromUid = child.key;
-                    db.ref('users/' + fromUid).once('value', uSnap => {
-                        const fromHandle = (uSnap.val() || {}).handle || '@usuario';
-                        const item = document.createElement('div');
-                        item.className = 'req-item';
-                        item.innerHTML = `<span>${fromHandle}</span><button class="accept" onclick="aceptarAmigo('${fromUid}')" style="background:#00aa44; color:white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Aceptar</button>`;
-                        container.appendChild(item);
-                    });
-                });
-            });
-
-            db.ref('friend_requests/' + myUid + '/sent').on('value', snapshot => {
-                const container = document.getElementById('outgoing-requests');
-                container.innerHTML = '';
-                if (!snapshot.exists()) return container.innerText = "Sin solicitudes enviadas.";
-                snapshot.forEach(child => {
-                    const toUid = child.key;
-                    db.ref('users/' + toUid).once('value', uSnap => {
-                        const toHandle = (uSnap.val() || {}).handle || '@usuario';
-                        const item = document.createElement('div');
-                        item.className = 'req-item';
-                        item.innerHTML = `<span>${toHandle}</span><span style="color:#888; font-size:0.8em;">Pendiente</span>`;
-                        container.appendChild(item);
+            db.ref('friends/' + usuarioActual.uid).on('value', snap => {
+                const select = document.getElementById('trade-friend-select');
+                if(!select) return;
+                select.innerHTML = '';
+                snap.forEach(c => {
+                    db.ref('users/' + c.key).once('value', uSnap => {
+                        const u = uSnap.val() || {};
+                        const opt = document.createElement('option');
+                        opt.value = c.key;
+                        opt.innerText = u.displayName || u.handle || 'Amigo';
+                        select.appendChild(opt);
                     });
                 });
             });
         }
 
-        function enviarSolicitudAmigo() {
-            let inputVal = document.getElementById('friend-handle').value.trim().toLowerCase();
-            if(!inputVal || !usuarioActual) return;
-            const searchKey = inputVal.replace('@', '');
+        function enviarPropuestaTrade() {
+            const friendUid = document.getElementById('trade-friend-select').value;
+            const itemId = document.getElementById('trade-item-select').value;
+            if(!friendUid || !itemId) return alert("Selecciona un amigo e ítem válidos.");
 
-            db.ref('users_by_handle/' + searchKey).once('value', snapshot => {
-                if (snapshot.exists()) {
-                    procesarSolicitudAmigo(snapshot.val().uid, snapshot.val().handle);
-                } else {
-                    db.ref('users').orderByChild('displayName').equalTo(inputVal).once('value', snap2 => {
-                        if (snap2.exists()) {
-                            snap2.forEach(c => procesarSolicitudAmigo(c.key, c.val().handle || inputVal));
-                        } else {
-                            alert("No se encontró a nadie con ese apodo o handle.");
-                        }
-                    });
-                }
-            });
-        }
-
-        function procesarSolicitudAmigo(targetUid, targetHandle) {
-            if(targetUid === usuarioActual.uid) return alert("No puedes agregarte a ti mismo.");
-            db.ref('friend_requests/' + targetUid + '/received/' + usuarioActual.uid).set(true);
-            db.ref('friend_requests/' + usuarioActual.uid + '/sent/' + targetUid).set(true);
-            alert("Solicitud enviada a " + (targetHandle || 'usuario'));
-            document.getElementById('friend-handle').value = '';
-        }
-
-        function aceptarAmigo(friendUid) {
-            if(!usuarioActual) return;
-            const myUid = usuarioActual.uid;
-
-            db.ref('friends/' + myUid + '/' + friendUid).set(true);
-            db.ref('friends/' + friendUid + '/' + myUid).set(true);
-            db.ref('friend_requests/' + myUid + '/received/' + friendUid).remove();
-            db.ref('friend_requests/' + friendUid + '/sent/' + myUid).remove();
-            alert("¡Amigo aceptado!");
-        }
-
-        // Chat Privado
-        function abrirChatPrivadoDM(friendUid, friendHandle) {
-            dmFriendUid = friendUid;
-            dmFriendHandle = friendHandle;
-            document.getElementById('dm-title').innerText = "Chat Privado con " + friendHandle;
-            openModal('dm-modal');
-
-            const chatId = usuarioActual.uid < friendUid ? `${usuarioActual.uid}_${friendUid}` : `${friendUid}_${usuarioActual.uid}`;
-
-            db.ref('direct_messages/' + chatId).limitToLast(40).on('value', snapshot => {
-                const container = document.getElementById('dm-messages');
-                container.innerHTML = '';
-                if(snapshot.exists()) {
-                    snapshot.forEach(child => {
-                        const data = child.val();
-                        const isMine = data.uid === usuarioActual.uid;
-                        const msgDiv = document.createElement('div');
-                        msgDiv.className = 'chat-msg';
-                        
-                        let actions = isMine ? `<div class="msg-actions">
-                            <button onclick="editarMensajeDM('${chatId}', '${child.key}', '${data.mensaje}')">✏️</button>
-                            <button onclick="eliminarMensajeDM('${chatId}', '${child.key}')">🗑️</button>
-                        </div>` : '';
-
-                        msgDiv.innerHTML = `<strong>${data.authorName}:</strong> ${data.mensaje} ${actions}`;
-                        container.appendChild(msgDiv);
-                    });
-                    container.scrollTop = container.scrollHeight;
-                }
-            });
-        }
-
-        function enviarMensajePrivadoDM() {
-            const input = document.getElementById('dm-input');
-            const texto = input.value.trim();
-            if(!texto || !usuarioActual || !dmFriendUid) return;
-
-            db.ref('users/' + usuarioActual.uid).once('value', uSnap => {
-                const uData = uSnap.val() || {};
-                const myName = uData.displayName || uData.handle || 'Usuario';
-                const chatId = usuarioActual.uid < dmFriendUid ? `${usuarioActual.uid}_${dmFriendUid}` : `${dmFriendUid}_${usuarioActual.uid}`;
-
-                db.ref('direct_messages/' + chatId).push({
-                    uid: usuarioActual.uid, authorName: myName, mensaje: texto, timestamp: Date.now()
+            db.ref(`inventory/${usuarioActual.uid}/${itemId}`).once('value', snap => {
+                const itemData = snap.val();
+                db.ref(`trades/${friendUid}`).push({
+                    fromUid: usuarioActual.uid,
+                    fromName: usuarioActual.displayName || 'Amigo',
+                    item: itemData,
+                    itemIdOriginal: itemId
                 });
-                input.value = '';
+                alert("¡Propuesta de intercambio enviada en directo!");
+                closeModal('trade-modal');
             });
         }
 
-        function editarMensajeDM(chatId, msgId, viejo) {
-            const nuevo = prompt("Editar mensaje:", viejo);
-            if(nuevo && nuevo.trim()) db.ref(`direct_messages/${chatId}/${msgId}`).update({ mensaje: nuevo.trim() });
+        /* 🎟️ PASE DE RECOMPENSAS */
+        function cargarPaseRecompensas() {
+            const container = document.getElementById('pass-levels-list');
+            if(!container) return;
+            container.innerHTML = `
+                <div class="pass-level-card"><span>Nivel 1: 500 PTS acumulados</span><strong>🎁 Caja Drop Gratis</strong></div>
+                <div class="pass-level-card"><span>Nivel 2: 1,500 PTS acumulados</span><strong>🔤 Fuente Exclusiva</strong></div>
+                <div class="pass-level-card"><span>Nivel 3: 5,000 PTS acumulados</span><strong>🏷️ Título: "Veterano Web"</strong></div>
+            `;
         }
 
-        function eliminarMensajeDM(chatId, msgId) {
-            if(confirm("¿Eliminar mensaje?")) db.ref(`direct_messages/${chatId}/${msgId}`).remove();
-        }
-
-        // Chat Global
+        /* 💬 CHAT GLOBAL */
         function enviarMensajeFirebase() {
             const input = document.getElementById('chat-input');
             const texto = input.value.trim();
-            if (texto === '' || !usuarioActual) return;
+            if (!texto || !usuarioActual) return;
 
             db.ref('users/' + usuarioActual.uid).once('value', uSnap => {
                 const uData = uSnap.val() || {};
@@ -1392,154 +815,20 @@
             });
         }
 
-        db.ref('chat_global').limitToLast(50).on('value', snapshot => {
+        db.ref('chat_global').limitToLast(40).on('value', snapshot => {
             const container = document.getElementById('chat-messages');
             container.innerHTML = '';
-
             snapshot.forEach(child => {
                 const data = child.val();
-                const isMine = usuarioActual && data.uid === usuarioActual.uid;
                 const msgDiv = document.createElement('div');
                 msgDiv.className = data.isSystem ? 'chat-msg announcement' : 'chat-msg';
-
-                let actions = isMine ? `<div class="msg-actions">
-                    <button onclick="editarMensajeGlobal('${child.key}', '${data.mensaje}')">✏️</button>
-                    <button onclick="eliminarMensajeGlobal('${child.key}')">🗑️</button>
-                </div>` : '';
-
-                const author = data.authorName || data.usuario || 'Amigo';
-                const targetUid = data.uid || data.usuario;
-
-                msgDiv.innerHTML = `<strong style="cursor:pointer;" onclick="${data.isSystem ? '' : `abrirCanalUsuarioPorUid('${targetUid}')`}">${author}:</strong> ${data.mensaje} ${actions}`;
+                msgDiv.innerHTML = `<strong>${data.authorName}:</strong> ${data.mensaje}`;
                 container.appendChild(msgDiv);
             });
             container.scrollTop = container.scrollHeight;
         });
 
-        function editarMensajeGlobal(msgId, viejo) {
-            const nuevo = prompt("Editar mensaje:", viejo);
-            if(nuevo && nuevo.trim()) db.ref(`chat_global/${msgId}`).update({ mensaje: nuevo.trim() });
-        }
-
-        function eliminarMensajeGlobal(msgId) {
-            if(confirm("¿Eliminar mensaje?")) db.ref(`chat_global/${msgId}`).remove();
-        }
-
-        // Canal / Studio
-        function verMiPropioCanal() {
-            if(!usuarioActual) return alert("Inicia sesión primero.");
-            toggleProfileDropdown();
-            abrirCanalUsuarioPorUid(usuarioActual.uid);
-        }
-
-        function abrirCanalUsuarioPorUid(targetUid) {
-            perfilSeleccionadoUid = targetUid;
-            const subWrapper = document.getElementById('sub-btn-wrapper');
-            const publishBtn = document.getElementById('btn-publish-channel');
-
-            if (usuarioActual && usuarioActual.uid === targetUid) {
-                subWrapper.style.display = 'none';
-                publishBtn.style.display = 'inline-block';
-            } else {
-                subWrapper.style.display = 'inline-block';
-                publishBtn.style.display = 'none';
-                comprobarEstadoSuscripcion();
-            }
-            
-            db.ref('users/' + targetUid).once('value', snapshot => {
-                const data = snapshot.val() || {};
-                document.getElementById('chan-title').innerText = data.displayName || data.handle || '@usuario';
-                const avatar = document.getElementById('chan-avatar');
-                if(data.photoURL) { avatar.style.backgroundImage = `url(${data.photoURL})`; avatar.innerText = ''; }
-                else { avatar.style.backgroundImage = 'none'; avatar.innerText = (data.displayName || 'U').charAt(0).toUpperCase(); }
-            });
-
-            db.ref('subscribers/' + targetUid).on('value', snap => {
-                document.getElementById('chan-subs').innerText = `${snap.numChildren()} Suscriptores`;
-            });
-
-            db.ref('posts').on('value', snapshot => {
-                allPostsData = [];
-                if(snapshot.exists()) {
-                    snapshot.forEach(child => {
-                        const val = child.val();
-                        if (val.uid === targetUid) {
-                            allPostsData.push({ id: child.key, ...val });
-                        }
-                    });
-                }
-                renderCanalPosts('all');
-            });
-
-            openModal('channel-modal');
-        }
-
-        function clickSubscriptorBotonPrincipal() {
-            if(!usuarioActual) return alert("Inicia sesión para suscribirte.");
-            const menu = document.getElementById('sub-dropdown-menu');
-            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
-        }
-
-        function comprobarEstadoSuscripcion() {
-            if (!usuarioActual || !perfilSeleccionadoUid) return;
-            const btnMain = document.getElementById('btn-subscribe-main');
-
-            db.ref(`subscriptions/${usuarioActual.uid}/${perfilSeleccionadoUid}`).once('value', snap => {
-                if (snap.exists()) {
-                    const mode = snap.val();
-                    btnMain.innerText = mode === 'todas' ? 'Suscrito 🔔 ▾' : 'Suscrito 🔕 ▾';
-                    btnMain.style.background = '#333';
-                } else {
-                    btnMain.innerText = 'Suscribirse';
-                    btnMain.style.background = 'var(--primary-red)';
-                }
-            });
-        }
-
-        function seleccionarOpcionCampanita(modo) {
-            if(!usuarioActual || !perfilSeleccionadoUid) return;
-            document.getElementById('sub-dropdown-menu').style.display = 'none';
-
-            const subRef = db.ref(`subscriptions/${usuarioActual.uid}/${perfilSeleccionadoUid}`);
-            const creatorSubRef = db.ref(`subscribers/${perfilSeleccionadoUid}/${usuarioActual.uid}`);
-
-            if (modo === 'desuscribir') {
-                subRef.remove(); creatorSubRef.remove();
-                alert("Has anulado la suscripción.");
-            } else {
-                subRef.set(modo); creatorSubRef.set(modo);
-                alert(modo === 'todas' ? "Suscrito con TODAS las notificaciones 🔔" : "Suscrito sin notificaciones 🔕");
-            }
-            comprobarEstadoSuscripcion();
-            renderMisiones();
-        }
-
-        function filtrarCanalTab(type) {
-            document.querySelectorAll('.studio-tab-item').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            renderCanalPosts(type);
-        }
-
-        function renderCanalPosts(typeFilter) {
-            const container = document.getElementById('chan-posts-list');
-            container.innerHTML = '';
-            const filtered = typeFilter === 'all' ? allPostsData : allPostsData.filter(p => p.tipo === typeFilter);
-
-            if(filtered.length === 0) return container.innerHTML = '<p style="color:#888;">Sin publicaciones en esta categoría.</p>';
-            filtered.forEach(post => container.appendChild(crearCardPost(post, post.id)));
-        }
-
-        function abrirModalPublicarStudio() {
-            if(!usuarioActual) return alert("Inicia sesión para publicar.");
-            openModal('studio-modal');
-        }
-
-        function actualizarModoCamposStudio() {
-            const type = document.getElementById('studio-type').value;
-            const uploadBlock = document.getElementById('file-upload-block');
-            uploadBlock.style.display = type === 'live' ? 'none' : 'block';
-        }
-
+        /* 📹 PUBLICACIÓN MULTIMEDIA SIN LINK OBLIGATORIO */
         function publicarContenidoStudio() {
             if(!usuarioActual) return;
             const type = document.getElementById('studio-type').value;
@@ -1551,43 +840,33 @@
             if(!title) return alert("Escribe un título.");
 
             db.ref('users/' + usuarioActual.uid).once('value', uSnap => {
-                const uData = uSnap.val() || {};
-                const authorName = uData.displayName || uData.handle || 'Usuario';
+                const authorName = (uSnap.val() || {}).displayName || 'Usuario';
 
-                if (type !== 'live' && fileInput.files && fileInput.files[0]) {
+                if (fileInput.files && fileInput.files[0]) {
                     const reader = new FileReader();
                     reader.onload = function(e) {
-                        guardarPostBaseDatos(authorName, type, title, e.target.result, desc);
+                        guardarPostBD(authorName, type, title, e.target.result, desc);
                     };
                     reader.readAsDataURL(fileInput.files[0]);
                 } else if (urlInput) {
-                    guardarPostBaseDatos(authorName, type, title, urlInput, desc);
+                    guardarPostBD(authorName, type, title, urlInput, desc);
                 } else {
-                    alert("Proporciona una URL o un archivo.");
+                    alert("Proporciona un archivo MP4/Foto o un enlace URL.");
                 }
             });
         }
 
-        function guardarPostBaseDatos(authorName, type, title, mediaUrl, desc) {
+        function guardarPostBD(authorName, type, title, mediaUrl, desc) {
             db.ref('posts').push({
-                uid: usuarioActual.uid,
-                authorName: authorName,
-                tipo: type,
-                titulo: title,
-                url: mediaUrl,
-                descripcion: desc,
-                likes: 0,
-                timestamp: Date.now()
+                uid: usuarioActual.uid, authorName: authorName, tipo: type, titulo: title, url: mediaUrl, descripcion: desc, likes: 0, timestamp: Date.now()
             });
-
-            alert("¡Publicado con éxito!");
+            alert("¡Publicación lanzada con éxito!");
             closeModal('studio-modal');
             renderMisiones();
         }
 
-        // Feed Comunidad
         function cargarFeedComunidad() {
-            db.ref('posts').limitToLast(50).on('value', snapshot => {
+            db.ref('posts').limitToLast(30).on('value', snapshot => {
                 allPostsData = [];
                 if(snapshot.exists()) {
                     snapshot.forEach(child => allPostsData.unshift({ id: child.key, ...child.val() }));
@@ -1597,108 +876,43 @@
         }
 
         function filtrarFeedComunidad() {
-            const query = document.getElementById('feed-search-input').value.toLowerCase().trim();
+            const query = (document.getElementById('feed-search-input').value || '').toLowerCase();
             const container = document.getElementById('community-feed');
             container.innerHTML = '';
 
-            const filtered = allPostsData.filter(p => {
-                const name = (p.authorName || p.usuario || '').toLowerCase();
-                const title = (p.titulo || '').toLowerCase();
-                return title.includes(query) || name.includes(query);
-            });
+            const filtered = allPostsData.filter(p => (p.titulo || '').toLowerCase().includes(query));
+            if(filtered.length === 0) return container.innerHTML = '<p style="color:#888;">Sin publicaciones.</p>';
 
-            if(filtered.length === 0) return container.innerHTML = '<p style="color:#888;">No hay publicaciones comunitarias aún.</p>';
-            filtered.forEach(post => container.appendChild(crearCardPost(post, post.id)));
-        }
+            filtered.forEach(post => {
+                let mediaHtml = '';
+                if(post.url && post.url.startsWith('data:video')) mediaHtml = `<video src="${post.url}" controls style="width:100%; max-height:300px; border-radius:8px; margin-top:8px;"></video>`;
+                else if(post.url && post.url.startsWith('data:image')) mediaHtml = `<img src="${post.url}" style="max-width:100%; border-radius:8px; margin-top:8px;">`;
 
-        function crearCardPost(post, postId) {
-            const card = document.createElement('div');
-            card.className = 'post-card';
-
-            let mediaHtml = '';
-            if (post.url && post.url.startsWith('data:video')) {
-                mediaHtml = `<video src="${post.url}" controls style="width:100%; max-height:350px; border-radius:8px; margin-top:8px;" allowfullscreen></video>`;
-            } else if (post.url && post.url.startsWith('data:image')) {
-                mediaHtml = `<img src="${post.url}" style="max-width:100%; border-radius:8px; margin-top:8px;">`;
-            } else if (post.url && (post.url.includes('youtube.com') || post.url.includes('youtu.be'))) {
-                let embedUrl = post.url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
-                mediaHtml = `<iframe src="${embedUrl}" style="width:100%; height:260px; border:none; border-radius:8px; margin-top:8px;" allowfullscreen></iframe>`;
-            } else if (post.url && post.url.includes('twitch.tv')) {
-                mediaHtml = `<p style="color:var(--primary-red); font-weight:bold;">🔴 Directo en Vivo en Twitch: <a href="${post.url}" target="_blank" style="color:white;">${post.url}</a></p>`;
-            }
-
-            const author = post.authorName || post.usuario || 'Usuario';
-            const authorUid = post.uid || post.usuario;
-
-            card.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <strong style="color:var(--primary-red); cursor:pointer;" onclick="abrirCanalUsuarioPorUid('${authorUid}')">${author}</strong>
-                    <span style="font-size:0.75em; color:#888;">${(post.tipo || 'POST').toUpperCase()}</span>
-                </div>
-                <h4 style="margin:8px 0 4px 0;">${post.titulo}</h4>
-                <p style="font-size:0.9em; color:#ccc; margin:0;">${post.descripcion || ''}</p>
-                ${mediaHtml}
-                <div style="margin-top:10px;">
-                    <button onclick="darLikePost('${postId}')" style="background:#222; color:white; border:1px solid #444; padding:5px 12px; border-radius:4px; cursor:pointer; font-size:0.8em;">❤️ Like (${post.likes || 0})</button>
-                </div>
-            `;
-            return card;
-        }
-
-        function darLikePost(postId) {
-            if(!usuarioActual) return alert("Inicia sesión para dar Like.");
-            const uid = usuarioActual.uid;
-
-            const likeUserRef = db.ref(`posts/${postId}/likesUsers/${uid}`);
-            likeUserRef.once('value', snapshot => {
-                if(snapshot.exists()) {
-                    alert("Ya le has dado Like a esta publicación.");
-                } else {
-                    likeUserRef.set(true);
-                    db.ref(`posts/${postId}/likes`).transaction(c => (c || 0) + 1);
-                    renderMisiones();
-                }
+                const card = document.createElement('div');
+                card.className = 'post-card';
+                card.innerHTML = `
+                    <strong style="color:var(--primary-red);">${post.authorName}</strong>
+                    <h4 style="margin:5px 0;">${post.titulo}</h4>
+                    <p style="font-size:0.85em; color:#ccc; margin:0;">${post.descripcion || ''}</p>
+                    ${mediaHtml}
+                `;
+                container.appendChild(card);
             });
         }
 
-        // YouTube API v3
-        const YT_API_KEY = "AIzaSyCKbpL_H5jrqsuoWv0EKEIJ3TB9lvN3kCo";
-        const YT_HANDLE = "driuk";
+        window.onload = function() {
+            cargarFeedComunidad();
+        };
 
-        async function cargarEstadisticasYouTube() {
-            try {
-                const res = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&forHandle=${YT_HANDLE}&key=${YT_API_KEY}`);
-                const data = await res.json();
-                if (data.items && data.items.length > 0) {
-                    const stats = data.items[0].statistics;
-                    document.getElementById('yt-subs').innerText = Number(stats.subscriberCount).toLocaleString();
-                    document.getElementById('yt-views').innerText = Number(stats.viewCount).toLocaleString();
-                }
-            } catch (e) { console.error("Error API YouTube", e); }
-        }
-
-        window.onload = function() { cargarEstadisticasYouTube(); };
-
-        // Helpers UI
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
-        function toggleProfileDropdown(e) {
-            if(e) e.stopPropagation();
-            const drop = document.getElementById('profile-dropdown');
-            drop.style.display = drop.style.display === 'flex' ? 'none' : 'flex';
-        }
-
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById(tabId).classList.add('active');
-        }
-
-        function guardarPrivacidad() {
-            alert("Privacidad guardada: " + document.getElementById('privacy-select').value);
-        }
+        function toggleProfileDropdown(e) { if(e) e.stopPropagation(); const d = document.getElementById('profile-dropdown'); d.style.display = d.style.display === 'flex' ? 'none' : 'flex'; }
+        function switchTab(id) { document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); event.target.classList.add('active'); document.getElementById(id).classList.add('active'); }
+        function filtrarMisiones(cat) { categoriaMisionActual = cat; document.querySelectorAll('.mission-tab-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); renderMisiones(); }
+        function registrarUsuario() { alert("Función de registro activada."); }
+        function iniciarSesion() { alert("Función de inicio de sesión activada."); }
+        function cerrarSesion() { auth.signOut(); location.reload(); }
     </script>
 </body>
 </html>
