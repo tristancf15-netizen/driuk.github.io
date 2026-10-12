@@ -280,7 +280,7 @@
         .mission-info p { margin: 0; font-size: 0.85em; color: #888; }
         .mission-reward { color: var(--gold-color); font-weight: bold; font-size: 0.9em; margin-top: 5px; }
         .btn-claim-mission { background: var(--gold-color); color: black; border: none; padding: 8px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; }
-        .btn-claim-mission:disabled { background: #333; color: #666; cursor: not-allowed; }
+        .btn-claim-mission:disabled { background: #222; color: #666; cursor: not-allowed; border: 1px solid #333; }
 
         /* Tienda */
         .shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 15px; }
@@ -726,26 +726,26 @@
         let perfilSeleccionadoUid = null;
         let categoriaMisionActual = 'diarias';
 
-        // Definición de Misiones por Período
+        // Misiones con Tipo de Verificación Real
         const MISIONES_BASE = {
             diarias: [
-                { id: 'm_d1', titulo: '💬 Escribe en el Chat Global', pts: 50, req: 1 },
-                { id: 'm_d2', titulo: '❤️ Da Like a una publicación', pts: 30, req: 1 },
-                { id: 'm_d3', titulo: '📹 Visita el canal de un creador', pts: 40, req: 1 }
+                { id: 'm_d1', titulo: '💬 Escribe 1 mensaje en el Chat Global', pts: 50, req: 1, type: 'chat_count' },
+                { id: 'm_d2', titulo: '❤️ Da Like a una publicación', pts: 30, req: 1, type: 'likes_given' },
+                { id: 'm_d3', titulo: '👥 Ten al menos 1 amigo agregado', pts: 40, req: 1, type: 'friends_count' }
             ],
             semanales: [
-                { id: 'm_s1', titulo: '🌐 Publica un contenido en la web', pts: 150, req: 1 },
-                { id: 'm_s2', titulo: '👥 Agrega a un amigo nuevo', pts: 100, req: 1 }
+                { id: 'm_s1', titulo: '🌐 Publica 1 contenido en la web', pts: 150, req: 1, type: 'posts_created' },
+                { id: 'm_s2', titulo: '💬 Escribe 5 mensajes en el Chat', pts: 100, req: 5, type: 'chat_count' }
             ],
             mensuales: [
-                { id: 'm_m1', titulo: '🔔 Suscríbete con campanita a 3 usuarios', pts: 300, req: 3 },
-                { id: 'm_m2', titulo: '❤️ Acumula 10 Likes en tus posts', pts: 400, req: 10 }
+                { id: 'm_m1', titulo: '🔔 Suscríbete con campanita a 3 usuarios', pts: 300, req: 3, type: 'subscriptions_count' },
+                { id: 'm_m2', titulo: '🌐 Publica 3 contenidos en la web', pts: 400, req: 3, type: 'posts_created' }
             ],
             cuatrimestrales: [
-                { id: 'm_c1', titulo: '🏆 Participa activamente 4 meses en la web', pts: 1000, req: 1 }
+                { id: 'm_c1', titulo: '🏆 Consigue 5 amigos agregados', pts: 1000, req: 5, type: 'friends_count' }
             ],
             anuales: [
-                { id: 'm_a1', titulo: '🌟 Veterano de la Web (1 Año)', pts: 3000, req: 1 }
+                { id: 'm_a1', titulo: '🌟 Escribe 50 mensajes en la comunidad', pts: 3000, req: 50, type: 'chat_count' }
             ]
         };
 
@@ -793,6 +793,12 @@
                     chatInput.disabled = false;
                     chatBtn.disabled = false;
                     chatInput.placeholder = `Escribe como ${finalName}...`;
+
+                    // Reinicio de Seguridad de Puntos si no se ha formateado
+                    if (data.points === undefined || data.resetPointsDone !== true) {
+                        db.ref('users/' + user.uid).update({ points: 0, resetPointsDone: true });
+                        db.ref('user_missions/' + user.uid).remove();
+                    }
 
                     // Presencia
                     const myConn = db.ref(`presence/${user.uid}`);
@@ -847,7 +853,98 @@
             });
         }
 
-        function agregarPuntos(misionId, cantidad) {
+        // MISIONES Y VERIFICACIÓN REAL
+        function filtrarMisiones(cat) {
+            categoriaMisionActual = cat;
+            document.querySelectorAll('.mission-tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            renderMisiones();
+        }
+
+        async function verificarProgresoMision(m) {
+            if (!usuarioActual) return 0;
+            const uid = usuarioActual.uid;
+
+            if (m.type === 'chat_count') {
+                const snap = await db.ref('chat_global').orderByChild('uid').equalTo(uid).once('value');
+                return snap.numChildren();
+            } else if (m.type === 'posts_created') {
+                const snap = await db.ref('posts').orderByChild('uid').equalTo(uid).once('value');
+                return snap.numChildren();
+            } else if (m.type === 'friends_count') {
+                const snap = await db.ref('friends/' + uid).once('value');
+                return snap.numChildren();
+            } else if (m.type === 'subscriptions_count') {
+                const snap = await db.ref('subscriptions/' + uid).once('value');
+                return snap.numChildren();
+            } else if (m.type === 'likes_given') {
+                const snap = await db.ref('posts').once('value');
+                let count = 0;
+                snap.forEach(c => {
+                    if (c.val().likesUsers && c.val().likesUsers[uid]) count++;
+                });
+                return count;
+            }
+            return 0;
+        }
+
+        async function renderMisiones() {
+            const container = document.getElementById('missions-list');
+            container.innerHTML = '<p style="color:#888;">Verificando misiones...</p>';
+            const misiones = MISIONES_BASE[categoriaMisionActual] || [];
+
+            actualizarContadorMisiones();
+
+            if(!usuarioActual) {
+                container.innerHTML = '';
+                misiones.forEach(m => {
+                    const div = document.createElement('div');
+                    div.className = 'mission-card';
+                    div.innerHTML = `
+                        <div class="mission-info">
+                            <h4>${m.titulo}</h4>
+                            <p class="mission-reward">+${m.pts} PUNTOS</p>
+                        </div>
+                        <button class="btn-claim-mission" disabled>Inicia Sesión</button>
+                    `;
+                    container.appendChild(div);
+                });
+                return;
+            }
+
+            const claimedSnap = await db.ref(`user_missions/${usuarioActual.uid}`).once('value');
+            const claimed = claimedSnap.val() || {};
+            container.innerHTML = '';
+
+            for (let m of misiones) {
+                const isClaimed = claimed[m.id] === true;
+                const progreso = await verificarProgresoMision(m);
+                const cumplida = progreso >= m.req;
+
+                const div = document.createElement('div');
+                div.className = 'mission-card';
+
+                let btnHtml = '';
+                if (isClaimed) {
+                    btnHtml = `<button class="btn-claim-mission" disabled style="background:#222; color:#00ff66;">✓ Reclamado</button>`;
+                } else if (cumplida) {
+                    btnHtml = `<button class="btn-claim-mission" onclick="reclamarMisionReal('${m.id}', ${m.pts})">Reclamar +${m.pts} PTS 🚀</button>`;
+                } else {
+                    btnHtml = `<button class="btn-claim-mission" disabled style="background:#1a1a1a; color:#666;">(${progreso}/${m.req}) Incompleta</button>`;
+                }
+
+                div.innerHTML = `
+                    <div class="mission-info">
+                        <h4>${m.titulo}</h4>
+                        <p class="mission-reward">+${m.pts} PUNTOS — Progreso: ${progreso}/${m.req}</p>
+                    </div>
+                    ${btnHtml}
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        function reclamarMisionReal(misionId, cantidad) {
             if(!usuarioActual) return alert("Inicia sesión primero.");
             const userPtsRef = db.ref(`users/${usuarioActual.uid}/points`);
             const claimedRef = db.ref(`user_missions/${usuarioActual.uid}/${misionId}`);
@@ -858,7 +955,7 @@
                 } else {
                     userPtsRef.transaction(current => (current || 0) + cantidad);
                     claimedRef.set(true);
-                    alert(`¡Enhorabuena! Has ganado +${cantidad} PUNTOS.`);
+                    alert(`¡Excelente! Misión completada. Has ganado +${cantidad} PUNTOS.`);
                     renderMisiones();
                 }
             });
@@ -881,7 +978,6 @@
                     }
                 }
 
-                // Descontar Puntos
                 db.ref(`users/${usuarioActual.uid}/points`).set(currentPts - coste);
 
                 const uName = data.displayName || data.handle || 'Usuario';
@@ -895,10 +991,8 @@
                     timestamp: Date.now()
                 };
 
-                // Guardar en compras públicas
                 db.ref('purchases').push(compData);
 
-                // Anuncio automático en el Chat Global estilo Twitch
                 let msgTexto = `🎉 ¡${uName} ha canjeado "${nombreItem}" usando ${coste} puntos!`;
                 if(customUserIngame.trim()) msgTexto += ` (Usuario proporcionado: ${customUserIngame.trim()})`;
 
@@ -936,58 +1030,6 @@
                         ${data.userIngame && data.userIngame !== 'N/A' ? `<p style="margin:4px 0 0 0; font-size:0.85em; color:#00ff66;">ID/Usuario indicado: <u>${data.userIngame}</u></p>` : ''}
                     `;
                     container.prepend(itemDiv);
-                });
-            });
-        }
-
-        // MISIONES
-        function filtrarMisiones(cat) {
-            categoriaMisionActual = cat;
-            document.querySelectorAll('.mission-tab-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-            renderMisiones();
-        }
-
-        function renderMisiones() {
-            const container = document.getElementById('missions-list');
-            container.innerHTML = '';
-            const misiones = MISIONES_BASE[categoriaMisionActual] || [];
-
-            actualizarContadorMisiones();
-
-            if(!usuarioActual) {
-                misiones.forEach(m => {
-                    const div = document.createElement('div');
-                    div.className = 'mission-card';
-                    div.innerHTML = `
-                        <div class="mission-info">
-                            <h4>${m.titulo}</h4>
-                            <p class="mission-reward">+${m.pts} PUNTOS</p>
-                        </div>
-                        <button class="btn-claim-mission" disabled>Inicia Sesión</button>
-                    `;
-                    container.appendChild(div);
-                });
-                return;
-            }
-
-            db.ref(`user_missions/${usuarioActual.uid}`).once('value', snapshot => {
-                const claimed = snapshot.val() || {};
-
-                misiones.forEach(m => {
-                    const isClaimed = claimed[m.id] === true;
-                    const div = document.createElement('div');
-                    div.className = 'mission-card';
-                    div.innerHTML = `
-                        <div class="mission-info">
-                            <h4>${m.titulo}</h4>
-                            <p class="mission-reward">+${m.pts} PUNTOS</p>
-                        </div>
-                        <button class="btn-claim-mission" ${isClaimed ? 'disabled' : ''} onclick="agregarPuntos('${m.id}', ${m.pts})">
-                            ${isClaimed ? '✓ Reclamado' : 'Completar / Reclamar'}
-                        </button>
-                    `;
-                    container.appendChild(div);
                 });
             });
         }
@@ -1071,11 +1113,11 @@
             auth.createUserWithEmailAndPassword(email, password)
                 .then(userCredential => {
                     const uid = userCredential.user.uid;
-                    const userObj = { uid: uid, displayName: name, handle: handle, email: email, points: 100 };
+                    const userObj = { uid: uid, displayName: name, handle: handle, email: email, points: 0, resetPointsDone: true };
                     db.ref('users/' + uid).set(userObj);
                     db.ref('users_by_handle/' + handle.replace('@', '')).set(userObj);
                 })
-                .then(() => alert("¡Cuenta registrada con 100 PUNTOS de regalo!"))
+                .then(() => alert("¡Cuenta registrada con éxito! Haz misiones para ganar tus primeros puntos."))
                 .catch(err => alert("Error: " + err.message));
         }
 
@@ -1338,6 +1380,7 @@
                 const myName = uData.displayName || uData.handle || 'Usuario';
                 db.ref('chat_global').push({ uid: usuarioActual.uid, authorName: myName, mensaje: texto, timestamp: Date.now() });
                 input.value = '';
+                renderMisiones();
             });
         }
 
@@ -1460,6 +1503,7 @@
                 alert(modo === 'todas' ? "Suscrito con TODAS las notificaciones 🔔" : "Suscrito sin notificaciones 🔕");
             }
             comprobarEstadoSuscripcion();
+            renderMisiones();
         }
 
         function filtrarCanalTab(type) {
@@ -1530,6 +1574,7 @@
 
             alert("¡Publicado con éxito!");
             closeModal('studio-modal');
+            renderMisiones();
         }
 
         // Feed Comunidad
@@ -1603,6 +1648,7 @@
                 } else {
                     likeUserRef.set(true);
                     db.ref(`posts/${postId}/likes`).transaction(c => (c || 0) + 1);
+                    renderMisiones();
                 }
             });
         }
