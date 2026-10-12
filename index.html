@@ -34,7 +34,31 @@
             min-height: 100vh;
         }
 
-        /* Barra Superior Integrada y Ordenada */
+        /* Notificación Flotante en Web (3 segundos) */
+        .toast-notification {
+            position: fixed;
+            top: 75px;
+            right: 20px;
+            background: #181818;
+            border-left: 4px solid var(--primary-red);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(255, 30, 56, 0.4);
+            z-index: 300;
+            display: none;
+            animation: fadeInOut 3s forwards;
+            font-size: 0.9em;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translateY(-10px); }
+            10% { opacity: 1; transform: translateY(0); }
+            90% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-10px); }
+        }
+
+        /* Barra Superior */
         .top-bar {
             width: 100%;
             background: #0d0d0d;
@@ -67,9 +91,7 @@
             transition: background 0.2s;
         }
 
-        .toggle-sidebar-btn:hover {
-            background: var(--dark-red);
-        }
+        .toggle-sidebar-btn:hover { background: var(--dark-red); }
 
         .top-bar .brand {
             font-weight: 900;
@@ -119,7 +141,7 @@
             background-position: center;
         }
 
-        /* Menú desplegable del Perfil arriba a la derecha */
+        /* Menú Desplegable */
         .profile-dropdown {
             display: none;
             position: absolute;
@@ -128,7 +150,7 @@
             background: #121212;
             border: 1px solid var(--primary-red);
             border-radius: 8px;
-            width: 200px;
+            width: 210px;
             box-shadow: 0 0 15px rgba(0,0,0,0.8);
             z-index: 150;
             flex-direction: column;
@@ -146,11 +168,9 @@
             border-bottom: 1px solid #222;
         }
 
-        .profile-dropdown button:hover {
-            background: var(--primary-red);
-        }
+        .profile-dropdown button:hover { background: var(--primary-red); }
 
-        /* Menú Lateral Limpio */
+        /* Menú Lateral y Animación Neón Parpadeante (0.7s) */
         .sidebar {
             position: fixed;
             top: 60px;
@@ -169,8 +189,18 @@
             box-shadow: 5px 0 15px rgba(0,0,0,0.5);
         }
 
-        .sidebar.active {
-            left: 0;
+        .sidebar.active { left: 0; }
+
+        .sidebar.neon-flash {
+            animation: neonBlink 0.7s ease-in-out;
+        }
+
+        @keyframes neonBlink {
+            0% { box-shadow: 0 0 5px var(--primary-red); border-right: 1px solid var(--primary-red); }
+            25% { box-shadow: 0 0 30px var(--primary-red); border-right: 3px solid #ff5566; }
+            50% { box-shadow: 0 0 5px var(--primary-red); border-right: 1px solid var(--primary-red); }
+            75% { box-shadow: 0 0 30px var(--primary-red); border-right: 3px solid #ff5566; }
+            100% { box-shadow: 5px 0 15px rgba(0,0,0,0.5); border-right: 1px solid #222; }
         }
 
         .sidebar-tabs {
@@ -190,7 +220,6 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 0.85em;
-            transition: all 0.3s ease;
         }
 
         .tab-btn.active {
@@ -208,9 +237,7 @@
             flex-grow: 1;
         }
 
-        .tab-content.active {
-            display: flex;
-        }
+        .tab-content.active { display: flex; }
 
         .sidebar-input {
             width: 100%;
@@ -221,10 +248,6 @@
             border-radius: 6px;
             box-sizing: border-box;
             outline: none;
-        }
-
-        .sidebar-input:focus {
-            border-color: var(--primary-red);
         }
 
         .sidebar-btn-sub {
@@ -266,25 +289,14 @@
             user-select: none;
         }
 
-        .friend-item:hover {
-            border: 1px solid var(--primary-red);
-        }
-
         .status-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 8px;
+            width: 10px; height: 10px;
+            border-radius: 50%; display: inline-block; margin-right: 8px;
         }
-
         .status-dot.online { background: #00ff66; box-shadow: 0 0 8px #00ff66; }
         .status-dot.offline { background: #ff3333; }
 
-        header {
-            text-align: center;
-            padding: 40px 20px 20px 20px;
-        }
+        header { text-align: center; padding: 40px 20px 20px 20px; }
 
         h1 {
             color: var(--primary-red);
@@ -294,11 +306,7 @@
             letter-spacing: 3px;
         }
 
-        p.subtitle {
-            color: var(--text-gray);
-            font-size: 1.25em;
-            margin-top: 8px;
-        }
+        p.subtitle { color: var(--text-gray); font-size: 1.25em; margin-top: 8px; }
 
         .badge {
             background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
@@ -312,11 +320,7 @@
             letter-spacing: 1px;
         }
 
-        .container {
-            width: 90%;
-            max-width: 900px;
-            margin: 20px auto 50px auto;
-        }
+        .container { width: 90%; max-width: 900px; margin: 20px auto 50px auto; }
 
         section {
             background-color: var(--card-bg);
@@ -335,25 +339,24 @@
             font-size: 1.6em;
         }
 
-        /* Redes Sociales */
+        /* Redes Sociales con Iconos Logo SVG */
         .social-box {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin: 20px 0;
+            display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin: 20px 0;
         }
 
         .btn-social {
             background-color: var(--card-bg);
             color: var(--text-white);
             text-decoration: none;
-            padding: 12px 24px;
+            padding: 12px 22px;
             border-radius: 12px;
             font-weight: bold;
             border: 2px solid #222;
+            display: flex; align-items: center; gap: 10px;
             transition: all 0.3s ease;
         }
+
+        .btn-social svg { width: 20px; height: 20px; fill: currentColor; }
 
         .btn-social:hover {
             border-color: var(--primary-red);
@@ -363,250 +366,95 @@
 
         /* Estadísticas */
         .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-            text-align: center;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; text-align: center;
         }
 
         .stat-card {
-            background: #0a0a0a;
-            border: 1px solid #222;
-            border-radius: 12px;
-            padding: 22px;
+            background: #0a0a0a; border: 1px solid #222; border-radius: 12px; padding: 22px;
         }
 
-        .stat-number {
-            font-size: 2.2em;
-            font-weight: 800;
-            color: var(--primary-red);
-        }
-
-        .stat-label {
-            color: var(--text-gray);
-            font-size: 0.9em;
-            margin-top: 5px;
-        }
+        .stat-number { font-size: 2.2em; font-weight: 800; color: var(--primary-red); }
+        .stat-label { color: var(--text-gray); font-size: 0.9em; margin-top: 5px; }
 
         /* Vídeos Destacados */
-        .video-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 650px) {
-            .video-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        .video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        @media (max-width: 650px) { .video-grid { grid-template-columns: 1fr; } }
 
         .video-card {
-            background: #0a0a0a;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #222;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
+            background: #0a0a0a; border-radius: 12px; overflow: hidden; border: 1px solid #222; text-align: center; display: flex; flex-direction: column; justify-content: space-between;
         }
 
-        .video-card img {
-            width: 100%;
-            height: 190px;
-            object-fit: cover;
-        }
-
-        .video-card h3 {
-            font-size: 1.05em;
-            margin: 15px;
-            color: var(--text-white);
-        }
-
+        .video-card img { width: 100%; height: 190px; object-fit: cover; }
+        .video-card h3 { font-size: 1.05em; margin: 15px; color: var(--text-white); }
         .video-card a.play-btn {
-            display: block;
-            margin: 0 15px 15px 15px;
-            background-color: var(--primary-red);
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
+            display: block; margin: 0 15px 15px 15px; background-color: var(--primary-red); color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold;
         }
 
         /* Setup Gamer */
-        .setup-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-        }
-
-        .setup-card {
-            background: #0a0a0a;
-            border: 1px solid #222;
-            border-radius: 10px;
-            padding: 18px;
-        }
-
-        .setup-title {
-            color: var(--primary-red);
-            font-weight: bold;
-            font-size: 0.85em;
-            text-transform: uppercase;
-        }
-
-        .setup-value {
-            font-size: 1.1em;
-            font-weight: 600;
-            margin-top: 6px;
-        }
+        .setup-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
+        .setup-card { background: #0a0a0a; border: 1px solid #222; border-radius: 10px; padding: 18px; }
+        .setup-title { color: var(--primary-red); font-weight: bold; font-size: 0.85em; text-transform: uppercase; }
+        .setup-value { font-size: 1.1em; font-weight: 600; margin-top: 6px; }
 
         /* Configuración Cámara */
-        .config-flex {
-            display: flex;
-            gap: 25px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
+        .config-flex { display: flex; gap: 25px; flex-wrap: wrap; align-items: center; }
+        .config-list { flex: 1; list-style: none; padding: 0; margin: 0; line-height: 2em; }
+        .config-list li { background: #0a0a0a; margin-bottom: 8px; padding: 8px 15px; border-radius: 8px; border: 1px solid #1a1a1a; }
+        .config-list li strong { color: var(--primary-red); }
+        .config-img { flex: 1; text-align: center; }
+        .config-img img { max-width: 100%; border-radius: 12px; border: 2px solid #333; }
 
-        .config-list {
-            flex: 1;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            line-height: 2em;
-        }
-
-        .config-list li {
-            background: #0a0a0a;
-            margin-bottom: 8px;
-            padding: 8px 15px;
-            border-radius: 8px;
-            border: 1px solid #1a1a1a;
-        }
-
-        .config-list li strong {
-            color: var(--primary-red);
-        }
-
-        .config-img {
-            flex: 1;
-            text-align: center;
-        }
-
-        .config-img img {
-            max-width: 100%;
-            border-radius: 12px;
-            border: 2px solid #333;
-        }
-
-        /* Chat Interactivo Global y Privado */
+        /* Chat Interactivo */
         .chat-box {
-            background: #0a0a0a;
-            border-radius: 12px;
-            border: 1px solid #222;
-            padding: 18px;
-            height: 300px;
-            display: flex;
-            flex-direction: column;
+            background: #0a0a0a; border-radius: 12px; border: 1px solid #222; padding: 18px; height: 320px; display: flex; flex-direction: column;
         }
 
         .chat-messages {
-            overflow-y: auto;
-            flex-grow: 1;
-            margin-bottom: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+            overflow-y: auto; flex-grow: 1; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px;
         }
 
         .chat-msg {
-            background: #141414;
-            padding: 10px 14px;
-            border-radius: 8px;
-            font-size: 0.92em;
-            border-left: 3px solid var(--primary-red);
-            word-break: break-word;
+            background: #141414; padding: 10px 14px; border-radius: 8px; font-size: 0.92em; border-left: 3px solid var(--primary-red); word-break: break-word; position: relative;
         }
 
-        .chat-input-area {
-            display: flex;
-            gap: 10px;
+        .chat-msg .msg-actions {
+            display: none; position: absolute; right: 10px; top: 8px; gap: 5px;
         }
 
-        .chat-input-area input {
-            flex-grow: 1;
-            background: #141414;
-            border: 1px solid #333;
-            padding: 12px;
-            border-radius: 8px;
-            color: white;
-            outline: none;
-        }
+        .chat-msg:hover .msg-actions { display: flex; }
+        .msg-actions button { background: #222; color: #ccc; border: none; padding: 2px 6px; border-radius: 4px; font-size: 0.75em; cursor: pointer; }
+        .msg-actions button:hover { color: white; background: var(--primary-red); }
 
-        .chat-input-area button {
-            background: var(--primary-red);
-            color: white;
-            border: none;
-            padding: 12px 22px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+        .chat-input-area { display: flex; gap: 10px; }
+        .chat-input-area input { flex-grow: 1; background: #141414; border: 1px solid #333; padding: 12px; border-radius: 8px; color: white; outline: none; }
+        .chat-input-area button { background: var(--primary-red); color: white; border: none; padding: 12px 22px; border-radius: 8px; font-weight: bold; cursor: pointer; }
 
         /* Modales */
         .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85);
-            z-index: 200;
-            justify-content: center;
-            align-items: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 200; justify-content: center; align-items: center;
         }
 
         .modal-content {
-            background: #121212;
-            padding: 30px;
-            border-radius: 12px;
-            border: 1px solid var(--primary-red);
-            width: 90%;
-            max-width: 500px;
-            max-height: 85vh;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            box-shadow: 0 0 25px var(--neon-glow);
+            background: #121212; padding: 30px; border-radius: 12px; border: 1px solid var(--primary-red); width: 90%; max-width: 550px; max-height: 85vh; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; box-shadow: 0 0 25px var(--neon-glow);
         }
 
-        .modal-content h3 {
-            margin: 0;
-            color: var(--primary-red);
-        }
+        .modal-content h3 { margin: 0; color: var(--primary-red); }
+        .modal-content input, .modal-content select, .modal-content textarea { background: #0a0a0a; border: 1px solid #333; padding: 12px; border-radius: 6px; color: white; }
 
-        .modal-content input, .modal-content select, .modal-content textarea {
-            background: #0a0a0a;
-            border: 1px solid #333;
-            padding: 12px;
-            border-radius: 6px;
-            color: white;
-        }
+        .post-card { background: #181818; border: 1px solid #333; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
 
-        /* Studio Post Item */
-        .post-card {
-            background: #181818;
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 12px;
-            margin-bottom: 10px;
-        }
+        /* Studio Youtube Style Tabs */
+        .studio-nav-tabs { display: flex; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; margin-top: 15px; }
+        .studio-tab-item { background: transparent; color: #888; border: none; font-weight: bold; padding: 6px 12px; cursor: pointer; }
+        .studio-tab-item.active { color: var(--primary-red); border-bottom: 2px solid var(--primary-red); }
     </style>
 </head>
 <body>
 
-    <!-- Barra Superior Súper Ordenada -->
+    <!-- Pop-up de Notificación In-App (3s sin sonido) -->
+    <div class="toast-notification" id="toast-notif"></div>
+
+    <!-- Barra Superior -->
     <div class="top-bar">
         <div class="top-left-group">
             <button class="toggle-sidebar-btn" onclick="toggleSidebar()">☰ Menú</button>
@@ -616,51 +464,47 @@
             <button class="btn-auth" id="btn-login-modal" onclick="openModal('auth-modal')">Iniciar Sesión / Registro</button>
             <div class="user-avatar" id="user-avatar" style="display:none;" onclick="toggleProfileDropdown()">U</div>
             
-            <!-- Menú Desplegable de Perfil -->
             <div class="profile-dropdown" id="profile-dropdown">
-                <button onclick="abrirMiStudio()">📹 Mi Canal / Studio</button>
-                <button onclick="toggleSidebar()">👥 Amigos y Ajustes</button>
+                <button onclick="verMiPropioCanal()">📹 Mi Canal / Studio</button>
+                <button onclick="abrirModalPublicarStudio()">➕ Publicar Nuevo Contenido</button>
+                <button onclick="abrirAmigosAjustesDesdePerfil()">👥 Amigos y Ajustes</button>
                 <button onclick="cerrarSesion()" style="color:var(--primary-red);">🚪 Cerrar Sesión</button>
             </div>
         </div>
     </div>
 
-    <!-- Menú Lateral Ordenado con Pestañas -->
+    <!-- Menú Lateral Ordenado -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-tabs">
             <button class="tab-btn active" onclick="switchTab('tab-amigos')">👥 Amigos</button>
             <button class="tab-btn" onclick="switchTab('tab-ajustes')">⚙️ Ajustes</button>
         </div>
 
-        <!-- Pestaña 1: Amigos y Presencia Real -->
         <div class="tab-content active" id="tab-amigos">
             <label style="font-size:0.8em; color:#888;">Añadir amigo por apodo exacto:</label>
             <input type="text" class="sidebar-input" id="friend-username" placeholder="Escribe apodo exacto...">
             <button class="sidebar-btn-sub" onclick="enviarSolicitudAmigo()">Enviar Solicitud</button>
 
-            <!-- Lista de Amigos con Doble Click & Presencia -->
             <div class="req-box">
-                <div class="req-title">Mis Amigos (1 Click = Perfil | 2 Clicks = Chat):</div>
+                <div class="req-title">Mis Amigos (1 Click = Perfil | 2 Clicks = DM):</div>
                 <div id="friends-list" style="font-size:0.85em; color:#888;">No tienes amigos agregados.</div>
             </div>
             
-            <!-- Solicitudes Recibidas -->
             <div class="req-box">
                 <div class="req-title">Solicitudes de Amistad:</div>
                 <div id="incoming-requests" style="font-size:0.85em; color:#888;">No tienes solicitudes.</div>
             </div>
 
-            <!-- Solicitudes Enviadas -->
             <div class="req-box">
                 <div class="req-title">Solicitudes Enviadas:</div>
                 <div id="outgoing-requests" style="font-size:0.85em; color:#888;">Sin solicitudes enviadas.</div>
             </div>
         </div>
 
-        <!-- Pestaña 2: Ajustes de Perfil y Cuenta -->
         <div class="tab-content" id="tab-ajustes">
-            <label style="font-size:0.8em; color:#888;">Foto de Perfil (URL Imagen):</label>
+            <label style="font-size:0.8em; color:#888;">Foto de Perfil (URL o Archivo):</label>
             <input type="text" class="sidebar-input" id="avatar-url-input" placeholder="https://...">
+            <input type="file" id="avatar-file-input" accept="image/*" style="font-size:0.8em; color:#ccc;">
             <button class="sidebar-btn-sub" onclick="guardarFotoPerfil()">Guardar Foto</button>
 
             <label style="font-size:0.8em; color:#888; margin-top:10px;">Cambiar Apodo:</label>
@@ -685,91 +529,100 @@
     </header>
 
     <div class="container">
-        <!-- Redes Sociales -->
+        <!-- Redes Sociales con Iconos Logo SVG -->
         <div class="social-box">
-            <a class="btn-social" href="https://www.youtube.com/@driuk" target="_blank">YouTube</a>
-            <a class="btn-social" href="https://twitch.tv/driukstrife" target="_blank">Twitch</a>
-            <a class="btn-social" href="https://discord.gg/WDXTun5rfR" target="_blank">Discord</a>
+            <a class="btn-social" href="https://www.youtube.com/@driuk" target="_blank">
+                <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                YouTube
+            </a>
+            <a class="btn-social" href="https://twitch.tv/driukstrife" target="_blank">
+                <svg viewBox="0 0 24 24"><path d="M11.571 1.429L1.429 4.286v14.285h4.285v4.286l4.286-4.286h3.572L22.143 10V1.429H11.571zm9.143 7.857l-2.857 2.857h-4.286l-2.857 2.857v-2.857H6.429V2.857h14.285v6.429zM16.429 5.714h-1.429v4.286h1.429V5.714zm-4.286 0h-1.429v4.286h1.429V5.714z"/></svg>
+                Twitch
+            </a>
+            <a class="btn-social" href="https://discord.gg/WDXTun5rfR" target="_blank">
+                <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515a.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0a12.64 12.64 0 0 0-.617-1.25a.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057a19.9 19.9 0 0 0 5.993 3.03a.078.078 0 0 0 .084-.028a14.09 14.09 0 0 0 1.226-1.994a.076.076 0 0 0-.041-.106a13.107 13.107 0 0 1-1.872-.892a.077.077 0 0 1-.008-.128a10.2 10.2 0 0 0 .372-.292a.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127a12.299 12.299 0 0 1-1.873.892a.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028a19.839 19.839 0 0 0 6.002-3.03a.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.956-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419c0-1.333.955-2.419 2.157-2.419c1.21 0 2.176 1.096 2.157 2.42c0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                Discord
+            </a>
         </div>
 
-        <!-- Estadísticas en Tiempo Real con YouTube API -->
+        <!-- 1. Estadísticas de YouTube API -->
         <section>
-            <h2>🏆 2. LOGROS Y HITOS DE LA COMUNIDAD (YOUTUBE API)</h2>
+            <h2>🏆 1. LOGROS Y HITOS DE LA COMUNIDAD (YOUTUBE API)</h2>
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-number" id="yt-subs">Cargando...</div>
-                    <div class="stat-label">2.1. Suscriptores Reales</div>
+                    <div class="stat-label">1.1. Suscriptores Reales</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="yt-views">Cargando...</div>
-                    <div class="stat-label">2.2. Visualizaciones Totales</div>
+                    <div class="stat-label">1.2. Visualizaciones Totales</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number">Diamante 1 💎</div>
-                    <div class="stat-label">2.3. Rango Máximo Alcanzado</div>
+                    <div class="stat-label">1.3. Rango Máximo Alcanzado</div>
                 </div>
             </div>
         </section>
 
-        <!-- Último Contenido Multimedia -->
+        <!-- 2. Último Contenido Multimedia -->
         <section>
-            <h2>🎬 3. ÚLTIMO CONTENIDO DESTACADO</h2>
+            <h2>🎬 2. ÚLTIMO CONTENIDO DESTACADO</h2>
             <div class="video-grid">
                 <div class="video-card">
                     <a href="https://youtu.be/DuFB_bxeAAg?si=fFzFck0RNGWR4q1Q" target="_blank">
                         <img src="https://img.youtube.com/vi/DuFB_bxeAAg/hqdefault.jpg" alt="Jugué Rocket League SIN BALL CAM">
                     </a>
-                    <h3>3.1. Jugué Rocket League SIN BALL CAM: ¿Es posible ganar?</h3>
+                    <h3>2.1. Jugué Rocket League SIN BALL CAM: ¿Es posible ganar?</h3>
                     <a class="play-btn" href="https://youtu.be/DuFB_bxeAAg?si=fFzFck0RNGWR4q1Q" target="_blank">Ver Vídeo Completo 🔴</a>
                 </div>
                 <div class="video-card">
                     <a href="https://youtube.com/shorts/NXKzgqY29o4?si=90ZmHhLNa4rrtqXv" target="_blank">
                         <img src="https://img.youtube.com/vi/NXKzgqY29o4/hqdefault.jpg" alt="Tengo una sorpresa para el canal">
                     </a>
-                    <h3>3.2. Tengo una sorpresa para el canal 👀</h3>
+                    <h3>2.2. Tengo una sorpresa para el canal 👀</h3>
                     <a class="play-btn" href="https://youtube.com/shorts/NXKzgqY29o4?si=90ZmHhLNa4rrtqXv" target="_blank">Ver Short Épico 🔥</a>
                 </div>
             </div>
         </section>
 
-        <!-- Hardware y Periféricos -->
+        <!-- 3. Hardware y Periféricos -->
         <section>
-            <h2>🖥️ 4. MI SETUP COMPETITIVO</h2>
+            <h2>🖥️ 3. MI SETUP COMPETITIVO</h2>
             <div class="setup-grid">
                 <div class="setup-card">
-                    <div class="setup-title">4.1. Mando Gamer</div>
+                    <div class="setup-title">3.1. Mando Gamer</div>
                     <div class="setup-value">GameSir G7 SE</div>
                 </div>
                 <div class="setup-card">
-                    <div class="setup-title">4.2. Monitor 240Hz</div>
+                    <div class="setup-title">3.2. Monitor 240Hz</div>
                     <div class="setup-value">AOC 25G3ZM</div>
                 </div>
                 <div class="setup-card">
-                    <div class="setup-title">4.3. Auriculares</div>
+                    <div class="setup-title">3.3. Auriculares</div>
                     <div class="setup-value">Logitech G PRO X LIGHTSPEED</div>
                 </div>
                 <div class="setup-card">
-                    <div class="setup-title">4.4. Tarjeta Gráfica</div>
+                    <div class="setup-title">3.4. Tarjeta Gráfica</div>
                     <div class="setup-value">AMD Radeon RX 7800 XT</div>
                 </div>
                 <div class="setup-card">
-                    <div class="setup-title">4.5. Procesador</div>
+                    <div class="setup-title">3.5. Procesador</div>
                     <div class="setup-value">AMD Ryzen 7 5700X3D</div>
                 </div>
             </div>
         </section>
 
-        <!-- Configuración Cámara Rocket League -->
+        <!-- 4. Configuración Cámara Rocket League -->
         <section>
-            <h2>⚙️ 5. CONFIGURACIÓN DE CÁMARA (ROCKET LEAGUE)</h2>
+            <h2>⚙️ 4. CONFIGURACIÓN DE CÁMARA (ROCKET LEAGUE)</h2>
             <div class="config-flex">
                 <ul class="config-list">
-                    <li><strong>5.1. FOV (Campo de visión):</strong> 110</li>
-                    <li><strong>5.2. Distancia:</strong> 270</li>
-                    <li><strong>5.3. Altura:</strong> 100</li>
-                    <li><strong>5.4. Ángulo:</strong> -4.0</li>
-                    <li><strong>5.5. Rigidez:</strong> 0.45</li>
-                    <li><strong>5.6. Velocidad de giro:</strong> 4.20</li>
+                    <li><strong>4.1. FOV (Campo de visión):</strong> 110</li>
+                    <li><strong>4.2. Distancia:</strong> 270</li>
+                    <li><strong>4.3. Altura:</strong> 100</li>
+                    <li><strong>4.4. Ángulo:</strong> -4.0</li>
+                    <li><strong>4.5. Rigidez:</strong> 0.45</li>
+                    <li><strong>4.6. Velocidad de giro:</strong> 4.20</li>
                 </ul>
                 <div class="config-img">
                     <img src="camara.jpg" alt="Configuración de cámara real de Driuk en Rocket League">
@@ -778,17 +631,9 @@
             </div>
         </section>
 
-        <!-- Feed Social de Creadores y Usuarios -->
+        <!-- 5. Chat Global Sincronizado -->
         <section>
-            <h2>🌐 6. PUBLICACIONES Y VIDEOS DE LA COMUNIDAD</h2>
-            <div id="community-feed">
-                <p style="color:#888;">Cargando feed de publicaciones...</p>
-            </div>
-        </section>
-
-        <!-- Chat Global Sincronizado en Tiempo Real -->
-        <section>
-            <h2>💬 7. SALA DE CHAT Y COMUNIDAD</h2>
+            <h2>💬 5. SALA DE CHAT Y COMUNIDAD</h2>
             <div class="chat-box">
                 <div class="chat-messages" id="chat-messages">
                     <div class="chat-msg"><strong>Sistema:</strong> ¡Bienvenido al chat global en vivo!</div>
@@ -799,9 +644,18 @@
                 </div>
             </div>
         </section>
+
+        <!-- 6. Feed de la Comunidad con Buscador -->
+        <section>
+            <h2>🌐 6. PUBLICACIONES Y VÍDEOS DE LA COMUNIDAD</h2>
+            <input type="text" id="feed-search-input" placeholder="🔍 Buscar por título o apodo de creador..." class="sidebar-input" style="margin-bottom:15px;" onkeyup="filtrarFeedComunidad()">
+            <div id="community-feed">
+                <p style="color:#888;">Cargando publicaciones de la comunidad...</p>
+            </div>
+        </section>
     </div>
 
-    <!-- Modal de Autenticación (Login / Registro) -->
+    <!-- Modal de Autenticación -->
     <div class="modal" id="auth-modal">
         <div class="modal-content">
             <h3>Acceso de Usuario</h3>
@@ -816,35 +670,51 @@
         </div>
     </div>
 
-    <!-- Modal de Perfil de Usuario/Amigo -->
-    <div class="modal" id="profile-modal">
-        <div class="modal-content" style="text-align:center;">
-            <div id="prof-avatar" style="width:70px; height:70px; border-radius:50%; background:var(--primary-red); margin:0 auto; display:flex; align-items:center; justify-content:center; font-size:2em; font-weight:bold; background-size:cover;">U</div>
-            <h3 id="prof-username" style="margin-top:10px;">Usuario</h3>
-            <p id="prof-subs" style="color:#888; font-size:0.9em;">0 Suscriptores</p>
-            <button class="btn-auth" id="btn-subscribe" onclick="toggleSuscripcion()">Suscribirse</button>
-            
-            <h4 style="color:var(--primary-red); text-align:left; margin-top:20px;">Publicaciones del Creador:</h4>
-            <div id="prof-posts" style="text-align:left;">Sin publicaciones.</div>
+    <!-- Modal Mi Canal / Studio Completo Estilo YouTube -->
+    <div class="modal" id="channel-modal">
+        <div class="modal-content" style="max-width:700px;">
+            <div style="background:linear-gradient(90deg, #330000, #990012); height:100px; border-radius:8px; display:flex; align-items:flex-end; padding:15px;">
+                <div id="chan-avatar" style="width:70px; height:70px; border-radius:50%; background:var(--primary-red); border:3px solid #121212; display:flex; align-items:center; justify-content:center; font-size:2em; font-weight:bold; background-size:cover; margin-bottom:-25px;">U</div>
+            </div>
+            <div style="margin-top:30px; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h2 id="chan-title" style="margin:0; border:none;">Nombre del Canal</h2>
+                    <p id="chan-subs" style="color:#888; font-size:0.9em; margin:4px 0;">0 Suscriptores</p>
+                </div>
+                <button class="btn-auth" onclick="abrirModalPublicarStudio()">➕ Publicar Vídeo/Foto</button>
+            </div>
 
-            <button style="background:transparent; color:red; border:none; cursor:pointer; margin-top:15px;" onclick="closeModal('profile-modal')">Cerrar</button>
+            <!-- Navegación Estilo YouTube -->
+            <div class="studio-nav-tabs">
+                <button class="studio-tab-item active" onclick="filtrarCanalTab('all')">Inicio</button>
+                <button class="studio-tab-item" onclick="filtrarCanalTab('video')">Vídeos</button>
+                <button class="studio-tab-item" onclick="filtrarCanalTab('short')">Shorts</button>
+                <button class="studio-tab-item" onclick="filtrarCanalTab('live')">Directos</button>
+                <button class="studio-tab-item" onclick="filtrarCanalTab('photo')">Comunidad</button>
+            </div>
+
+            <div id="chan-posts-list" style="margin-top:15px;">Sin contenido.</div>
+
+            <button style="background:transparent; color:red; border:none; cursor:pointer; margin-top:15px;" onclick="closeModal('channel-modal')">Cerrar Canal</button>
         </div>
     </div>
 
-    <!-- Modal Mi Studio (Publicar Vídeos, Shorts, Fotos, Directos) -->
+    <!-- Modal Publicar en Studio (Soporta MP4 o Links) -->
     <div class="modal" id="studio-modal">
         <div class="modal-content">
-            <h3>📹 Mi Studio & Publicaciones</h3>
+            <h3>📹 Publicar en tu Canal</h3>
             <label style="font-size:0.8em; color:#888;">Tipo de Publicación:</label>
             <select id="studio-type" class="sidebar-input">
-                <option value="video">📹 Vídeo Largo</option>
-                <option value="short">⚡ Short</option>
-                <option value="photo">📸 Foto / Imagen</option>
-                <option value="live">🔴 Directo (Twitch/YouTube)</option>
+                <option value="video">📹 Vídeo Largo (MP4 o Link)</option>
+                <option value="short">⚡ Short (MP4 o Link)</option>
+                <option value="photo">📸 Foto / Comunidad</option>
+                <option value="live">🔴 Emisión en Directo</option>
             </select>
 
-            <input type="text" id="studio-title" placeholder="Título de la publicación...">
-            <input type="text" id="studio-url" placeholder="Enlace URL (YouTube, Twitch, Imagen)...">
+            <input type="text" id="studio-title" placeholder="Título...">
+            <input type="text" id="studio-url" placeholder="Enlace URL (YouTube/MP4)...">
+            <label style="font-size:0.8em; color:#888;">O adjuntar archivo MP4/Imagen desde tu equipo:</label>
+            <input type="file" id="studio-file" accept="video/mp4,image/*" style="font-size:0.8em; color:#ccc;">
             <textarea id="studio-desc" placeholder="Descripción opcional..." rows="3"></textarea>
 
             <button class="btn-auth" onclick="publicarContenidoStudio()">Publicar Ahora 🚀</button>
@@ -856,7 +726,7 @@
     <div class="modal" id="dm-modal">
         <div class="modal-content">
             <h3 id="dm-title">Chat Privado</h3>
-            <div class="chat-box" style="height:250px;">
+            <div class="chat-box" style="height:280px;">
                 <div class="chat-messages" id="dm-messages"></div>
                 <div class="chat-input-area">
                     <input type="text" id="dm-input" placeholder="Escribe un mensaje privado...">
@@ -868,7 +738,6 @@
     </div>
 
     <script>
-        // Configuración oficial de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCspy94tmXYMUucN5bbr-fXlA2ry3XecSk",
             authDomain: "driuk-web-fcabd.firebaseapp.com",
@@ -884,11 +753,11 @@
         const db = firebase.database();
 
         let usuarioActual = null;
-        let perfilSeleccionado = null;
         let dmFriendUser = null;
         let clickTimer = null;
+        let allPostsData = [];
 
-        // Estado de autenticación y Presencia en Tiempo Real
+        // Estado Auth & Presencia
         auth.onAuthStateChanged(user => {
             const btnModal = document.getElementById('btn-login-modal');
             const avatar = document.getElementById('user-avatar');
@@ -913,20 +782,15 @@
                 chatBtn.disabled = false;
                 chatInput.placeholder = `Escribe como ${username}...`;
                 
-                // Sistema de Presencia Real (Verde/Rojo)
-                const myConnectionsRef = db.ref(`users/${username}/online`);
-                const lastOnlineRef = db.ref(`users/${username}/lastOnline`);
-                const connectedRef = db.ref('.info/connected');
-
-                connectedRef.on('value', snap => {
+                // Presencia en vivo
+                const myConn = db.ref(`users/${username}/online`);
+                db.ref('.info/connected').on('value', snap => {
                     if (snap.val() === true) {
-                        myConnectionsRef.set(true);
-                        myConnectionsRef.onDisconnect().set(false);
-                        lastOnlineRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
+                        myConn.set(true);
+                        myConn.onDisconnect().set(false);
                     }
                 });
 
-                // Registrar datos básicos
                 db.ref('users/' + username).update({
                     uid: user.uid,
                     displayName: username,
@@ -934,6 +798,7 @@
                     photoURL: user.photoURL || ''
                 });
 
+                escucharNotificacionesMensajes();
                 cargarSolicitudesYAmigos();
                 cargarFeedComunidad();
                 closeModal('auth-modal');
@@ -948,28 +813,47 @@
             }
         });
 
-        // Autenticación
+        // Escuchar Pop-Up Notificación de Mensaje Privado (3s sin sonido)
+        function escucharNotificacionesMensajes() {
+            if(!usuarioActual) return;
+            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
+
+            db.ref('direct_messages').on('child_changed', snapshot => {
+                const chatId = snapshot.key;
+                if(chatId.includes(myUsername)) {
+                    snapshot.ref.limitToLast(1).once('value', lastSnap => {
+                        lastSnap.forEach(msgChild => {
+                            const data = msgChild.val();
+                            if(data.usuario !== myUsername) {
+                                mostrarToastNotificacion(`💬 Nuevo mensaje de @${data.usuario}: "${data.mensaje.substring(0,25)}..."`);
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        function mostrarToastNotificacion(texto) {
+            const toast = document.getElementById('toast-notif');
+            toast.innerText = texto;
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 3000);
+        }
+
+        // Auth Basica
         function registrarUsuario() {
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value.trim();
             const username = document.getElementById('auth-username').value.trim().toLowerCase();
 
-            if(!email || !password || !username) {
-                alert("Rellena Apodo, Correo y Contraseña.");
-                return;
-            }
+            if(!email || !password || !username) return alert("Completa todos los campos.");
 
             db.ref('users/' + username).once('value', snapshot => {
-                if (snapshot.exists()) {
-                    alert("Ese apodo ya está registrado.");
-                } else {
-                    auth.createUserWithEmailAndPassword(email, password)
-                        .then(userCredential => {
-                            return userCredential.user.updateProfile({ displayName: username });
-                        })
-                        .then(() => alert("¡Cuenta registrada con éxito!"))
-                        .catch(err => alert("Error: " + err.message));
-                }
+                if (snapshot.exists()) return alert("Ese apodo ya existe.");
+                auth.createUserWithEmailAndPassword(email, password)
+                    .then(userCredential => userCredential.user.updateProfile({ displayName: username }))
+                    .then(() => alert("¡Cuenta creada!"))
+                    .catch(err => alert("Error: " + err.message));
             });
         }
 
@@ -981,7 +865,7 @@
 
         function recuperarPassword() {
             const email = document.getElementById('auth-email').value.trim();
-            if(!email) return alert("Introduce tu correo.");
+            if(!email) return alert("Escribe tu correo.");
             auth.sendPasswordResetEmail(email).then(() => alert("Enlace enviado.")).catch(err => alert("Error: " + err.message));
         }
 
@@ -990,34 +874,60 @@
         }
 
         function cambiarApodo() {
-            const nuevoApodo = document.getElementById('new-username-input').value.trim().toLowerCase();
-            if(!nuevoApodo || !usuarioActual) return;
-
-            db.ref('users/' + nuevoApodo).once('value', snapshot => {
-                if (snapshot.exists()) {
-                    alert("Ese apodo ya pertenece a otra cuenta.");
-                } else {
-                    usuarioActual.updateProfile({ displayName: nuevoApodo }).then(() => {
-                        alert("¡Apodo actualizado!");
-                        location.reload();
-                    });
-                }
+            const nuevo = document.getElementById('new-username-input').value.trim().toLowerCase();
+            if(!nuevo || !usuarioActual) return;
+            db.ref('users/' + nuevo).once('value', snap => {
+                if(snap.exists()) return alert("Apodo ocupado.");
+                usuarioActual.updateProfile({ displayName: nuevo }).then(() => { alert("Apodo cambiado!"); location.reload(); });
             });
         }
 
         function cerrarSesion() { auth.signOut(); location.reload(); }
 
-        // Presencia y Clicks en Amigos (1 Click = Perfil | 2 Clicks = Chat DM)
+        // Foto Perfil desde Link o Archivo
+        function guardarFotoPerfil() {
+            const linkUrl = document.getElementById('avatar-url-input').value.trim();
+            const fileInput = document.getElementById('avatar-file-input');
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    aplicarFotoURL(e.target.result);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else if (linkUrl) {
+                aplicarFotoURL(linkUrl);
+            }
+        }
+
+        function aplicarFotoURL(url) {
+            if(!usuarioActual) return;
+            usuarioActual.updateProfile({ photoURL: url }).then(() => {
+                document.getElementById('user-avatar').style.backgroundImage = `url(${url})`;
+                document.getElementById('user-avatar').innerText = '';
+                db.ref('users/' + (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase()).update({ photoURL: url });
+                alert("¡Foto de perfil actualizada!");
+            });
+        }
+
+        // Abrir Menú Lateral con destello Neón
+        function abrirAmigosAjustesDesdePerfil() {
+            toggleProfileDropdown();
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar.classList.contains('active')) {
+                sidebar.classList.add('neon-flash');
+                setTimeout(() => sidebar.classList.remove('neon-flash'), 700);
+            } else {
+                sidebar.classList.add('active');
+            }
+        }
+
+        // Amigos y Presencia Real
         function handleFriendClick(friendUser) {
             if (clickTimer == null) {
-                clickTimer = setTimeout(() => {
-                    clickTimer = null;
-                    abrirPerfilUsuario(friendUser); // Single click
-                }, 250);
+                clickTimer = setTimeout(() => { clickTimer = null; abrirCanalUsuario(friendUser); }, 250);
             } else {
-                clearTimeout(clickTimer);
-                clickTimer = null;
-                abrirChatPrivadoDM(friendUser); // Double click
+                clearTimeout(clickTimer); clickTimer = null; abrirChatPrivadoDM(friendUser);
             }
         }
 
@@ -1025,14 +935,11 @@
             if(!usuarioActual) return;
             const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
 
-            // Escuchar lista de amigos con indicador verde/rojo en tiempo real
             db.ref('friends/' + myUsername).on('value', snapshot => {
                 const container = document.getElementById('friends-list');
                 container.innerHTML = '';
-                if (!snapshot.exists()) {
-                    container.innerText = "No tienes amigos aceptados.";
-                    return;
-                }
+                if (!snapshot.exists()) return container.innerText = "No tienes amigos agregados.";
+                
                 snapshot.forEach(child => {
                     const friendName = child.key;
                     db.ref('users/' + friendName + '/online').on('value', onlineSnap => {
@@ -1056,11 +963,10 @@
                 });
             });
 
-            // Solicitudes recibidas y enviadas
             db.ref('friend_requests/' + myUsername + '/received').on('value', snapshot => {
                 const container = document.getElementById('incoming-requests');
                 container.innerHTML = '';
-                if (!snapshot.exists()) { container.innerText = "No tienes solicitudes."; return; }
+                if (!snapshot.exists()) return container.innerText = "No tienes solicitudes.";
                 snapshot.forEach(child => {
                     const fromUser = child.key;
                     const item = document.createElement('div');
@@ -1073,7 +979,7 @@
             db.ref('friend_requests/' + myUsername + '/sent').on('value', snapshot => {
                 const container = document.getElementById('outgoing-requests');
                 container.innerHTML = '';
-                if (!snapshot.exists()) { container.innerText = "Sin solicitudes enviadas."; return; }
+                if (!snapshot.exists()) return container.innerText = "Sin solicitudes enviadas.";
                 snapshot.forEach(child => {
                     const toUser = child.key;
                     const item = document.createElement('div');
@@ -1092,14 +998,11 @@
             if (targetUsername === myUsername) return alert("No puedes agregarte a ti mismo.");
 
             db.ref('users/' + targetUsername).once('value', snapshot => {
-                if (!snapshot.exists()) {
-                    alert("La cuenta NO existe.");
-                } else {
-                    db.ref('friend_requests/' + targetUsername + '/received/' + myUsername).set(true);
-                    db.ref('friend_requests/' + myUsername + '/sent/' + targetUsername).set(true);
-                    alert("Solicitud enviada a " + targetUsername);
-                    document.getElementById('friend-username').value = '';
-                }
+                if (!snapshot.exists()) return alert("La cuenta NO existe.");
+                db.ref('friend_requests/' + targetUsername + '/received/' + myUsername).set(true);
+                db.ref('friend_requests/' + myUsername + '/sent/' + targetUsername).set(true);
+                alert("Solicitud enviada a " + targetUsername);
+                document.getElementById('friend-username').value = '';
             });
         }
 
@@ -1114,7 +1017,7 @@
             alert("¡Ahora eres amigo de " + friendUser + "!");
         }
 
-        // Chat Privado DM
+        // Chat Privado DM con Editar / Eliminar
         function abrirChatPrivadoDM(friendUser) {
             dmFriendUser = friendUser;
             document.getElementById('dm-title').innerText = "Chat Privado con " + friendUser;
@@ -1123,15 +1026,22 @@
             const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
             const chatId = myUsername < friendUser ? `${myUsername}_${friendUser}` : `${friendUser}_${myUsername}`;
 
-            db.ref('direct_messages/' + chatId).limitToLast(30).on('value', snapshot => {
+            db.ref('direct_messages/' + chatId).limitToLast(40).on('value', snapshot => {
                 const container = document.getElementById('dm-messages');
                 container.innerHTML = '';
                 if(snapshot.exists()) {
                     snapshot.forEach(child => {
                         const data = child.val();
+                        const isMine = data.usuario === myUsername;
                         const msgDiv = document.createElement('div');
                         msgDiv.className = 'chat-msg';
-                        msgDiv.innerHTML = `<strong>${data.usuario}:</strong> ${data.mensaje}`;
+                        
+                        let actions = isMine ? `<div class="msg-actions">
+                            <button onclick="editarMensajeDM('${chatId}', '${child.key}', '${data.mensaje}')">✏️</button>
+                            <button onclick="eliminarMensajeDM('${chatId}', '${child.key}')">🗑️</button>
+                        </div>` : '';
+
+                        msgDiv.innerHTML = `<strong>${data.usuario}:</strong> ${data.mensaje} ${actions}`;
                         container.appendChild(msgDiv);
                     });
                     container.scrollTop = container.scrollHeight;
@@ -1147,176 +1057,228 @@
             const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
             const chatId = myUsername < dmFriendUser ? `${myUsername}_${dmFriendUser}` : `${dmFriendUser}_${myUsername}`;
 
-            db.ref('direct_messages/' + chatId).push({
-                usuario: myUsername,
-                mensaje: texto,
-                timestamp: Date.now()
-            });
-
+            db.ref('direct_messages/' + chatId).push({ usuario: myUsername, mensaje: texto, timestamp: Date.now() });
             input.value = '';
         }
 
-        // Perfil y Sistema de Suscripciones estilo YouTube
-        function abrirPerfilUsuario(username) {
-            perfilSeleccionado = username;
-            document.getElementById('prof-username').innerText = username;
-            
-            db.ref('users/' + username).once('value', snapshot => {
-                const data = snapshot.val() || {};
-                const avatar = document.getElementById('prof-avatar');
-                if(data.photoURL) {
-                    avatar.style.backgroundImage = `url(${data.photoURL})`;
-                    avatar.innerText = '';
-                } else {
-                    avatar.style.backgroundImage = 'none';
-                    avatar.innerText = username.charAt(0).toUpperCase();
-                }
-            });
-
-            // Cargar suscriptores del perfil
-            db.ref('subscribers/' + username).on('value', snapshot => {
-                const count = snapshot.numChildren();
-                document.getElementById('prof-subs').innerText = `${count} Suscriptores`;
-            });
-
-            // Cargar publicaciones del usuario
-            db.ref('posts').orderByChild('usuario').equalTo(username).on('value', snapshot => {
-                const container = document.getElementById('prof-posts');
-                container.innerHTML = '';
-                if (!snapshot.exists()) { container.innerText = "Sin publicaciones."; return; }
-                snapshot.forEach(child => {
-                    const post = child.val();
-                    container.appendChild(crearCardPost(post, child.key));
-                });
-            });
-
-            openModal('profile-modal');
+        function editarMensajeDM(chatId, msgId, antiguoText) {
+            const nuevo = prompt("Editar mensaje privado:", antiguoText);
+            if(nuevo && nuevo.trim()) db.ref(`direct_messages/${chatId}/${msgId}`).update({ mensaje: nuevo.trim() });
         }
 
-        function toggleSuscripcion() {
-            if(!usuarioActual || !perfilSeleccionado) return alert("Inicia sesión para suscribirte.");
-            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
-
-            const subRef = db.ref('subscribers/' + perfilSeleccionado + '/' + myUsername);
-            subRef.once('value', snapshot => {
-                if(snapshot.exists()) {
-                    subRef.remove();
-                    alert("Suscripción cancelada.");
-                } else {
-                    subRef.set(true);
-                    alert("¡Te has suscrito a " + perfilSeleccionado + "!");
-                }
-            });
+        function eliminarMensajeDM(chatId, msgId) {
+            if(confirm("¿Eliminar mensaje?")) db.ref(`direct_messages/${chatId}/${msgId}`).remove();
         }
 
-        // Studio y Publicaciones en el Feed
-        function abrirMiStudio() {
-            if(!usuarioActual) return alert("Inicia sesión para entrar a tu Studio.");
-            toggleProfileDropdown();
-            openModal('studio-modal');
-        }
-
-        function publicarContenidoStudio() {
-            if(!usuarioActual) return;
-            const type = document.getElementById('studio-type').value;
-            const title = document.getElementById('studio-title').value.trim();
-            const url = document.getElementById('studio-url').value.trim();
-            const desc = document.getElementById('studio-desc').value.trim();
-            const username = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
-
-            if(!title) return alert("Escribe un título.");
-
-            db.ref('posts').push({
-                usuario: username,
-                tipo: type,
-                titulo: title,
-                url: url,
-                descripcion: desc,
-                likes: 0,
-                timestamp: Date.now()
-            });
-
-            alert("¡Publicación realizada con éxito!");
-            closeModal('studio-modal');
-            document.getElementById('studio-title').value = '';
-            document.getElementById('studio-url').value = '';
-            document.getElementById('studio-desc').value = '';
-        }
-
-        function cargarFeedComunidad() {
-            db.ref('posts').limitToLast(20).on('value', snapshot => {
-                const container = document.getElementById('community-feed');
-                container.innerHTML = '';
-                if (!snapshot.exists()) {
-                    container.innerHTML = '<p style="color:#888;">No hay publicaciones comunitarias aún.</p>';
-                    return;
-                }
-                snapshot.forEach(child => {
-                    container.prepend(crearCardPost(child.val(), child.key));
-                });
-            });
-        }
-
-        function crearCardPost(post, postId) {
-            const card = document.createElement('div');
-            card.className = 'post-card';
-
-            let previewHtml = '';
-            if (post.tipo === 'photo' && post.url) {
-                previewHtml = `<img src="${post.url}" style="max-width:100%; border-radius:8px; margin-top:8px;">`;
-            } else if (post.url && (post.url.includes('youtube.com') || post.url.includes('youtu.be'))) {
-                previewHtml = `<a href="${post.url}" target="_blank" style="color:var(--primary-red); font-weight:bold; display:block; margin-top:8px;">Ver en YouTube 🔴</a>`;
-            }
-
-            card.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <strong style="color:var(--primary-red); cursor:pointer;" onclick="abrirPerfilUsuario('${post.usuario}')">@${post.usuario}</strong>
-                    <span style="font-size:0.75em; color:#888;">${post.tipo.toUpperCase()}</span>
-                </div>
-                <h4 style="margin:8px 0 4px 0;">${post.titulo}</h4>
-                <p style="font-size:0.9em; color:#ccc; margin:0;">${post.descripcion || ''}</p>
-                ${previewHtml}
-                <div style="margin-top:10px;">
-                    <button onclick="darLikePost('${postId}')" style="background:#222; color:white; border:1px solid #444; padding:4px 10px; border-radius:4px; cursor:pointer; font-size:0.8em;">❤️ Like (${post.likes || 0})</button>
-                </div>
-            `;
-            return card;
-        }
-
-        function darLikePost(postId) {
-            if(!usuarioActual) return alert("Inicia sesión para dar Like.");
-            const postRef = db.ref('posts/' + postId + '/likes');
-            postRef.transaction(currentLikes => (currentLikes || 0) + 1);
-        }
-
-        // Chat Global en Vivo
+        // Chat Global Editar / Eliminar
         function enviarMensajeFirebase() {
             const input = document.getElementById('chat-input');
             const texto = input.value.trim();
             if (texto === '' || !usuarioActual) return;
 
             const username = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
-
-            db.ref('chat_global').push({
-                usuario: username,
-                mensaje: texto,
-                timestamp: Date.now()
-            });
-
+            db.ref('chat_global').push({ usuario: username, mensaje: texto, timestamp: Date.now() });
             input.value = '';
         }
 
-        db.ref('chat_global').limitToLast(50).on('child_added', snapshot => {
-            const data = snapshot.val();
+        db.ref('chat_global').limitToLast(50).on('value', snapshot => {
             const container = document.getElementById('chat-messages');
-            
-            const msgDiv = document.createElement('div');
-            msgDiv.className = 'chat-msg';
-            msgDiv.innerHTML = `<strong style="cursor:pointer;" onclick="abrirPerfilUsuario('${data.usuario}')">${data.usuario}:</strong> ${data.mensaje}`;
-            
-            container.appendChild(msgDiv);
+            container.innerHTML = '';
+            if(!usuarioActual) return;
+            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
+
+            snapshot.forEach(child => {
+                const data = child.val();
+                const isMine = data.usuario === myUsername;
+                const msgDiv = document.createElement('div');
+                msgDiv.className = 'chat-msg';
+
+                let actions = isMine ? `<div class="msg-actions">
+                    <button onclick="editarMensajeGlobal('${child.key}', '${data.mensaje}')">✏️</button>
+                    <button onclick="eliminarMensajeGlobal('${child.key}')">🗑️</button>
+                </div>` : '';
+
+                msgDiv.innerHTML = `<strong style="cursor:pointer;" onclick="abrirCanalUsuario('${data.usuario}')">${data.usuario}:</strong> ${data.mensaje} ${actions}`;
+                container.appendChild(msgDiv);
+            });
             container.scrollTop = container.scrollHeight;
         });
+
+        function editarMensajeGlobal(msgId, viejo) {
+            const nuevo = prompt("Editar mensaje:", viejo);
+            if(nuevo && nuevo.trim()) db.ref(`chat_global/${msgId}`).update({ mensaje: nuevo.trim() });
+        }
+
+        function eliminarMensajeGlobal(msgId) {
+            if(confirm("¿Eliminar mensaje de chat global?")) db.ref(`chat_global/${msgId}`).remove();
+        }
+
+        // Canal / Studio del Creador (Estilo YouTube)
+        function verMiPropioCanal() {
+            if(!usuarioActual) return alert("Inicia sesión primero.");
+            toggleProfileDropdown();
+            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
+            abrirCanalUsuario(myUsername);
+        }
+
+        function abrirCanalUsuario(username) {
+            document.getElementById('chan-title').innerText = "@" + username;
+            
+            db.ref('users/' + username).once('value', snapshot => {
+                const data = snapshot.val() || {};
+                const avatar = document.getElementById('chan-avatar');
+                if(data.photoURL) { avatar.style.backgroundImage = `url(${data.photoURL})`; avatar.innerText = ''; }
+                else { avatar.style.backgroundImage = 'none'; avatar.innerText = username.charAt(0).toUpperCase(); }
+            });
+
+            db.ref('subscribers/' + username).on('value', snap => {
+                document.getElementById('chan-subs').innerText = `${snap.numChildren()} Suscriptores`;
+            });
+
+            db.ref('posts').orderByChild('usuario').equalTo(username).on('value', snapshot => {
+                allPostsData = [];
+                if(snapshot.exists()) {
+                    snapshot.forEach(child => allPostsData.push({ id: child.key, ...child.val() }));
+                }
+                renderCanalPosts('all');
+            });
+
+            openModal('channel-modal');
+        }
+
+        function filtrarCanalTab(type) {
+            document.querySelectorAll('.studio-tab-item').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            renderCanalPosts(type);
+        }
+
+        function renderCanalPosts(typeFilter) {
+            const container = document.getElementById('chan-posts-list');
+            container.innerHTML = '';
+
+            const filtered = typeFilter === 'all' ? allPostsData : allPostsData.filter(p => p.tipo === typeFilter);
+
+            if(filtered.length === 0) return container.innerHTML = '<p style="color:#888;">Sin publicaciones en esta categoría.</p>';
+
+            filtered.forEach(post => {
+                container.appendChild(crearCardPost(post, post.id));
+            });
+        }
+
+        function abrirModalPublicarStudio() {
+            if(!usuarioActual) return alert("Inicia sesión para publicar.");
+            openModal('studio-modal');
+        }
+
+        // Publicar Vídeos/Shorts desde Archivos MP4 o Links
+        function publicarContenidoStudio() {
+            if(!usuarioActual) return;
+            const type = document.getElementById('studio-type').value;
+            const title = document.getElementById('studio-title').value.trim();
+            const urlInput = document.getElementById('studio-url').value.trim();
+            const fileInput = document.getElementById('studio-file');
+            const desc = document.getElementById('studio-desc').value.trim();
+            const username = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
+
+            if(!title) return alert("Escribe un título.");
+
+            if (fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    guardarPostBaseDatos(username, type, title, e.target.result, desc);
+                };
+                reader.readAsDataURL(fileInput.files[0]);
+            } else if (urlInput) {
+                guardarPostBaseDatos(username, type, title, urlInput, desc);
+            } else {
+                alert("Proporciona un enlace URL o adjunta un archivo MP4/Foto.");
+            }
+        }
+
+        function guardarPostBaseDatos(username, type, title, mediaUrl, desc) {
+            db.ref('posts').push({
+                usuario: username,
+                tipo: type,
+                titulo: title,
+                url: mediaUrl,
+                descripcion: desc,
+                likes: 0,
+                timestamp: Date.now()
+            });
+
+            alert("¡Publicado en tu canal con éxito!");
+            closeModal('studio-modal');
+        }
+
+        // Feed de la Comunidad con Buscador y Likes Únicos por Cuenta
+        function cargarFeedComunidad() {
+            db.ref('posts').limitToLast(30).on('value', snapshot => {
+                allPostsData = [];
+                if(snapshot.exists()) {
+                    snapshot.forEach(child => allPostsData.unshift({ id: child.key, ...child.val() }));
+                }
+                filtrarFeedComunidad();
+            });
+        }
+
+        function filtrarFeedComunidad() {
+            const query = document.getElementById('feed-search-input').value.toLowerCase().trim();
+            const container = document.getElementById('community-feed');
+            container.innerHTML = '';
+
+            const filtered = allPostsData.filter(p => 
+                p.titulo.toLowerCase().includes(query) || p.usuario.toLowerCase().includes(query)
+            );
+
+            if(filtered.length === 0) return container.innerHTML = '<p style="color:#888;">No se encontraron resultados.</p>';
+
+            filtered.forEach(post => container.appendChild(crearCardPost(post, post.id)));
+        }
+
+        function crearCardPost(post, postId) {
+            const card = document.createElement('div');
+            card.className = 'post-card';
+
+            let mediaHtml = '';
+            if (post.url && post.url.startsWith('data:video')) {
+                mediaHtml = `<video src="${post.url}" controls style="width:100%; max-height:350px; border-radius:8px; margin-top:8px;" allowfullscreen></video>`;
+            } else if (post.url && post.url.startsWith('data:image')) {
+                mediaHtml = `<img src="${post.url}" style="max-width:100%; border-radius:8px; margin-top:8px;">`;
+            } else if (post.url && (post.url.includes('youtube.com') || post.url.includes('youtu.be'))) {
+                let embedUrl = post.url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
+                mediaHtml = `<iframe src="${embedUrl}" style="width:100%; height:260px; border:none; border-radius:8px; margin-top:8px;" allowfullscreen></iframe>`;
+            }
+
+            card.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <strong style="color:var(--primary-red); cursor:pointer;" onclick="abrirCanalUsuario('${post.usuario}')">@${post.usuario}</strong>
+                    <span style="font-size:0.75em; color:#888;">${post.tipo.toUpperCase()}</span>
+                </div>
+                <h4 style="margin:8px 0 4px 0;">${post.titulo}</h4>
+                <p style="font-size:0.9em; color:#ccc; margin:0;">${post.descripcion || ''}</p>
+                ${mediaHtml}
+                <div style="margin-top:10px;">
+                    <button onclick="darLikePost('${postId}')" style="background:#222; color:white; border:1px solid #444; padding:5px 12px; border-radius:4px; cursor:pointer; font-size:0.8em;">❤️ Like (${post.likes || 0})</button>
+                </div>
+            `;
+            return card;
+        }
+
+        // Like Único por Cuenta
+        function darLikePost(postId) {
+            if(!usuarioActual) return alert("Inicia sesión para dar Like.");
+            const uid = usuarioActual.uid;
+
+            const likeUserRef = db.ref(`posts/${postId}/likesUsers/${uid}`);
+            likeUserRef.once('value', snapshot => {
+                if(snapshot.exists()) {
+                    alert("Ya le has dado Like a esta publicación.");
+                } else {
+                    likeUserRef.set(true);
+                    db.ref(`posts/${postId}/likes`).transaction(c => (c || 0) + 1);
+                }
+            });
+        }
 
         // YouTube API v3
         const YT_API_KEY = "AIzaSyCKbpL_H5jrqsuoWv0EKEIJ3TB9lvN3kCo";
@@ -1331,14 +1293,12 @@
                     document.getElementById('yt-subs').innerText = Number(stats.subscriberCount).toLocaleString();
                     document.getElementById('yt-views').innerText = Number(stats.viewCount).toLocaleString();
                 }
-            } catch (e) {
-                console.error("Error API YouTube", e);
-            }
+            } catch (e) { console.error("Error API YouTube", e); }
         }
 
         window.onload = function() { cargarEstadisticasYouTube(); };
 
-        // Controles de interfaz
+        // Controles de interfaz UI
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
@@ -1354,21 +1314,8 @@
             document.getElementById(tabId).classList.add('active');
         }
 
-        function guardarFotoPerfil() {
-            const url = document.getElementById('avatar-url-input').value.trim();
-            if(url && usuarioActual) {
-                usuarioActual.updateProfile({ photoURL: url }).then(() => {
-                    const avatar = document.getElementById('user-avatar');
-                    avatar.style.backgroundImage = `url(${url})`;
-                    avatar.innerText = '';
-                    alert("¡Foto actualizada!");
-                });
-            }
-        }
-
         function guardarPrivacidad() {
-            const val = document.getElementById('privacy-select').value;
-            alert("Privacidad guardada: " + val);
+            alert("Privacidad guardada: " + document.getElementById('privacy-select').value);
         }
     </script>
 </body>
