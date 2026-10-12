@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Sitio web oficial de Driuk. Creador de contenido de videojuegos, Rocket League, gaming, gameplays, setup gamer y canal de YouTube.">
-    <meta name="keywords" content="Driuk, Videojuegos, Gaming, Creador de Contenido, Rocket League, Fortnite, Gameplay Español, Setup Gamer, YouTube Gaming">
+    <meta name="description" content="Sitio web oficial de Driuk. Creador de contenido de videojuegos, Rocket League, gaming y canal de YouTube.">
     <title>Driuk | Youtuber & Gaming Creator</title>
+
+    <!-- Firebase App & Database Scripts (SDK v9 Compatibility) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
     <style>
         :root {
             --bg-color: #080808;
@@ -29,9 +34,123 @@
             min-height: 100vh;
         }
 
+        /* Barra Superior / Header de Usuario */
+        .top-bar {
+            width: 100%;
+            background: #0d0d0d;
+            border-bottom: 1px solid #222;
+            padding: 12px 25px;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .top-bar .brand {
+            font-weight: 900;
+            color: var(--primary-red);
+            font-size: 1.3em;
+            letter-spacing: 2px;
+        }
+
+        .user-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-auth {
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-auth:hover {
+            background: var(--dark-red);
+            box-shadow: 0 0 10px var(--neon-glow);
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--primary-red);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            cursor: pointer;
+            border: 2px solid #fff;
+            box-shadow: 0 0 10px var(--neon-glow);
+            object-fit: cover;
+        }
+
+        /* Menú Lateral de Amigos y Ajustes */
+        .sidebar {
+            position: fixed;
+            top: 60px;
+            left: -280px;
+            width: 270px;
+            height: calc(100vh - 60px);
+            background: #0d0d0d;
+            border-right: 1px solid #222;
+            transition: left 0.3s ease;
+            z-index: 90;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar.active {
+            left: 0;
+        }
+
+        .toggle-sidebar-btn {
+            position: fixed;
+            top: 70px;
+            left: 10px;
+            z-index: 95;
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 0 10px var(--neon-glow);
+        }
+
+        .sidebar-section h3 {
+            color: var(--primary-red);
+            font-size: 1em;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 5px;
+        }
+
+        .friends-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.9em;
+            color: var(--text-gray);
+        }
+
         header {
             text-align: center;
-            padding: 50px 20px 20px 20px;
+            padding: 40px 20px 20px 20px;
         }
 
         h1 {
@@ -40,31 +159,12 @@
             margin: 0;
             text-shadow: 0 0 20px var(--neon-glow);
             letter-spacing: 3px;
-            animation: pulseTitle 3s infinite alternate ease-in-out;
-        }
-
-        @keyframes pulseTitle {
-            0% { text-shadow: 0 0 10px var(--neon-glow); transform: scale(1); }
-            100% { text-shadow: 0 0 30px var(--primary-red); transform: scale(1.02); }
         }
 
         p.subtitle {
             color: var(--text-gray);
             font-size: 1.25em;
             margin-top: 8px;
-            font-weight: 300;
-        }
-
-        .badge {
-            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
-            color: white;
-            padding: 10px 24px;
-            border-radius: 30px;
-            font-weight: bold;
-            display: inline-block;
-            margin-top: 15px;
-            box-shadow: 0 0 15px var(--neon-glow);
-            letter-spacing: 1px;
         }
 
         .container {
@@ -80,13 +180,6 @@
             padding: 30px;
             margin-bottom: 35px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        section:hover {
-            border-color: var(--primary-red);
-            box-shadow: 0 0 25px rgba(255, 30, 56, 0.25);
-            transform: translateY(-2px);
         }
 
         h2 {
@@ -95,49 +188,35 @@
             padding-bottom: 10px;
             margin-top: 0;
             font-size: 1.6em;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
 
-        /* 1. Redes Sociales */
+        /* Redes Sociales */
         .social-box {
             display: flex;
             justify-content: center;
             gap: 15px;
             flex-wrap: wrap;
-            margin: 30px 0;
+            margin: 20px 0;
         }
 
         .btn-social {
             background-color: var(--card-bg);
             color: var(--text-white);
             text-decoration: none;
-            padding: 14px 28px;
+            padding: 12px 24px;
             border-radius: 12px;
             font-weight: bold;
             border: 2px solid #222;
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .btn-social svg {
-            width: 22px;
-            height: 22px;
-            fill: currentColor;
         }
 
         .btn-social:hover {
             border-color: var(--primary-red);
-            background-color: #1a0205;
-            transform: translateY(-4px);
             color: var(--primary-red);
-            box-shadow: 0 0 20px var(--neon-glow);
+            box-shadow: 0 0 15px var(--neon-glow);
         }
 
-        /* 2. Logros y Estadísticas */
+        /* Estadísticas */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -150,13 +229,6 @@
             border: 1px solid #222;
             border-radius: 12px;
             padding: 22px;
-            transition: all 0.3s ease;
-        }
-
-        .stat-card:hover {
-            border-color: var(--primary-red);
-            transform: scale(1.03);
-            box-shadow: 0 0 15px var(--neon-glow);
         }
 
         .stat-number {
@@ -165,163 +237,15 @@
             color: var(--primary-red);
         }
 
-        .stat-label {
-            color: var(--text-gray);
-            font-size: 0.95em;
-            margin-top: 6px;
-        }
-
-        /* 3. Vídeos y Shorts */
-        .video-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 650px) {
-            .video-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .video-card {
-            background: #0a0a0a;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #222;
-            text-align: center;
-            transition: all 0.3s ease;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .video-card:hover {
-            transform: translateY(-5px);
-            border-color: var(--primary-red);
-            box-shadow: 0 0 20px var(--neon-glow);
-        }
-
-        .video-card img {
-            width: 100%;
-            height: 190px;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .video-card:hover img {
-            transform: scale(1.05);
-        }
-
-        .video-card h3 {
-            font-size: 1.05em;
-            margin: 15px;
-            color: var(--text-white);
-        }
-
-        .video-card a {
-            display: block;
-            margin: 0 15px 15px 15px;
-            background-color: var(--primary-red);
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            font-size: 0.95em;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .video-card a:hover {
-            background-color: var(--dark-red);
-            box-shadow: 0 0 12px var(--neon-glow);
-        }
-
-        /* 4. Setup Gamer */
-        .setup-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-        }
-
-        .setup-card {
-            background: #0a0a0a;
-            border: 1px solid #222;
-            border-radius: 10px;
-            padding: 18px;
-            transition: all 0.3s ease;
-        }
-
-        .setup-card:hover {
-            border-color: var(--primary-red);
-            box-shadow: 0 0 15px var(--neon-glow);
-            transform: translateY(-3px);
-        }
-
-        .setup-title {
-            color: var(--primary-red);
-            font-weight: bold;
-            font-size: 0.85em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .setup-value {
-            font-size: 1.1em;
-            font-weight: 600;
-            margin-top: 6px;
-        }
-
-        /* 5. Configuración Cámara */
-        .config-flex {
-            display: flex;
-            gap: 25px;
-            flex-wrap: wrap;
-            align-items: center;
-        }
-
-        .config-list {
-            flex: 1;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            line-height: 2em;
-        }
-
-        .config-list li {
-            background: #0a0a0a;
-            margin-bottom: 8px;
-            padding: 8px 15px;
-            border-radius: 8px;
-            border: 1px solid #1a1a1a;
-        }
-
-        .config-list li strong {
-            color: var(--primary-red);
-        }
-
-        .config-img {
-            flex: 1;
-            text-align: center;
-        }
-
-        .config-img img {
-            max-width: 100%;
-            border-radius: 12px;
-            border: 2px solid #333;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.7);
-        }
-
-        /* 6. Chat de Comunidad Interactivo */
+        /* Chat Interactivo */
         .chat-box {
             background: #0a0a0a;
             border-radius: 12px;
             border: 1px solid #222;
             padding: 18px;
-            height: 280px;
+            height: 300px;
             display: flex;
             flex-direction: column;
-            justify-content: flex-end;
         }
 
         .chat-messages {
@@ -331,8 +255,6 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            text-align: left;
-            padding-right: 5px;
         }
 
         .chat-msg {
@@ -357,12 +279,6 @@
             border-radius: 8px;
             color: white;
             outline: none;
-            font-size: 0.95em;
-        }
-
-        .chat-input-area input:focus {
-            border-color: var(--primary-red);
-            box-shadow: 0 0 8px var(--neon-glow);
         }
 
         .chat-input-area button {
@@ -373,192 +289,299 @@
             border-radius: 8px;
             font-weight: bold;
             cursor: pointer;
-            transition: all 0.3s ease;
         }
 
-        .chat-input-area button:hover {
-            background: var(--dark-red);
-            box-shadow: 0 0 12px var(--neon-glow);
+        /* Modal Autenticación */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #121212;
+            padding: 30px;
+            border-radius: 12px;
+            border: 1px solid var(--primary-red);
+            width: 90%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: 0 0 25px var(--neon-glow);
+        }
+
+        .modal-content h3 {
+            margin: 0;
+            color: var(--primary-red);
+        }
+
+        .modal-content input {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            padding: 12px;
+            border-radius: 6px;
+            color: white;
         }
     </style>
 </head>
 <body>
 
+    <!-- Barra Superior -->
+    <div class="top-bar">
+        <div class="brand">DRIUK WEB</div>
+        <div class="user-nav">
+            <button class="btn-auth" id="btn-login-modal" onclick="openModal()">Iniciar Sesión / Registro</button>
+            <div class="user-avatar" id="user-avatar" style="display:none;" onclick="toggleSidebar()">U</div>
+        </div>
+    </div>
+
+    <!-- Botón Menú Lateral de Amigos -->
+    <button class="toggle-sidebar-btn" onclick="toggleSidebar()">☰ Amigos & Ajustes</button>
+
+    <!-- Menú Lateral -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <h3>⚙️ Ajustes de Perfil</h3>
+            <p style="font-size:0.85em; color:#888;">Gestiona tu cuenta y foto de perfil.</p>
+            <input type="text" id="avatar-url-input" placeholder="URL Imagen de Perfil" style="width:100%; padding:6px; background:#1e1e1e; border:1px solid #333; color:white; border-radius:4px; margin-top:5px;">
+            <button onclick="guardarFotoPerfil()" style="margin-top:6px; width:100%; background:var(--primary-red); color:white; border:none; padding:6px; border-radius:4px; cursor:pointer;">Guardar Foto</button>
+        </div>
+
+        <div class="sidebar-section">
+            <h3>👥 Lista de Amigos</h3>
+            <ul class="friends-list">
+                <li>No tienes amigos agregados aún.</li>
+            </ul>
+        </div>
+
+        <button onclick="cerrarSesion()" style="background:#333; color:white; border:none; padding:8px; border-radius:6px; cursor:pointer; margin-top:auto;">Cerrar Sesión</button>
+    </div>
+
     <header>
         <h1>DRIUK</h1>
-        <p class="subtitle">Creador de Contenido & Gaming de Videojuegos 🚀</p>
-        <div class="badge">💎 RANGO MÁXIMO: DIAMANTE 1</div>
+        <p class="subtitle">Creador de Contenido & Gaming 🚀</p>
     </header>
 
     <div class="container">
-        <!-- 1. Enlaces e Identidad Social -->
+        <!-- Redes Sociales -->
         <div class="social-box">
-            <a class="btn-social" href="https://www.youtube.com/@driuk" target="_blank" title="Canal Oficial de YouTube de Driuk">
-                <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-                YouTube
-            </a>
-            <a class="btn-social" href="https://twitch.tv/driukstrife" target="_blank" title="Canal Oficial de Twitch de Driuk">
-                <svg viewBox="0 0 24 24"><path d="M11.571 4.714h1.715v5.143h-1.715zm4.715 0h1.714v5.143h-1.714zM6 0L1.714 4.286v15.428h5.143V24l4.286-4.286h3.428L22.286 12V0zm14.571 11.143l-3.428 3.428h-3.429l-3 3v-3H6.857V1.714h13.714z"/></svg>
-                Twitch
-            </a>
-            <a class="btn-social" href="https://discord.gg/WDXTun5rfR" target="_blank" title="Servidor de Discord de la Comunidad">
-                <svg viewBox="0 0 24 24"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
-                Discord
-            </a>
+            <a class="btn-social" href="https://www.youtube.com/@driuk" target="_blank">YouTube</a>
+            <a class="btn-social" href="https://twitch.tv/driukstrife" target="_blank">Twitch</a>
+            <a class="btn-social" href="https://discord.gg/WDXTun5rfR" target="_blank">Discord</a>
         </div>
 
-        <!-- Apartado 2. Estadísticas y Logros de la Comunidad -->
+        <!-- Estadísticas en Tiempo Real con la API de YouTube -->
         <section>
-            <h2>🏆 2. LOGROS Y HITOS DE LA COMUNIDAD</h2>
+            <h2>🏆 ESTADÍSTICAS EN TIEMPO REAL (YOUTUBE API)</h2>
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-number">1,31K</div>
-                    <div class="stat-label">2.1. Suscriptores en YouTube</div>
+                    <div class="stat-number" id="yt-subs">Cargando...</div>
+                    <div class="stat-label">Suscriptores Reales</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">384.644</div>
-                    <div class="stat-label">2.2. Visualizaciones Totales</div>
+                    <div class="stat-number" id="yt-views">Cargando...</div>
+                    <div class="stat-label">Visualizaciones Totales</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number">Diamante 1 💎</div>
-                    <div class="stat-label">2.3. Rango Máximo Alcanzado</div>
+                    <div class="stat-label">Rango Máximo</div>
                 </div>
             </div>
         </section>
 
-        <!-- Apartado 3. Último Contenido Multimedia -->
+        <!-- Chat Global Sincronizado en Tiempo Real -->
         <section>
-            <h2>🎬 3. ÚLTIMO CONTENIDO DESTACADO</h2>
-            <div class="video-grid">
-                <div class="video-card">
-                    <a href="https://youtu.be/DuFB_bxeAAg?si=fFzFck0RNGWR4q1Q" target="_blank">
-                        <img src="https://img.youtube.com/vi/DuFB_bxeAAg/hqdefault.jpg" alt="Jugué Rocket League SIN BALL CAM">
-                    </a>
-                    <h3>3.1. Jugué Rocket League SIN BALL CAM: ¿Es posible ganar?</h3>
-                    <a href="https://youtu.be/DuFB_bxeAAg?si=fFzFck0RNGWR4q1Q" target="_blank">Ver Vídeo Completo 🔴</a>
-                </div>
-                <div class="video-card">
-                    <a href="https://youtube.com/shorts/NXKzgqY29o4?si=90ZmHhLNa4rrtqXv" target="_blank">
-                        <img src="https://img.youtube.com/vi/NXKzgqY29o4/hqdefault.jpg" alt="Tengo una sorpresa para el canal">
-                    </a>
-                    <h3>3.2. Tengo una sorpresa para el canal 👀</h3>
-                    <a href="https://youtube.com/shorts/NXKzgqY29o4?si=90ZmHhLNa4rrtqXv" target="_blank">Ver Short Épico 🔥</a>
-                </div>
-            </div>
-        </section>
-
-        <!-- Apartado 4. Hardware y Periféricos -->
-        <section>
-            <h2>🖥️ 4. MI SETUP COMPETITIVO</h2>
-            <div class="setup-grid">
-                <div class="setup-card">
-                    <div class="setup-title">4.1. Mando Gamer</div>
-                    <div class="setup-value">GameSir G7 SE</div>
-                </div>
-                <div class="setup-card">
-                    <div class="setup-title">4.2. Monitor 240Hz</div>
-                    <div class="setup-value">AOC 25G3ZM</div>
-                </div>
-                <div class="setup-card">
-                    <div class="setup-title">4.3. Auriculares</div>
-                    <div class="setup-value">Logitech G PRO X LIGHTSPEED</div>
-                </div>
-                <div class="setup-card">
-                    <div class="setup-title">4.4. Tarjeta Gráfica</div>
-                    <div class="setup-value">AMD Radeon RX 7800 XT</div>
-                </div>
-                <div class="setup-card">
-                    <div class="setup-title">4.5. Procesador</div>
-                    <div class="setup-value">AMD Ryzen 7 5700X3D</div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Apartado 5. Configuración del Juego -->
-        <section>
-            <h2>⚙️ 5. CONFIGURACIÓN DE CÁMARA (ROCKET LEAGUE)</h2>
-            <div class="config-flex">
-                <ul class="config-list">
-                    <li><strong>5.1. FOV (Campo de visión):</strong> 110</li>
-                    <li><strong>5.2. Distancia:</strong> 270</li>
-                    <li><strong>5.3. Altura:</strong> 100</li>
-                    <li><strong>5.4. Ángulo:</strong> -4.0</li>
-                    <li><strong>5.5. Rigidez:</strong> 0.45</li>
-                    <li><strong>5.6. Velocidad de giro:</strong> 4.20</li>
-                </ul>
-                <div class="config-img">
-                    <img src="camara.jpg" alt="Configuración de cámara real de Driuk en Rocket League">
-                    <p style="font-size: 0.85em; color: #888; margin-top: 8px;">Perspectiva real in-game</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Apartado 6. Comunidad y Chat Funcional -->
-        <section>
-            <h2>💬 6. SALA DE CHAT Y COMUNIDAD</h2>
+            <h2>💬 CHAT GLOBAL DE LA COMUNIDAD</h2>
             <div class="chat-box">
                 <div class="chat-messages" id="chat-messages">
-                    <div class="chat-msg"><strong>6.1. Sistema:</strong> ¡Bienvenido a la comunidad oficial de Driuk!</div>
-                    <div class="chat-msg"><strong>6.2. Driuk:</strong> ¡A por el rango Diamante en directo! 💎</div>
+                    <div class="chat-msg"><strong>Sistema:</strong> ¡Bienvenido al chat oficial en vivo!</div>
                 </div>
                 <div class="chat-input-area">
-                    <input type="text" id="chat-input" placeholder="Escribe un mensaje en el chat...">
-                    <button id="chat-btn" onclick="enviarMensaje()">Enviar</button>
+                    <input type="text" id="chat-input" placeholder="Inicia sesión para escribir..." disabled>
+                    <button id="chat-btn" onclick="enviarMensajeFirebase()" disabled>Enviar</button>
                 </div>
             </div>
         </section>
     </div>
 
-    <!-- Script de JavaScript para que el chat funcione en tiempo real -->
+    <!-- Modal de Login / Registro -->
+    <div class="modal" id="auth-modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Iniciar Sesión</h3>
+            <input type="text" id="auth-username" placeholder="Nombre de Usuario (Apodo)">
+            <input type="email" id="auth-email" placeholder="Correo Electrónico">
+            <input type="password" id="auth-password" placeholder="Contraseña">
+            
+            <button class="btn-auth" onclick="iniciarSesion()">Entrar</button>
+            <button class="btn-auth" style="background:#333;" onclick="registrarUsuario()">Crear Cuenta Nueva</button>
+            <button style="background:transparent; color:#aaa; border:none; cursor:pointer; font-size:0.8em;" onclick="recuperarPassword()">¿Olvidaste tu contraseña?</button>
+            <button style="background:transparent; color:red; border:none; cursor:pointer;" onclick="closeModal()">Cancelar</button>
+        </div>
+    </div>
+
     <script>
-        function enviarMensaje() {
-            const input = document.getElementById('chat-input');
-            const texto = input.value.trim();
-            if (texto === '') return; // No enviar mensajes vacíos
-
-            const messagesContainer = document.getElementById('chat-messages');
-            
-            // Crear el elemento visual del mensaje
-            const nuevoMsg = document.createElement('div');
-            nuevoMsg.className = 'chat-msg';
-            nuevoMsg.innerHTML = `<strong>Visitante:</strong> ${texto}`;
-            
-            messagesContainer.appendChild(nuevoMsg);
-            
-            // Guardar el mensaje en la memoria del navegador (localStorage)
-            let mensajesGuardados = JSON.parse(localStorage.getItem('chat_driuk') || '[]');
-            mensajesGuardados.push(texto);
-            localStorage.setItem('chat_driuk', JSON.stringify(mensajesGuardados));
-
-            // Limpiar la barra de texto y mover la vista del chat al último mensaje
-            input.value = '';
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-
-        // Cargar los mensajes guardados automáticamente al abrir la página
-        window.onload = function() {
-            const messagesContainer = document.getElementById('chat-messages');
-            let mensajesGuardados = JSON.parse(localStorage.getItem('chat_driuk') || '[]');
-            mensajesGuardados.forEach(texto => {
-                const msg = document.createElement('div');
-                msg.className = 'chat-msg';
-                msg.innerHTML = `<strong>Visitante:</strong> ${texto}`;
-                messagesContainer.appendChild(msg);
-            });
-            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        // 1. Configuración de Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCspy94tmXYMUucN5bbr-fXlA2ry3XecSk",
+            authDomain: "driuk-web-fcabd.firebaseapp.com",
+            databaseURL: "https://driuk-web-fcabd-default-rtdb.firebaseio.com",
+            projectId: "driuk-web-fcabd",
+            storageBucket: "driuk-web-fcabd.firebasestorage.app",
+            messagingSenderId: "748992389453",
+            appId: "1:748992389453:web:0e098cf51c7024bcc45704"
         };
 
-        // Permitir enviar el mensaje pulsando la tecla "Enter"
-        document.addEventListener("DOMContentLoaded", () => {
-            const input = document.getElementById('chat-input');
-            if(input) {
-                input.addEventListener("keypress", function(event) {
-                    if (event.key === "Enter") {
-                        enviarMensaje();
-                    }
-                });
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.database();
+
+        let usuarioActual = null;
+
+        // 2. Control de Estado de Sesión
+        auth.onAuthStateChanged(user => {
+            const btnModal = document.getElementById('btn-login-modal');
+            const avatar = document.getElementById('user-avatar');
+            const chatInput = document.getElementById('chat-input');
+            const chatBtn = document.getElementById('chat-btn');
+
+            if (user) {
+                usuarioActual = user;
+                btnModal.style.display = 'none';
+                avatar.style.display = 'flex';
+                
+                // Cargar Apodo
+                const username = user.displayName || user.email.split('@')[0];
+                avatar.innerText = username.charAt(0).toUpperCase();
+
+                chatInput.disabled = false;
+                chatBtn.disabled = false;
+                chatInput.placeholder = `Escribe como ${username}...`;
+                closeModal();
+            } else {
+                usuarioActual = null;
+                btnModal.style.display = 'block';
+                avatar.style.display = 'none';
+                chatInput.disabled = true;
+                chatBtn.disabled = true;
+                chatInput.placeholder = "Inicia sesión para escribir...";
             }
         });
+
+        // 3. Sistema de Registro e Inicio de Sesión
+        function registrarUsuario() {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const username = document.getElementById('auth-username').value;
+
+            if(!email || !password || !username) {
+                alert("Por favor completa todos los campos (Usuario, Email y Contraseña).");
+                return;
+            }
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    return userCredential.user.updateProfile({ displayName: username });
+                })
+                .then(() => alert("¡Cuenta creada con éxito!"))
+                .catch(err => alert("Error al registrar: " + err.message));
+        }
+
+        function iniciarSesion() {
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+
+            auth.signInWithEmailAndPassword(email, password)
+                .catch(err => alert("Error de inicio de sesión: " + err.message));
+        }
+
+        function recuperarPassword() {
+            const email = document.getElementById('auth-email').value;
+            if(!email) {
+                alert("Escribe tu correo electrónico en la casilla para enviarte el enlace de recuperación.");
+                return;
+            }
+            auth.sendPasswordResetEmail(email)
+                .then(() => alert("Enlace enviado a tu correo para restablecer la contraseña."))
+                .catch(err => alert("Error: " + err.message));
+        }
+
+        function cerrarSesion() {
+            auth.signOut();
+        }
+
+        // 4. Chat Global Sincronizado en Tiempo Real (Firebase Database)
+        function enviarMensajeFirebase() {
+            const input = document.getElementById('chat-input');
+            const texto = input.value.trim();
+            if (texto === '' || !usuarioActual) return;
+
+            const username = usuarioActual.displayName || usuarioActual.email.split('@')[0];
+
+            db.ref('chat_global').push({
+                usuario: username,
+                mensaje: texto,
+                timestamp: Date.now()
+            });
+
+            input.value = '';
+        }
+
+        // Escuchar mensajes en tiempo real desde la nube
+        db.ref('chat_global').limitToLast(50).on('child_added', snapshot => {
+            const data = snapshot.val();
+            const container = document.getElementById('chat-messages');
+            
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'chat-msg';
+            msgDiv.innerHTML = `<strong>${data.usuario}:</strong> ${data.mensaje}`;
+            
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        });
+
+        // 5. Estadísticas de YouTube API v3 Automáticas
+        const YT_API_KEY = "AIzaSyCKbpL_H5jrqsuoWv0EKEIJ3TB9lvN3kCo";
+        const YT_HANDLE = "driuk";
+
+        async function cargarEstadisticasYouTube() {
+            try {
+                const res = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=statistics&forHandle=${YT_HANDLE}&key=${YT_API_KEY}`);
+                const data = await res.json();
+                
+                if (data.items && data.items.length > 0) {
+                    const stats = data.items[0].statistics;
+                    document.getElementById('yt-subs').innerText = Number(stats.subscriberCount).toLocaleString();
+                    document.getElementById('yt-views').innerText = Number(stats.viewCount).toLocaleString();
+                }
+            } catch (e) {
+                console.error("Error al cargar la API de YouTube", e);
+            }
+        }
+
+        window.onload = function() {
+            cargarEstadisticasYouTube();
+        };
+
+        // Modales y Menú
+        function openModal() { document.getElementById('auth-modal').style.display = 'flex'; }
+        function closeModal() { document.getElementById('auth-modal').style.display = 'none'; }
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
+        
+        function guardarFotoPerfil() {
+            const url = document.getElementById('avatar-url-input').value;
+            if(url && usuarioActual) {
+                usuarioActual.updateProfile({ photoURL: url }).then(() => {
+                    document.getElementById('user-avatar').style.backgroundImage = `url(${url})`;
+                    document.getElementById('user-avatar').innerText = '';
+                    alert("¡Foto de perfil actualizada!");
+                });
+            }
+        }
     </script>
 </body>
 </html>
