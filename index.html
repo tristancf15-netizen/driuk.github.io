@@ -558,8 +558,8 @@
 
     <!-- Modal TIENDA DE PUNTOS -->
     <div class="modal" id="shop-modal">
-        <div class="modal-content" style="max-width:700px;">
-            <h3 style="color:var(--gold-color);">🛒 Tienda de Canjes de Stream</h3>
+        <div class="modal-content" style="max-width:750px;">
+            <h3 style="color:var(--gold-color);">🛒 Tienda de Canjes de Stream y Roles</h3>
             <p style="color:#888; font-size:0.9em; margin-top:0;">Canjea tus puntos ganados completando misiones por recompensas exclusivas.</p>
             
             <div class="shop-grid">
@@ -578,17 +578,31 @@
                 </div>
 
                 <div class="shop-card">
-                    <div class="shop-title">💬 VIP en Chat Global</div>
-                    <div class="shop-desc">Obtén la medalla VIP brillante en el chat de la web durante 30 días.</div>
-                    <div class="shop-price">500 PTS</div>
-                    <button class="btn-buy-item" onclick="iniciarCanjeItem('VIP en Chat', 500, false)">Canjear Recompensa</button>
+                    <div class="shop-title">💎 VIP en Twitch</div>
+                    <div class="shop-desc">Obtén la insignia de VIP oficial en el canal de Twitch de Driuk.</div>
+                    <div class="shop-price">35,000 PTS</div>
+                    <button class="btn-buy-item" onclick="iniciarCanjeItem('VIP en Twitch', 35000, true)">Canjear Recompensa</button>
                 </div>
 
                 <div class="shop-card">
-                    <div class="shop-title">⭐ Rol Exclusivo Discord</div>
-                    <div class="shop-desc">Consigue el rol especial "Leyenda de la Web" en el Discord Oficial.</div>
-                    <div class="shop-price">600 PTS</div>
-                    <button class="btn-buy-item" onclick="iniciarCanjeItem('Rol Discord Exclusivo', 600, true)">Canjear Recompensa</button>
+                    <div class="shop-title">🛡️ Moderador en YouTube o Twitch</div>
+                    <div class="shop-desc">Conviértete en moderador oficial del chat de YouTube o Twitch.</div>
+                    <div class="shop-price">40,000 PTS</div>
+                    <button class="btn-buy-item" onclick="iniciarCanjeItem('Moderador en YT/Twitch', 40000, true)">Canjear Recompensa</button>
+                </div>
+
+                <div class="shop-card">
+                    <div class="shop-title">🎬 Elegir Temática de Próximo Vídeo</div>
+                    <div class="shop-desc">Propones un reto o tema exclusivo para mi siguiente vídeo o Short.</div>
+                    <div class="shop-price">15,000 PTS</div>
+                    <button class="btn-buy-item" onclick="iniciarCanjeItem('Elegir Tema de Vídeo', 15000, true)">Canjear Recompensa</button>
+                </div>
+
+                <div class="shop-card">
+                    <div class="shop-title">💬 VIP en Chat Global de la Web</div>
+                    <div class="shop-desc">Obtén la medalla VIP brillante en el chat de la web durante 30 días.</div>
+                    <div class="shop-price">500 PTS</div>
+                    <button class="btn-buy-item" onclick="iniciarCanjeItem('VIP en Chat Web', 500, false)">Canjear Recompensa</button>
                 </div>
             </div>
 
@@ -794,12 +808,6 @@
                     chatBtn.disabled = false;
                     chatInput.placeholder = `Escribe como ${finalName}...`;
 
-                    // Reinicio de Seguridad de Puntos si no se ha formateado
-                    if (data.points === undefined || data.resetPointsDone !== true) {
-                        db.ref('users/' + user.uid).update({ points: 0, resetPointsDone: true });
-                        db.ref('user_missions/' + user.uid).remove();
-                    }
-
                     // Presencia
                     const myConn = db.ref(`presence/${user.uid}`);
                     db.ref('.info/connected').on('value', snap => {
@@ -809,7 +817,7 @@
                         }
                     });
 
-                    // Guardado por UID
+                    // Guardado por UID sin tocar puntos
                     const userObj = {
                         uid: user.uid,
                         displayName: finalName,
@@ -968,11 +976,11 @@
                 const data = snapshot.val() || {};
                 const currentPts = data.points || 0;
 
-                if(currentPts < coste) return alert(`No tienes suficientes puntos. Necesitas ${coste} PTS y tienes ${currentPts} PTS.`);
+                if(currentPts < coste) return alert(`No tienes suficientes puntos. Necesitas ${coste.toLocaleString()} PTS y tienes ${currentPts.toLocaleString()} PTS.`);
 
                 let customUserIngame = "";
                 if(requiereID) {
-                    customUserIngame = prompt(`Para canjear "${nombreItem}", debes escribir aquí tu nombre de usuario / ID de juego para poder agregarte:`);
+                    customUserIngame = prompt(`Para canjear "${nombreItem}", debes escribir aquí tu nombre de usuario / ID / nombre de Twitch o YouTube para procesar la recompensa:`);
                     if(!customUserIngame || !customUserIngame.trim()) {
                         return alert("Debes introducir tu nombre de usuario obligatoriamente para completar el canje.");
                     }
@@ -993,7 +1001,7 @@
 
                 db.ref('purchases').push(compData);
 
-                let msgTexto = `🎉 ¡${uName} ha canjeado "${nombreItem}" usando ${coste} puntos!`;
+                let msgTexto = `🎉 ¡${uName} ha canjeado "${nombreItem}" usando ${coste.toLocaleString()} puntos!`;
                 if(customUserIngame.trim()) msgTexto += ` (Usuario proporcionado: ${customUserIngame.trim()})`;
 
                 db.ref('chat_global').push({
@@ -1004,7 +1012,7 @@
                     timestamp: Date.now()
                 });
 
-                alert(`¡Canje realizado con éxito! "${nombreItem}" por ${coste} PUNTOS.`);
+                alert(`¡Canje realizado con éxito! "${nombreItem}" por ${coste.toLocaleString()} PUNTOS.`);
                 closeModal('shop-modal');
             });
         }
@@ -1026,7 +1034,7 @@
                             <strong style="color:var(--gold-color);">${data.authorName} (${data.handle})</strong>
                             <span style="font-size:0.75em; color:#888;">${dateStr}</span>
                         </div>
-                        <p style="margin:5px 0 0 0; font-weight:bold;">🎁 ${data.item} (${data.coste} PTS)</p>
+                        <p style="margin:5px 0 0 0; font-weight:bold;">🎁 ${data.item} (${data.coste.toLocaleString()} PTS)</p>
                         ${data.userIngame && data.userIngame !== 'N/A' ? `<p style="margin:4px 0 0 0; font-size:0.85em; color:#00ff66;">ID/Usuario indicado: <u>${data.userIngame}</u></p>` : ''}
                     `;
                     container.prepend(itemDiv);
@@ -1113,7 +1121,7 @@
             auth.createUserWithEmailAndPassword(email, password)
                 .then(userCredential => {
                     const uid = userCredential.user.uid;
-                    const userObj = { uid: uid, displayName: name, handle: handle, email: email, points: 0, resetPointsDone: true };
+                    const userObj = { uid: uid, displayName: name, handle: handle, email: email, points: 0 };
                     db.ref('users/' + uid).set(userObj);
                     db.ref('users_by_handle/' + handle.replace('@', '')).set(userObj);
                 })
