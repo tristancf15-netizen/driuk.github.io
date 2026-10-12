@@ -34,7 +34,7 @@
             min-height: 100vh;
         }
 
-        /* Notificación Flotante en Web (3 segundos) */
+        /* Notificación Flotante In-App (3s) */
         .toast-notification {
             position: fixed;
             top: 75px;
@@ -73,11 +73,7 @@
             z-index: 100;
         }
 
-        .top-left-group {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+        .top-left-group { display: flex; align-items: center; gap: 15px; }
 
         .toggle-sidebar-btn {
             background: var(--primary-red);
@@ -94,106 +90,40 @@
         .toggle-sidebar-btn:hover { background: var(--dark-red); }
 
         .top-bar .brand {
-            font-weight: 900;
-            color: var(--primary-red);
-            font-size: 1.3em;
-            letter-spacing: 2px;
+            font-weight: 900; color: var(--primary-red); font-size: 1.3em; letter-spacing: 2px;
         }
 
-        .user-nav {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            position: relative;
-        }
+        .user-nav { display: flex; align-items: center; gap: 15px; position: relative; }
 
         .btn-auth {
-            background: var(--primary-red);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            background: var(--primary-red); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; transition: all 0.3s ease;
         }
 
-        .btn-auth:hover {
-            background: var(--dark-red);
-            box-shadow: 0 0 10px var(--neon-glow);
-        }
+        .btn-auth:hover { background: var(--dark-red); box-shadow: 0 0 10px var(--neon-glow); }
 
         .user-avatar {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: var(--primary-red);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.1em;
-            cursor: pointer;
-            border: 2px solid #fff;
-            box-shadow: 0 0 10px var(--neon-glow);
-            background-size: cover;
-            background-position: center;
+            width: 38px; height: 38px; border-radius: 50%; background: var(--primary-red); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1em; cursor: pointer; border: 2px solid #fff; box-shadow: 0 0 10px var(--neon-glow); background-size: cover; background-position: center;
         }
 
         /* Menú Desplegable */
         .profile-dropdown {
-            display: none;
-            position: absolute;
-            top: 50px;
-            right: 0;
-            background: #121212;
-            border: 1px solid var(--primary-red);
-            border-radius: 8px;
-            width: 210px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.8);
-            z-index: 150;
-            flex-direction: column;
-            overflow: hidden;
+            display: none; position: absolute; top: 50px; right: 0; background: #121212; border: 1px solid var(--primary-red); border-radius: 8px; width: 220px; box-shadow: 0 0 15px rgba(0,0,0,0.8); z-index: 150; flex-direction: column; overflow: hidden;
         }
 
         .profile-dropdown button {
-            background: transparent;
-            color: white;
-            border: none;
-            padding: 12px 15px;
-            text-align: left;
-            cursor: pointer;
-            font-weight: bold;
-            border-bottom: 1px solid #222;
+            background: transparent; color: white; border: none; padding: 12px 15px; text-align: left; cursor: pointer; font-weight: bold; border-bottom: 1px solid #222;
         }
 
         .profile-dropdown button:hover { background: var(--primary-red); }
 
-        /* Menú Lateral y Animación Neón Parpadeante (0.7s) */
+        /* Menú Lateral y Neón */
         .sidebar {
-            position: fixed;
-            top: 60px;
-            left: -330px;
-            width: 320px;
-            height: calc(100vh - 60px);
-            background: #0d0d0d;
-            border-right: 1px solid #222;
-            transition: left 0.3s ease;
-            z-index: 90;
-            padding: 20px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            box-shadow: 5px 0 15px rgba(0,0,0,0.5);
+            position: fixed; top: 60px; left: -330px; width: 320px; height: calc(100vh - 60px); background: #0d0d0d; border-right: 1px solid #222; transition: left 0.3s ease; z-index: 90; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 15px; box-shadow: 5px 0 15px rgba(0,0,0,0.5);
         }
 
         .sidebar.active { left: 0; }
 
-        .sidebar.neon-flash {
-            animation: neonBlink 0.7s ease-in-out;
-        }
+        .sidebar.neon-flash { animation: neonBlink 0.7s ease-in-out; }
 
         @keyframes neonBlink {
             0% { box-shadow: 0 0 5px var(--primary-red); border-right: 1px solid var(--primary-red); }
@@ -203,180 +133,77 @@
             100% { box-shadow: 5px 0 15px rgba(0,0,0,0.5); border-right: 1px solid #222; }
         }
 
-        .sidebar-tabs {
-            display: flex;
-            gap: 8px;
-            border-bottom: 1px solid #222;
-            padding-bottom: 10px;
-        }
+        .sidebar-tabs { display: flex; gap: 8px; border-bottom: 1px solid #222; padding-bottom: 10px; }
 
         .tab-btn {
-            flex: 1;
-            background: #141414;
-            color: var(--text-gray);
-            border: 1px solid #222;
-            padding: 8px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.85em;
+            flex: 1; background: #141414; color: var(--text-gray); border: 1px solid #222; padding: 8px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 0.85em;
         }
 
         .tab-btn.active {
-            background: var(--primary-red);
-            color: white;
-            border-color: var(--primary-red);
-            box-shadow: 0 0 8px var(--neon-glow);
+            background: var(--primary-red); color: white; border-color: var(--primary-red); box-shadow: 0 0 8px var(--neon-glow);
         }
 
-        .tab-content {
-            display: none;
-            flex-direction: column;
-            gap: 12px;
-            overflow-y: auto;
-            flex-grow: 1;
-        }
-
+        .tab-content { display: none; flex-direction: column; gap: 12px; overflow-y: auto; flex-grow: 1; }
         .tab-content.active { display: flex; }
 
         .sidebar-input {
-            width: 100%;
-            padding: 10px;
-            background: #141414;
-            border: 1px solid #333;
-            color: white;
-            border-radius: 6px;
-            box-sizing: border-box;
-            outline: none;
+            width: 100%; padding: 10px; background: #141414; border: 1px solid #333; color: white; border-radius: 6px; box-sizing: border-box; outline: none;
         }
 
         .sidebar-btn-sub {
-            width: 100%;
-            background: var(--primary-red);
-            color: white;
-            border: none;
-            padding: 9px;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
+            width: 100%; background: var(--primary-red); color: white; border: none; padding: 9px; border-radius: 6px; font-weight: bold; cursor: pointer;
         }
 
-        .req-box {
-            background: #141414;
-            border: 1px solid #222;
-            border-radius: 8px;
-            padding: 10px;
-            margin-top: 5px;
-        }
+        .req-box { background: #141414; border: 1px solid #222; border-radius: 8px; padding: 10px; margin-top: 5px; }
 
-        .req-title {
-            color: var(--primary-red);
-            font-size: 0.85em;
-            font-weight: bold;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-        }
+        .req-title { color: var(--primary-red); font-size: 0.85em; font-weight: bold; margin-bottom: 6px; text-transform: uppercase; }
 
         .friend-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: #1e1e1e;
-            padding: 8px;
-            border-radius: 6px;
-            margin-bottom: 6px;
-            cursor: pointer;
-            user-select: none;
+            display: flex; align-items: center; justify-content: space-between; background: #1e1e1e; padding: 8px; border-radius: 6px; margin-bottom: 6px; cursor: pointer; user-select: none;
         }
 
-        .status-dot {
-            width: 10px; height: 10px;
-            border-radius: 50%; display: inline-block; margin-right: 8px;
-        }
+        .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
         .status-dot.online { background: #00ff66; box-shadow: 0 0 8px #00ff66; }
         .status-dot.offline { background: #ff3333; }
 
         header { text-align: center; padding: 40px 20px 20px 20px; }
 
-        h1 {
-            color: var(--primary-red);
-            font-size: 3.8em;
-            margin: 0;
-            text-shadow: 0 0 20px var(--neon-glow);
-            letter-spacing: 3px;
-        }
+        h1 { color: var(--primary-red); font-size: 3.8em; margin: 0; text-shadow: 0 0 20px var(--neon-glow); letter-spacing: 3px; }
 
         p.subtitle { color: var(--text-gray); font-size: 1.25em; margin-top: 8px; }
 
         .badge {
-            background: linear-gradient(135deg, var(--primary-red), var(--dark-red));
-            color: white;
-            padding: 10px 24px;
-            border-radius: 30px;
-            font-weight: bold;
-            display: inline-block;
-            margin-top: 15px;
-            box-shadow: 0 0 15px var(--neon-glow);
-            letter-spacing: 1px;
+            background: linear-gradient(135deg, var(--primary-red), var(--dark-red)); color: white; padding: 10px 24px; border-radius: 30px; font-weight: bold; display: inline-block; margin-top: 15px; box-shadow: 0 0 15px var(--neon-glow); letter-spacing: 1px;
         }
 
         .container { width: 90%; max-width: 900px; margin: 20px auto 50px auto; }
 
         section {
-            background-color: var(--card-bg);
-            border: 1px solid #222;
-            border-radius: 16px;
-            padding: 30px;
-            margin-bottom: 35px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            background-color: var(--card-bg); border: 1px solid #222; border-radius: 16px; padding: 30px; margin-bottom: 35px; box-shadow: 0 10px 30px rgba(0,0,0,0.6);
         }
 
-        h2 {
-            color: var(--primary-red);
-            border-bottom: 2px solid var(--primary-red);
-            padding-bottom: 10px;
-            margin-top: 0;
-            font-size: 1.6em;
-        }
+        h2 { color: var(--primary-red); border-bottom: 2px solid var(--primary-red); padding-bottom: 10px; margin-top: 0; font-size: 1.6em; }
 
-        /* Redes Sociales con Iconos Logo SVG */
-        .social-box {
-            display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin: 20px 0;
-        }
+        /* Redes Sociales con SVG Logos */
+        .social-box { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin: 20px 0; }
 
         .btn-social {
-            background-color: var(--card-bg);
-            color: var(--text-white);
-            text-decoration: none;
-            padding: 12px 22px;
-            border-radius: 12px;
-            font-weight: bold;
-            border: 2px solid #222;
-            display: flex; align-items: center; gap: 10px;
-            transition: all 0.3s ease;
+            background-color: var(--card-bg); color: var(--text-white); text-decoration: none; padding: 12px 22px; border-radius: 12px; font-weight: bold; border: 2px solid #222; display: flex; align-items: center; gap: 10px; transition: all 0.3s ease;
         }
 
         .btn-social svg { width: 20px; height: 20px; fill: currentColor; }
 
-        .btn-social:hover {
-            border-color: var(--primary-red);
-            color: var(--primary-red);
-            box-shadow: 0 0 15px var(--neon-glow);
-        }
+        .btn-social:hover { border-color: var(--primary-red); color: var(--primary-red); box-shadow: 0 0 15px var(--neon-glow); }
 
         /* Estadísticas */
-        .stats-grid {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; text-align: center;
-        }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; text-align: center; }
 
-        .stat-card {
-            background: #0a0a0a; border: 1px solid #222; border-radius: 12px; padding: 22px;
-        }
+        .stat-card { background: #0a0a0a; border: 1px solid #222; border-radius: 12px; padding: 22px; }
 
         .stat-number { font-size: 2.2em; font-weight: 800; color: var(--primary-red); }
         .stat-label { color: var(--text-gray); font-size: 0.9em; margin-top: 5px; }
 
-        /* Vídeos Destacados */
+        /* Vídeos */
         .video-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media (max-width: 650px) { .video-grid { grid-template-columns: 1fr; } }
 
@@ -390,7 +217,7 @@
             display: block; margin: 0 15px 15px 15px; background-color: var(--primary-red); color: white; padding: 12px; border-radius: 8px; text-decoration: none; font-weight: bold;
         }
 
-        /* Setup Gamer */
+        /* Setup */
         .setup-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; }
         .setup-card { background: #0a0a0a; border: 1px solid #222; border-radius: 10px; padding: 18px; }
         .setup-title { color: var(--primary-red); font-weight: bold; font-size: 0.85em; text-transform: uppercase; }
@@ -405,21 +232,13 @@
         .config-img img { max-width: 100%; border-radius: 12px; border: 2px solid #333; }
 
         /* Chat Interactivo */
-        .chat-box {
-            background: #0a0a0a; border-radius: 12px; border: 1px solid #222; padding: 18px; height: 320px; display: flex; flex-direction: column;
-        }
+        .chat-box { background: #0a0a0a; border-radius: 12px; border: 1px solid #222; padding: 18px; height: 320px; display: flex; flex-direction: column; }
 
-        .chat-messages {
-            overflow-y: auto; flex-grow: 1; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px;
-        }
+        .chat-messages { overflow-y: auto; flex-grow: 1; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
 
-        .chat-msg {
-            background: #141414; padding: 10px 14px; border-radius: 8px; font-size: 0.92em; border-left: 3px solid var(--primary-red); word-break: break-word; position: relative;
-        }
+        .chat-msg { background: #141414; padding: 10px 14px; border-radius: 8px; font-size: 0.92em; border-left: 3px solid var(--primary-red); word-break: break-word; position: relative; }
 
-        .chat-msg .msg-actions {
-            display: none; position: absolute; right: 10px; top: 8px; gap: 5px;
-        }
+        .chat-msg .msg-actions { display: none; position: absolute; right: 10px; top: 8px; gap: 5px; }
 
         .chat-msg:hover .msg-actions { display: flex; }
         .msg-actions button { background: #222; color: #ccc; border: none; padding: 2px 6px; border-radius: 4px; font-size: 0.75em; cursor: pointer; }
@@ -443,7 +262,7 @@
 
         .post-card { background: #181818; border: 1px solid #333; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
 
-        /* Studio Youtube Style Tabs */
+        /* Studio YouTube Style Tabs */
         .studio-nav-tabs { display: flex; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; margin-top: 15px; }
         .studio-tab-item { background: transparent; color: #888; border: none; font-weight: bold; padding: 6px 12px; cursor: pointer; }
         .studio-tab-item.active { color: var(--primary-red); border-bottom: 2px solid var(--primary-red); }
@@ -451,7 +270,7 @@
 </head>
 <body>
 
-    <!-- Pop-up de Notificación In-App (3s sin sonido) -->
+    <!-- Pop-up de Notificación In-App -->
     <div class="toast-notification" id="toast-notif"></div>
 
     <!-- Barra Superior -->
@@ -462,9 +281,9 @@
         </div>
         <div class="user-nav">
             <button class="btn-auth" id="btn-login-modal" onclick="openModal('auth-modal')">Iniciar Sesión / Registro</button>
-            <div class="user-avatar" id="user-avatar" style="display:none;" onclick="toggleProfileDropdown()">U</div>
+            <div class="user-avatar" id="user-avatar" style="display:none;" onclick="toggleProfileDropdown(event)">U</div>
             
-            <div class="profile-dropdown" id="profile-dropdown">
+            <div class="profile-dropdown" id="profile-dropdown" onclick="event.stopPropagation()">
                 <button onclick="verMiPropioCanal()">📹 Mi Canal / Studio</button>
                 <button onclick="abrirModalPublicarStudio()">➕ Publicar Nuevo Contenido</button>
                 <button onclick="abrirAmigosAjustesDesdePerfil()">👥 Amigos y Ajustes</button>
@@ -473,7 +292,7 @@
         </div>
     </div>
 
-    <!-- Menú Lateral Ordenado -->
+    <!-- Menú Lateral -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-tabs">
             <button class="tab-btn active" onclick="switchTab('tab-amigos')">👥 Amigos</button>
@@ -481,8 +300,8 @@
         </div>
 
         <div class="tab-content active" id="tab-amigos">
-            <label style="font-size:0.8em; color:#888;">Añadir amigo por apodo exacto:</label>
-            <input type="text" class="sidebar-input" id="friend-username" placeholder="Escribe apodo exacto...">
+            <label style="font-size:0.8em; color:#888;">Añadir amigo por @handle exacto:</label>
+            <input type="text" class="sidebar-input" id="friend-handle" placeholder="@ejemplo...">
             <button class="sidebar-btn-sub" onclick="enviarSolicitudAmigo()">Enviar Solicitud</button>
 
             <div class="req-box">
@@ -507,9 +326,13 @@
             <input type="file" id="avatar-file-input" accept="image/*" style="font-size:0.8em; color:#ccc;">
             <button class="sidebar-btn-sub" onclick="guardarFotoPerfil()">Guardar Foto</button>
 
-            <label style="font-size:0.8em; color:#888; margin-top:10px;">Cambiar Apodo:</label>
-            <input type="text" class="sidebar-input" id="new-username-input" placeholder="Nuevo Apodo...">
-            <button class="sidebar-btn-sub" onclick="cambiarApodo()">Actualizar Apodo</button>
+            <label style="font-size:0.8em; color:#888; margin-top:10px;">Cambiar Apodo Visible:</label>
+            <input type="text" class="sidebar-input" id="new-displayname-input" placeholder="Nombre visible...">
+            
+            <label style="font-size:0.8em; color:#888; margin-top:8px;">Cambiar @Handle Único:</label>
+            <input type="text" class="sidebar-input" id="new-handle-input" placeholder="@driuk...">
+            
+            <button class="sidebar-btn-sub" onclick="actualizarPerfilYHandle()" style="margin-top:8px;">Actualizar Nombres</button>
 
             <label style="font-size:0.8em; color:#888; margin-top:10px;">Privacidad de Mensajes:</label>
             <select class="sidebar-input" id="privacy-select" onchange="guardarPrivacidad()">
@@ -529,7 +352,7 @@
     </header>
 
     <div class="container">
-        <!-- Redes Sociales con Iconos Logo SVG -->
+        <!-- Redes Sociales con Iconos SVG -->
         <div class="social-box">
             <a class="btn-social" href="https://www.youtube.com/@driuk" target="_blank">
                 <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
@@ -566,7 +389,7 @@
 
         <!-- 2. Último Contenido Multimedia -->
         <section>
-            <h2>🎬 2. ÚLTIMO CONTENIDO DESTACADO</h2>
+            <h2>🎬 2. ÚLTIMO CONTENIDO</h2>
             <div class="video-grid">
                 <div class="video-card">
                     <a href="https://youtu.be/DuFB_bxeAAg?si=fFzFck0RNGWR4q1Q" target="_blank">
@@ -585,7 +408,7 @@
             </div>
         </section>
 
-        <!-- 3. Hardware y Periféricos -->
+        <!-- 3. Setup -->
         <section>
             <h2>🖥️ 3. MI SETUP COMPETITIVO</h2>
             <div class="setup-grid">
@@ -631,7 +454,7 @@
             </div>
         </section>
 
-        <!-- 5. Chat Global Sincronizado -->
+        <!-- 5. Chat Global -->
         <section>
             <h2>💬 5. SALA DE CHAT Y COMUNIDAD</h2>
             <div class="chat-box">
@@ -648,18 +471,19 @@
         <!-- 6. Feed de la Comunidad con Buscador -->
         <section>
             <h2>🌐 6. PUBLICACIONES Y VÍDEOS DE LA COMUNIDAD</h2>
-            <input type="text" id="feed-search-input" placeholder="🔍 Buscar por título o apodo de creador..." class="sidebar-input" style="margin-bottom:15px;" onkeyup="filtrarFeedComunidad()">
+            <input type="text" id="feed-search-input" placeholder="🔍 Buscar por título o @handle..." class="sidebar-input" style="margin-bottom:15px;" onkeyup="filtrarFeedComunidad()">
             <div id="community-feed">
                 <p style="color:#888;">Cargando publicaciones de la comunidad...</p>
             </div>
         </section>
     </div>
 
-    <!-- Modal de Autenticación -->
+    <!-- Modal Autenticación -->
     <div class="modal" id="auth-modal">
         <div class="modal-content">
             <h3>Acceso de Usuario</h3>
-            <input type="text" id="auth-username" placeholder="Apodo (Nombre de usuario)">
+            <input type="text" id="auth-username" placeholder="Apodo o Nombre Visible">
+            <input type="text" id="auth-handle" placeholder="Handle Único (ej: @driuk)">
             <input type="email" id="auth-email" placeholder="Correo Electrónico">
             <input type="password" id="auth-password" placeholder="Contraseña">
             
@@ -670,7 +494,7 @@
         </div>
     </div>
 
-    <!-- Modal Mi Canal / Studio Completo Estilo YouTube -->
+    <!-- Modal Canal Estilo YouTube -->
     <div class="modal" id="channel-modal">
         <div class="modal-content" style="max-width:700px;">
             <div style="background:linear-gradient(90deg, #330000, #990012); height:100px; border-radius:8px; display:flex; align-items:flex-end; padding:15px;">
@@ -681,10 +505,12 @@
                     <h2 id="chan-title" style="margin:0; border:none;">Nombre del Canal</h2>
                     <p id="chan-subs" style="color:#888; font-size:0.9em; margin:4px 0;">0 Suscriptores</p>
                 </div>
-                <button class="btn-auth" onclick="abrirModalPublicarStudio()">➕ Publicar Vídeo/Foto</button>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-auth" id="btn-subscribe" onclick="toggleSuscripcionConCampanita()">Suscribirse 🔔</button>
+                    <button class="btn-auth" style="background:#333;" onclick="abrirModalPublicarStudio()">➕ Publicar</button>
+                </div>
             </div>
 
-            <!-- Navegación Estilo YouTube -->
             <div class="studio-nav-tabs">
                 <button class="studio-tab-item active" onclick="filtrarCanalTab('all')">Inicio</button>
                 <button class="studio-tab-item" onclick="filtrarCanalTab('video')">Vídeos</button>
@@ -699,22 +525,26 @@
         </div>
     </div>
 
-    <!-- Modal Publicar en Studio (Soporta MP4 o Links) -->
+    <!-- Modal Publicar en Studio -->
     <div class="modal" id="studio-modal">
         <div class="modal-content">
             <h3>📹 Publicar en tu Canal</h3>
             <label style="font-size:0.8em; color:#888;">Tipo de Publicación:</label>
-            <select id="studio-type" class="sidebar-input">
+            <select id="studio-type" class="sidebar-input" onchange="actualizarModoCamposStudio()">
                 <option value="video">📹 Vídeo Largo (MP4 o Link)</option>
                 <option value="short">⚡ Short (MP4 o Link)</option>
                 <option value="photo">📸 Foto / Comunidad</option>
-                <option value="live">🔴 Emisión en Directo</option>
+                <option value="live">🔴 Emisión en Directo (Solo Link)</option>
             </select>
 
             <input type="text" id="studio-title" placeholder="Título...">
-            <input type="text" id="studio-url" placeholder="Enlace URL (YouTube/MP4)...">
-            <label style="font-size:0.8em; color:#888;">O adjuntar archivo MP4/Imagen desde tu equipo:</label>
-            <input type="file" id="studio-file" accept="video/mp4,image/*" style="font-size:0.8em; color:#ccc;">
+            <input type="text" id="studio-url" placeholder="Enlace URL (YouTube/Twitch)...">
+            
+            <div id="file-upload-block">
+                <label style="font-size:0.8em; color:#888;">O adjuntar archivo MP4/Imagen desde tu equipo:</label>
+                <input type="file" id="studio-file" accept="video/mp4,image/*" style="font-size:0.8em; color:#ccc;">
+            </div>
+
             <textarea id="studio-desc" placeholder="Descripción opcional..." rows="3"></textarea>
 
             <button class="btn-auth" onclick="publicarContenidoStudio()">Publicar Ahora 🚀</button>
@@ -722,7 +552,7 @@
         </div>
     </div>
 
-    <!-- Modal Chat Privado DM -->
+    <!-- Modal DM -->
     <div class="modal" id="dm-modal">
         <div class="modal-content">
             <h3 id="dm-title">Chat Privado</h3>
@@ -753,9 +583,20 @@
         const db = firebase.database();
 
         let usuarioActual = null;
-        let dmFriendUser = null;
+        let dmFriendUid = null;
+        let dmFriendHandle = null;
         let clickTimer = null;
         let allPostsData = [];
+        let perfilSeleccionadoUid = null;
+
+        // Cierre automático del menú desplegable al hacer clic fuera
+        document.addEventListener('click', function(e) {
+            const drop = document.getElementById('profile-dropdown');
+            const avatar = document.getElementById('user-avatar');
+            if (drop && drop.style.display === 'flex' && !drop.contains(e.target) && !avatar.contains(e.target)) {
+                drop.style.display = 'none';
+            }
+        });
 
         // Estado Auth & Presencia
         auth.onAuthStateChanged(user => {
@@ -769,39 +610,46 @@
                 btnModal.style.display = 'none';
                 avatar.style.display = 'flex';
                 
-                const username = (user.displayName || user.email.split('@')[0]).toLowerCase();
-                if (user.photoURL) {
-                    avatar.style.backgroundImage = `url(${user.photoURL})`;
-                    avatar.innerText = '';
-                } else {
-                    avatar.style.backgroundImage = 'none';
-                    avatar.innerText = username.charAt(0).toUpperCase();
-                }
+                db.ref('users/' + user.uid).once('value', snapshot => {
+                    const data = snapshot.val() || {};
+                    const handle = data.handle || '@' + (user.email.split('@')[0]);
+                    const dName = data.displayName || user.displayName || handle;
 
-                chatInput.disabled = false;
-                chatBtn.disabled = false;
-                chatInput.placeholder = `Escribe como ${username}...`;
-                
-                // Presencia en vivo
-                const myConn = db.ref(`users/${username}/online`);
-                db.ref('.info/connected').on('value', snap => {
-                    if (snap.val() === true) {
-                        myConn.set(true);
-                        myConn.onDisconnect().set(false);
+                    if (data.photoURL || user.photoURL) {
+                        avatar.style.backgroundImage = `url(${data.photoURL || user.photoURL})`;
+                        avatar.innerText = '';
+                    } else {
+                        avatar.style.backgroundImage = 'none';
+                        avatar.innerText = dName.charAt(0).toUpperCase();
                     }
-                });
 
-                db.ref('users/' + username).update({
-                    uid: user.uid,
-                    displayName: username,
-                    email: user.email,
-                    photoURL: user.photoURL || ''
-                });
+                    chatInput.disabled = false;
+                    chatBtn.disabled = false;
+                    chatInput.placeholder = `Escribe como ${dName}...`;
 
-                escucharNotificacionesMensajes();
-                cargarSolicitudesYAmigos();
-                cargarFeedComunidad();
-                closeModal('auth-modal');
+                    // Actualizar presencias por UID
+                    const myConn = db.ref(`presence/${user.uid}`);
+                    db.ref('.info/connected').on('value', snap => {
+                        if (snap.val() === true) {
+                            myConn.set(true);
+                            myConn.onDisconnect().set(false);
+                        }
+                    });
+
+                    db.ref('users/' + user.uid).update({
+                        uid: user.uid,
+                        displayName: dName,
+                        handle: handle.toLowerCase(),
+                        email: user.email,
+                        photoURL: data.photoURL || user.photoURL || ''
+                    });
+
+                    escucharNotificacionesMensajes();
+                    escucharNotificacionesSuscripciones();
+                    cargarSolicitudesYAmigos();
+                    cargarFeedComunidad();
+                    closeModal('auth-modal');
+                });
             } else {
                 usuarioActual = null;
                 btnModal.style.display = 'block';
@@ -813,26 +661,7 @@
             }
         });
 
-        // Escuchar Pop-Up Notificación de Mensaje Privado (3s sin sonido)
-        function escucharNotificacionesMensajes() {
-            if(!usuarioActual) return;
-            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
-
-            db.ref('direct_messages').on('child_changed', snapshot => {
-                const chatId = snapshot.key;
-                if(chatId.includes(myUsername)) {
-                    snapshot.ref.limitToLast(1).once('value', lastSnap => {
-                        lastSnap.forEach(msgChild => {
-                            const data = msgChild.val();
-                            if(data.usuario !== myUsername) {
-                                mostrarToastNotificacion(`💬 Nuevo mensaje de @${data.usuario}: "${data.mensaje.substring(0,25)}..."`);
-                            }
-                        });
-                    });
-                }
-            });
-        }
-
+        // Notificación flotante emergente
         function mostrarToastNotificacion(texto) {
             const toast = document.getElementById('toast-notif');
             toast.innerText = texto;
@@ -840,21 +669,57 @@
             setTimeout(() => { toast.style.display = 'none'; }, 3000);
         }
 
+        function escucharNotificacionesMensajes() {
+            if(!usuarioActual) return;
+            db.ref('direct_messages').on('child_changed', snapshot => {
+                if(snapshot.key.includes(usuarioActual.uid)) {
+                    snapshot.ref.limitToLast(1).once('value', lastSnap => {
+                        lastSnap.forEach(msgChild => {
+                            const data = msgChild.val();
+                            if(data.uid !== usuarioActual.uid) {
+                                mostrarToastNotificacion(`💬 Mensaje de ${data.authorName}: "${data.mensaje.substring(0,25)}..."`);
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        function escucharNotificacionesSuscripciones() {
+            if(!usuarioActual) return;
+            db.ref(`subscriptions/${usuarioActual.uid}`).on('child_added', snap => {
+                const creatorUid = snap.key;
+                db.ref('posts').orderByChild('uid').equalTo(creatorUid).limitToLast(1).on('child_added', postSnap => {
+                    const post = postSnap.val();
+                    if(post.timestamp > Date.now() - 10000) {
+                        mostrarToastNotificacion(`🔔 ${post.authorName} ha publicado: "${post.titulo}"`);
+                    }
+                });
+            });
+        }
+
         // Auth Basica
         function registrarUsuario() {
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value.trim();
-            const username = document.getElementById('auth-username').value.trim().toLowerCase();
+            const name = document.getElementById('auth-username').value.trim();
+            let handle = document.getElementById('auth-handle').value.trim().toLowerCase();
 
-            if(!email || !password || !username) return alert("Completa todos los campos.");
+            if(!email || !password || !name) return alert("Completa todos los campos.");
+            if(!handle.startsWith('@')) handle = '@' + handle;
 
-            db.ref('users/' + username).once('value', snapshot => {
-                if (snapshot.exists()) return alert("Ese apodo ya existe.");
-                auth.createUserWithEmailAndPassword(email, password)
-                    .then(userCredential => userCredential.user.updateProfile({ displayName: username }))
-                    .then(() => alert("¡Cuenta creada!"))
-                    .catch(err => alert("Error: " + err.message));
-            });
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(userCredential => {
+                    const uid = userCredential.user.uid;
+                    return db.ref('users/' + uid).set({
+                        uid: uid,
+                        displayName: name,
+                        handle: handle,
+                        email: email
+                    });
+                })
+                .then(() => alert("¡Cuenta registrada con éxito!"))
+                .catch(err => alert("Error: " + err.message));
         }
 
         function iniciarSesion() {
@@ -873,27 +738,32 @@
             if(usuarioActual) usuarioActual.sendEmailVerification().then(() => alert("Correo enviado.")).catch(err => alert("Error: " + err.message));
         }
 
-        function cambiarApodo() {
-            const nuevo = document.getElementById('new-username-input').value.trim().toLowerCase();
-            if(!nuevo || !usuarioActual) return;
-            db.ref('users/' + nuevo).once('value', snap => {
-                if(snap.exists()) return alert("Apodo ocupado.");
-                usuarioActual.updateProfile({ displayName: nuevo }).then(() => { alert("Apodo cambiado!"); location.reload(); });
+        function actualizarPerfilYHandle() {
+            if(!usuarioActual) return;
+            const newName = document.getElementById('new-displayname-input').value.trim();
+            let newHandle = document.getElementById('new-handle-input').value.trim().toLowerCase();
+
+            if(newHandle && !newHandle.startsWith('@')) newHandle = '@' + newHandle;
+
+            const updates = {};
+            if(newName) updates.displayName = newName;
+            if(newHandle) updates.handle = newHandle;
+
+            db.ref('users/' + usuarioActual.uid).update(updates).then(() => {
+                alert("¡Perfil actualizado sin perder datos ni amigos!");
+                location.reload();
             });
         }
 
         function cerrarSesion() { auth.signOut(); location.reload(); }
 
-        // Foto Perfil desde Link o Archivo
         function guardarFotoPerfil() {
             const linkUrl = document.getElementById('avatar-url-input').value.trim();
             const fileInput = document.getElementById('avatar-file-input');
 
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    aplicarFotoURL(e.target.result);
-                };
+                reader.onload = function(e) { aplicarFotoURL(e.target.result); };
                 reader.readAsDataURL(fileInput.files[0]);
             } else if (linkUrl) {
                 aplicarFotoURL(linkUrl);
@@ -902,129 +772,140 @@
 
         function aplicarFotoURL(url) {
             if(!usuarioActual) return;
-            usuarioActual.updateProfile({ photoURL: url }).then(() => {
+            db.ref('users/' + usuarioActual.uid).update({ photoURL: url }).then(() => {
                 document.getElementById('user-avatar').style.backgroundImage = `url(${url})`;
                 document.getElementById('user-avatar').innerText = '';
-                db.ref('users/' + (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase()).update({ photoURL: url });
                 alert("¡Foto de perfil actualizada!");
             });
         }
 
-        // Abrir Menú Lateral con destello Neón
         function abrirAmigosAjustesDesdePerfil() {
             toggleProfileDropdown();
             const sidebar = document.getElementById('sidebar');
             if (sidebar.classList.contains('active')) {
                 sidebar.classList.add('neon-flash');
                 setTimeout(() => sidebar.classList.remove('neon-flash'), 700);
-            } else {
-                sidebar.classList.add('active');
-            }
+            } else { sidebar.classList.add('active'); }
         }
 
-        // Amigos y Presencia Real
-        function handleFriendClick(friendUser) {
+        // Amigos por UID
+        function handleFriendClick(friendUid, friendHandle) {
             if (clickTimer == null) {
-                clickTimer = setTimeout(() => { clickTimer = null; abrirCanalUsuario(friendUser); }, 250);
+                clickTimer = setTimeout(() => { clickTimer = null; abrirCanalUsuarioPorUid(friendUid); }, 250);
             } else {
-                clearTimeout(clickTimer); clickTimer = null; abrirChatPrivadoDM(friendUser);
+                clearTimeout(clickTimer); clickTimer = null; abrirChatPrivadoDM(friendUid, friendHandle);
             }
         }
 
         function cargarSolicitudesYAmigos() {
             if(!usuarioActual) return;
-            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
+            const myUid = usuarioActual.uid;
 
-            db.ref('friends/' + myUsername).on('value', snapshot => {
+            db.ref('friends/' + myUid).on('value', snapshot => {
                 const container = document.getElementById('friends-list');
                 container.innerHTML = '';
                 if (!snapshot.exists()) return container.innerText = "No tienes amigos agregados.";
                 
                 snapshot.forEach(child => {
-                    const friendName = child.key;
-                    db.ref('users/' + friendName + '/online').on('value', onlineSnap => {
-                        const isOnline = onlineSnap.val() === true;
-                        let item = document.getElementById('friend-item-' + friendName);
-                        if(!item) {
-                            item = document.createElement('div');
-                            item.id = 'friend-item-' + friendName;
-                            item.className = 'friend-item';
-                            item.onclick = () => handleFriendClick(friendName);
-                            container.appendChild(item);
-                        }
-                        item.innerHTML = `
-                            <div>
-                                <span class="status-dot ${isOnline ? 'online' : 'offline'}"></span>
-                                <strong>${friendName}</strong>
-                            </div>
-                            <span style="font-size:0.75em; color:#888;">${isOnline ? 'En línea' : 'Desconectado'}</span>
-                        `;
+                    const friendUid = child.key;
+                    db.ref('users/' + friendUid).on('value', userSnap => {
+                        const uData = userSnap.val() || {};
+                        const friendHandle = uData.handle || '@usuario';
+                        const friendName = uData.displayName || friendHandle;
+
+                        db.ref('presence/' + friendUid).on('value', onlineSnap => {
+                            const isOnline = onlineSnap.val() === true;
+                            let item = document.getElementById('friend-item-' + friendUid);
+                            if(!item) {
+                                item = document.createElement('div');
+                                item.id = 'friend-item-' + friendUid;
+                                item.className = 'friend-item';
+                                item.onclick = () => handleFriendClick(friendUid, friendHandle);
+                                container.appendChild(item);
+                            }
+                            item.innerHTML = `
+                                <div>
+                                    <span class="status-dot ${isOnline ? 'online' : 'offline'}"></span>
+                                    <strong>${friendName}</strong> <span style="font-size:0.75em; color:#888;">(${friendHandle})</span>
+                                </div>
+                                <span style="font-size:0.75em; color:#888;">${isOnline ? 'En línea' : 'Desconectado'}</span>
+                            `;
+                        });
                     });
                 });
             });
 
-            db.ref('friend_requests/' + myUsername + '/received').on('value', snapshot => {
+            db.ref('friend_requests/' + myUid + '/received').on('value', snapshot => {
                 const container = document.getElementById('incoming-requests');
                 container.innerHTML = '';
                 if (!snapshot.exists()) return container.innerText = "No tienes solicitudes.";
                 snapshot.forEach(child => {
-                    const fromUser = child.key;
-                    const item = document.createElement('div');
-                    item.className = 'req-item';
-                    item.innerHTML = `<span>${fromUser}</span><button class="accept" onclick="aceptarAmigo('${fromUser}')" style="background:#00aa44; color:white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Aceptar</button>`;
-                    container.appendChild(item);
+                    const fromUid = child.key;
+                    db.ref('users/' + fromUid).once('value', uSnap => {
+                        const fromHandle = (uSnap.val() || {}).handle || '@usuario';
+                        const item = document.createElement('div');
+                        item.className = 'req-item';
+                        item.innerHTML = `<span>${fromHandle}</span><button class="accept" onclick="aceptarAmigo('${fromUid}')" style="background:#00aa44; color:white; border:none; padding:3px 8px; border-radius:4px; cursor:pointer;">Aceptar</button>`;
+                        container.appendChild(item);
+                    });
                 });
             });
 
-            db.ref('friend_requests/' + myUsername + '/sent').on('value', snapshot => {
+            db.ref('friend_requests/' + myUid + '/sent').on('value', snapshot => {
                 const container = document.getElementById('outgoing-requests');
                 container.innerHTML = '';
                 if (!snapshot.exists()) return container.innerText = "Sin solicitudes enviadas.";
                 snapshot.forEach(child => {
-                    const toUser = child.key;
-                    const item = document.createElement('div');
-                    item.className = 'req-item';
-                    item.innerHTML = `<span>${toUser}</span><span style="color:#888; font-size:0.8em;">Pendiente</span>`;
-                    container.appendChild(item);
+                    const toUid = child.key;
+                    db.ref('users/' + toUid).once('value', uSnap => {
+                        const toHandle = (uSnap.val() || {}).handle || '@usuario';
+                        const item = document.createElement('div');
+                        item.className = 'req-item';
+                        item.innerHTML = `<span>${toHandle}</span><span style="color:#888; font-size:0.8em;">Pendiente</span>`;
+                        container.appendChild(item);
+                    });
                 });
             });
         }
 
         function enviarSolicitudAmigo() {
-            const targetUsername = document.getElementById('friend-username').value.trim().toLowerCase();
-            if(!targetUsername || !usuarioActual) return;
-            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
+            let targetHandle = document.getElementById('friend-handle').value.trim().toLowerCase();
+            if(!targetHandle || !usuarioActual) return;
+            if(!targetHandle.startsWith('@')) targetHandle = '@' + targetHandle;
 
-            if (targetUsername === myUsername) return alert("No puedes agregarte a ti mismo.");
+            db.ref('users').orderByChild('handle').equalTo(targetHandle).once('value', snapshot => {
+                if (!snapshot.exists()) return alert("El @handle NO existe.");
+                snapshot.forEach(child => {
+                    const targetUid = child.key;
+                    if(targetUid === usuarioActual.uid) return alert("No puedes agregarte a ti mismo.");
 
-            db.ref('users/' + targetUsername).once('value', snapshot => {
-                if (!snapshot.exists()) return alert("La cuenta NO existe.");
-                db.ref('friend_requests/' + targetUsername + '/received/' + myUsername).set(true);
-                db.ref('friend_requests/' + myUsername + '/sent/' + targetUsername).set(true);
-                alert("Solicitud enviada a " + targetUsername);
-                document.getElementById('friend-username').value = '';
+                    db.ref('friend_requests/' + targetUid + '/received/' + usuarioActual.uid).set(true);
+                    db.ref('friend_requests/' + usuarioActual.uid + '/sent/' + targetUid).set(true);
+                    alert("Solicitud enviada a " + targetHandle);
+                    document.getElementById('friend-handle').value = '';
+                });
             });
         }
 
-        function aceptarAmigo(friendUser) {
+        function aceptarAmigo(friendUid) {
             if(!usuarioActual) return;
-            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
+            const myUid = usuarioActual.uid;
 
-            db.ref('friends/' + myUsername + '/' + friendUser).set(true);
-            db.ref('friends/' + friendUser + '/' + myUsername).set(true);
-            db.ref('friend_requests/' + myUsername + '/received/' + friendUser).remove();
-            db.ref('friend_requests/' + friendUser + '/sent/' + myUsername).remove();
-            alert("¡Ahora eres amigo de " + friendUser + "!");
+            db.ref('friends/' + myUid + '/' + friendUid).set(true);
+            db.ref('friends/' + friendUid + '/' + myUid).set(true);
+            db.ref('friend_requests/' + myUid + '/received/' + friendUid).remove();
+            db.ref('friend_requests/' + friendUid + '/sent/' + myUid).remove();
+            alert("¡Amigo aceptado!");
         }
 
-        // Chat Privado DM con Editar / Eliminar
-        function abrirChatPrivadoDM(friendUser) {
-            dmFriendUser = friendUser;
-            document.getElementById('dm-title').innerText = "Chat Privado con " + friendUser;
+        // Chat Privado por UID
+        function abrirChatPrivadoDM(friendUid, friendHandle) {
+            dmFriendUid = friendUid;
+            dmFriendHandle = friendHandle;
+            document.getElementById('dm-title').innerText = "Chat Privado con " + friendHandle;
             openModal('dm-modal');
 
-            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
-            const chatId = myUsername < friendUser ? `${myUsername}_${friendUser}` : `${friendUser}_${myUsername}`;
+            const chatId = usuarioActual.uid < friendUid ? `${usuarioActual.uid}_${friendUid}` : `${friendUid}_${usuarioActual.uid}`;
 
             db.ref('direct_messages/' + chatId).limitToLast(40).on('value', snapshot => {
                 const container = document.getElementById('dm-messages');
@@ -1032,7 +913,7 @@
                 if(snapshot.exists()) {
                     snapshot.forEach(child => {
                         const data = child.val();
-                        const isMine = data.usuario === myUsername;
+                        const isMine = data.uid === usuarioActual.uid;
                         const msgDiv = document.createElement('div');
                         msgDiv.className = 'chat-msg';
                         
@@ -1041,7 +922,7 @@
                             <button onclick="eliminarMensajeDM('${chatId}', '${child.key}')">🗑️</button>
                         </div>` : '';
 
-                        msgDiv.innerHTML = `<strong>${data.usuario}:</strong> ${data.mensaje} ${actions}`;
+                        msgDiv.innerHTML = `<strong>${data.authorName}:</strong> ${data.mensaje} ${actions}`;
                         container.appendChild(msgDiv);
                     });
                     container.scrollTop = container.scrollHeight;
@@ -1052,17 +933,25 @@
         function enviarMensajePrivadoDM() {
             const input = document.getElementById('dm-input');
             const texto = input.value.trim();
-            if(!texto || !usuarioActual || !dmFriendUser) return;
+            if(!texto || !usuarioActual || !dmFriendUid) return;
 
-            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
-            const chatId = myUsername < dmFriendUser ? `${myUsername}_${dmFriendUser}` : `${dmFriendUser}_${myUsername}`;
+            db.ref('users/' + usuarioActual.uid).once('value', uSnap => {
+                const uData = uSnap.val() || {};
+                const myName = uData.displayName || uData.handle || 'Usuario';
+                const chatId = usuarioActual.uid < dmFriendUid ? `${usuarioActual.uid}_${dmFriendUid}` : `${dmFriendUid}_${usuarioActual.uid}`;
 
-            db.ref('direct_messages/' + chatId).push({ usuario: myUsername, mensaje: texto, timestamp: Date.now() });
-            input.value = '';
+                db.ref('direct_messages/' + chatId).push({
+                    uid: usuarioActual.uid,
+                    authorName: myName,
+                    mensaje: texto,
+                    timestamp: Date.now()
+                });
+                input.value = '';
+            });
         }
 
-        function editarMensajeDM(chatId, msgId, antiguoText) {
-            const nuevo = prompt("Editar mensaje privado:", antiguoText);
+        function editarMensajeDM(chatId, msgId, viejo) {
+            const nuevo = prompt("Editar mensaje:", viejo);
             if(nuevo && nuevo.trim()) db.ref(`direct_messages/${chatId}/${msgId}`).update({ mensaje: nuevo.trim() });
         }
 
@@ -1070,26 +959,27 @@
             if(confirm("¿Eliminar mensaje?")) db.ref(`direct_messages/${chatId}/${msgId}`).remove();
         }
 
-        // Chat Global Editar / Eliminar
+        // Chat Global
         function enviarMensajeFirebase() {
             const input = document.getElementById('chat-input');
             const texto = input.value.trim();
             if (texto === '' || !usuarioActual) return;
 
-            const username = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
-            db.ref('chat_global').push({ usuario: username, mensaje: texto, timestamp: Date.now() });
-            input.value = '';
+            db.ref('users/' + usuarioActual.uid).once('value', uSnap => {
+                const uData = uSnap.val() || {};
+                const myName = uData.displayName || uData.handle || 'Usuario';
+                db.ref('chat_global').push({ uid: usuarioActual.uid, authorName: myName, mensaje: texto, timestamp: Date.now() });
+                input.value = '';
+            });
         }
 
         db.ref('chat_global').limitToLast(50).on('value', snapshot => {
             const container = document.getElementById('chat-messages');
             container.innerHTML = '';
-            if(!usuarioActual) return;
-            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
 
             snapshot.forEach(child => {
                 const data = child.val();
-                const isMine = data.usuario === myUsername;
+                const isMine = usuarioActual && data.uid === usuarioActual.uid;
                 const msgDiv = document.createElement('div');
                 msgDiv.className = 'chat-msg';
 
@@ -1098,7 +988,7 @@
                     <button onclick="eliminarMensajeGlobal('${child.key}')">🗑️</button>
                 </div>` : '';
 
-                msgDiv.innerHTML = `<strong style="cursor:pointer;" onclick="abrirCanalUsuario('${data.usuario}')">${data.usuario}:</strong> ${data.mensaje} ${actions}`;
+                msgDiv.innerHTML = `<strong style="cursor:pointer;" onclick="abrirCanalUsuarioPorUid('${data.uid}')">${data.authorName}:</strong> ${data.mensaje} ${actions}`;
                 container.appendChild(msgDiv);
             });
             container.scrollTop = container.scrollHeight;
@@ -1110,32 +1000,32 @@
         }
 
         function eliminarMensajeGlobal(msgId) {
-            if(confirm("¿Eliminar mensaje de chat global?")) db.ref(`chat_global/${msgId}`).remove();
+            if(confirm("¿Eliminar mensaje?")) db.ref(`chat_global/${msgId}`).remove();
         }
 
-        // Canal / Studio del Creador (Estilo YouTube)
+        // Canal / Studio
         function verMiPropioCanal() {
             if(!usuarioActual) return alert("Inicia sesión primero.");
             toggleProfileDropdown();
-            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
-            abrirCanalUsuario(myUsername);
+            abrirCanalUsuarioPorUid(usuarioActual.uid);
         }
 
-        function abrirCanalUsuario(username) {
-            document.getElementById('chan-title').innerText = "@" + username;
+        function abrirCanalUsuarioPorUid(targetUid) {
+            perfilSeleccionadoUid = targetUid;
             
-            db.ref('users/' + username).once('value', snapshot => {
+            db.ref('users/' + targetUid).once('value', snapshot => {
                 const data = snapshot.val() || {};
+                document.getElementById('chan-title').innerText = data.displayName || data.handle || '@usuario';
                 const avatar = document.getElementById('chan-avatar');
                 if(data.photoURL) { avatar.style.backgroundImage = `url(${data.photoURL})`; avatar.innerText = ''; }
-                else { avatar.style.backgroundImage = 'none'; avatar.innerText = username.charAt(0).toUpperCase(); }
+                else { avatar.style.backgroundImage = 'none'; avatar.innerText = (data.displayName || 'U').charAt(0).toUpperCase(); }
             });
 
-            db.ref('subscribers/' + username).on('value', snap => {
+            db.ref('subscribers/' + targetUid).on('value', snap => {
                 document.getElementById('chan-subs').innerText = `${snap.numChildren()} Suscriptores`;
             });
 
-            db.ref('posts').orderByChild('usuario').equalTo(username).on('value', snapshot => {
+            db.ref('posts').orderByChild('uid').equalTo(targetUid).on('value', snapshot => {
                 allPostsData = [];
                 if(snapshot.exists()) {
                     snapshot.forEach(child => allPostsData.push({ id: child.key, ...child.val() }));
@@ -1144,6 +1034,22 @@
             });
 
             openModal('channel-modal');
+        }
+
+        function toggleSuscripcionConCampanita() {
+            if(!usuarioActual || !perfilSeleccionadoUid) return alert("Inicia sesión para suscribirte.");
+            const subRef = db.ref(`subscriptions/${usuarioActual.uid}/${perfilSeleccionadoUid}`);
+            const creatorSubRef = db.ref(`subscribers/${perfilSeleccionadoUid}/${usuarioActual.uid}`);
+
+            subRef.once('value', snap => {
+                if(snap.exists()) {
+                    subRef.remove(); creatorSubRef.remove();
+                    alert("Suscripción cancelada.");
+                } else {
+                    subRef.set(true); creatorSubRef.set(true);
+                    alert("¡Te has suscrito con la campanita activada! 🔔");
+                }
+            });
         }
 
         function filtrarCanalTab(type) {
@@ -1155,14 +1061,10 @@
         function renderCanalPosts(typeFilter) {
             const container = document.getElementById('chan-posts-list');
             container.innerHTML = '';
-
             const filtered = typeFilter === 'all' ? allPostsData : allPostsData.filter(p => p.tipo === typeFilter);
 
-            if(filtered.length === 0) return container.innerHTML = '<p style="color:#888;">Sin publicaciones en esta categoría.</p>';
-
-            filtered.forEach(post => {
-                container.appendChild(crearCardPost(post, post.id));
-            });
+            if(filtered.length === 0) return container.innerHTML = '<p style="color:#888;">Sin publicaciones.</p>';
+            filtered.forEach(post => container.appendChild(crearCardPost(post, post.id)));
         }
 
         function abrirModalPublicarStudio() {
@@ -1170,7 +1072,16 @@
             openModal('studio-modal');
         }
 
-        // Publicar Vídeos/Shorts desde Archivos MP4 o Links
+        function actualizarModoCamposStudio() {
+            const type = document.getElementById('studio-type').value;
+            const uploadBlock = document.getElementById('file-upload-block');
+            if (type === 'live') {
+                uploadBlock.style.display = 'none';
+            } else {
+                uploadBlock.style.display = 'block';
+            }
+        }
+
         function publicarContenidoStudio() {
             if(!usuarioActual) return;
             const type = document.getElementById('studio-type').value;
@@ -1178,26 +1089,31 @@
             const urlInput = document.getElementById('studio-url').value.trim();
             const fileInput = document.getElementById('studio-file');
             const desc = document.getElementById('studio-desc').value.trim();
-            const username = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
 
             if(!title) return alert("Escribe un título.");
 
-            if (fileInput.files && fileInput.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    guardarPostBaseDatos(username, type, title, e.target.result, desc);
-                };
-                reader.readAsDataURL(fileInput.files[0]);
-            } else if (urlInput) {
-                guardarPostBaseDatos(username, type, title, urlInput, desc);
-            } else {
-                alert("Proporciona un enlace URL o adjunta un archivo MP4/Foto.");
-            }
+            db.ref('users/' + usuarioActual.uid).once('value', uSnap => {
+                const uData = uSnap.val() || {};
+                const authorName = uData.displayName || uData.handle || 'Usuario';
+
+                if (type !== 'live' && fileInput.files && fileInput.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        guardarPostBaseDatos(authorName, type, title, e.target.result, desc);
+                    };
+                    reader.readAsDataURL(fileInput.files[0]);
+                } else if (urlInput) {
+                    guardarPostBaseDatos(authorName, type, title, urlInput, desc);
+                } else {
+                    alert("Proporciona una URL o un archivo de vídeo.");
+                }
+            });
         }
 
-        function guardarPostBaseDatos(username, type, title, mediaUrl, desc) {
+        function guardarPostBaseDatos(authorName, type, title, mediaUrl, desc) {
             db.ref('posts').push({
-                usuario: username,
+                uid: usuarioActual.uid,
+                authorName: authorName,
                 tipo: type,
                 titulo: title,
                 url: mediaUrl,
@@ -1210,7 +1126,7 @@
             closeModal('studio-modal');
         }
 
-        // Feed de la Comunidad con Buscador y Likes Únicos por Cuenta
+        // Feed Comunidad
         function cargarFeedComunidad() {
             db.ref('posts').limitToLast(30).on('value', snapshot => {
                 allPostsData = [];
@@ -1227,11 +1143,10 @@
             container.innerHTML = '';
 
             const filtered = allPostsData.filter(p => 
-                p.titulo.toLowerCase().includes(query) || p.usuario.toLowerCase().includes(query)
+                p.titulo.toLowerCase().includes(query) || p.authorName.toLowerCase().includes(query)
             );
 
             if(filtered.length === 0) return container.innerHTML = '<p style="color:#888;">No se encontraron resultados.</p>';
-
             filtered.forEach(post => container.appendChild(crearCardPost(post, post.id)));
         }
 
@@ -1247,11 +1162,13 @@
             } else if (post.url && (post.url.includes('youtube.com') || post.url.includes('youtu.be'))) {
                 let embedUrl = post.url.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/');
                 mediaHtml = `<iframe src="${embedUrl}" style="width:100%; height:260px; border:none; border-radius:8px; margin-top:8px;" allowfullscreen></iframe>`;
+            } else if (post.url && post.url.includes('twitch.tv')) {
+                mediaHtml = `<p style="color:var(--primary-red); font-weight:bold;">🔴 Directo en Vivo en Twitch: <a href="${post.url}" target="_blank" style="color:white;">${post.url}</a></p>`;
             }
 
             card.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <strong style="color:var(--primary-red); cursor:pointer;" onclick="abrirCanalUsuario('${post.usuario}')">@${post.usuario}</strong>
+                    <strong style="color:var(--primary-red); cursor:pointer;" onclick="abrirCanalUsuarioPorUid('${post.uid}')">${post.authorName}</strong>
                     <span style="font-size:0.75em; color:#888;">${post.tipo.toUpperCase()}</span>
                 </div>
                 <h4 style="margin:8px 0 4px 0;">${post.titulo}</h4>
@@ -1264,7 +1181,6 @@
             return card;
         }
 
-        // Like Único por Cuenta
         function darLikePost(postId) {
             if(!usuarioActual) return alert("Inicia sesión para dar Like.");
             const uid = usuarioActual.uid;
@@ -1280,7 +1196,7 @@
             });
         }
 
-        // YouTube API v3
+        // YouTube API v3 (Mantiene estadísticas actualizadas)
         const YT_API_KEY = "AIzaSyCKbpL_H5jrqsuoWv0EKEIJ3TB9lvN3kCo";
         const YT_HANDLE = "driuk";
 
@@ -1298,11 +1214,12 @@
 
         window.onload = function() { cargarEstadisticasYouTube(); };
 
-        // Controles de interfaz UI
+        // UI Helpers
         function openModal(id) { document.getElementById(id).style.display = 'flex'; }
         function closeModal(id) { document.getElementById(id).style.display = 'none'; }
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
-        function toggleProfileDropdown() {
+        function toggleProfileDropdown(e) {
+            if(e) e.stopPropagation();
             const drop = document.getElementById('profile-dropdown');
             drop.style.display = drop.style.display === 'flex' ? 'none' : 'flex';
         }
