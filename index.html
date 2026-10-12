@@ -34,7 +34,7 @@
             min-height: 100vh;
         }
 
-        /* Notificación Flotante In-App (3s) */
+        /* Notificación Flotante In-App */
         .toast-notification {
             position: fixed;
             top: 75px;
@@ -105,7 +105,7 @@
             width: 38px; height: 38px; border-radius: 50%; background: var(--primary-red); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.1em; cursor: pointer; border: 2px solid #fff; box-shadow: 0 0 10px var(--neon-glow); background-size: cover; background-position: center;
         }
 
-        /* Menú Desplegable */
+        /* Menú Desplegable de Perfil */
         .profile-dropdown {
             display: none; position: absolute; top: 50px; right: 0; background: #121212; border: 1px solid var(--primary-red); border-radius: 8px; width: 220px; box-shadow: 0 0 15px rgba(0,0,0,0.8); z-index: 150; flex-direction: column; overflow: hidden;
         }
@@ -116,13 +116,22 @@
 
         .profile-dropdown button:hover { background: var(--primary-red); }
 
+        /* Desplegable de Campanita en Suscripción */
+        .sub-dropdown-container { position: relative; display: inline-block; }
+        .sub-dropdown-menu {
+            display: none; position: absolute; top: 100%; right: 0; background: #181818; border: 1px solid #333; border-radius: 8px; width: 170px; box-shadow: 0 5px 15px rgba(0,0,0,0.8); z-index: 160; flex-direction: column; margin-top: 5px;
+        }
+        .sub-dropdown-menu button {
+            background: transparent; color: white; border: none; padding: 10px; text-align: left; cursor: pointer; font-size: 0.85em; border-bottom: 1px solid #222;
+        }
+        .sub-dropdown-menu button:hover { background: #222; color: var(--primary-red); }
+
         /* Menú Lateral y Neón */
         .sidebar {
             position: fixed; top: 60px; left: -330px; width: 320px; height: calc(100vh - 60px); background: #0d0d0d; border-right: 1px solid #222; transition: left 0.3s ease; z-index: 90; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; gap: 15px; box-shadow: 5px 0 15px rgba(0,0,0,0.5);
         }
 
         .sidebar.active { left: 0; }
-
         .sidebar.neon-flash { animation: neonBlink 0.7s ease-in-out; }
 
         @keyframes neonBlink {
@@ -155,7 +164,6 @@
         }
 
         .req-box { background: #141414; border: 1px solid #222; border-radius: 8px; padding: 10px; margin-top: 5px; }
-
         .req-title { color: var(--primary-red); font-size: 0.85em; font-weight: bold; margin-bottom: 6px; text-transform: uppercase; }
 
         .friend-item {
@@ -184,7 +192,7 @@
 
         h2 { color: var(--primary-red); border-bottom: 2px solid var(--primary-red); padding-bottom: 10px; margin-top: 0; font-size: 1.6em; }
 
-        /* Redes Sociales con SVG Logos */
+        /* Redes Sociales */
         .social-box { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin: 20px 0; }
 
         .btn-social {
@@ -192,14 +200,12 @@
         }
 
         .btn-social svg { width: 20px; height: 20px; fill: currentColor; }
-
         .btn-social:hover { border-color: var(--primary-red); color: var(--primary-red); box-shadow: 0 0 15px var(--neon-glow); }
 
         /* Estadísticas */
         .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; text-align: center; }
 
         .stat-card { background: #0a0a0a; border: 1px solid #222; border-radius: 12px; padding: 22px; }
-
         .stat-number { font-size: 2.2em; font-weight: 800; color: var(--primary-red); }
         .stat-label { color: var(--text-gray); font-size: 0.9em; margin-top: 5px; }
 
@@ -233,13 +239,9 @@
 
         /* Chat Interactivo */
         .chat-box { background: #0a0a0a; border-radius: 12px; border: 1px solid #222; padding: 18px; height: 320px; display: flex; flex-direction: column; }
-
         .chat-messages { overflow-y: auto; flex-grow: 1; margin-bottom: 12px; display: flex; flex-direction: column; gap: 10px; }
-
         .chat-msg { background: #141414; padding: 10px 14px; border-radius: 8px; font-size: 0.92em; border-left: 3px solid var(--primary-red); word-break: break-word; position: relative; }
-
         .chat-msg .msg-actions { display: none; position: absolute; right: 10px; top: 8px; gap: 5px; }
-
         .chat-msg:hover .msg-actions { display: flex; }
         .msg-actions button { background: #222; color: #ccc; border: none; padding: 2px 6px; border-radius: 4px; font-size: 0.75em; cursor: pointer; }
         .msg-actions button:hover { color: white; background: var(--primary-red); }
@@ -262,7 +264,6 @@
 
         .post-card { background: #181818; border: 1px solid #333; border-radius: 8px; padding: 12px; margin-bottom: 12px; }
 
-        /* Studio YouTube Style Tabs */
         .studio-nav-tabs { display: flex; gap: 10px; border-bottom: 1px solid #333; padding-bottom: 8px; margin-top: 15px; }
         .studio-tab-item { background: transparent; color: #888; border: none; font-weight: bold; padding: 6px 12px; cursor: pointer; }
         .studio-tab-item.active { color: var(--primary-red); border-bottom: 2px solid var(--primary-red); }
@@ -270,7 +271,7 @@
 </head>
 <body>
 
-    <!-- Pop-up de Notificación In-App -->
+    <!-- Pop-up Notificación In-App -->
     <div class="toast-notification" id="toast-notif"></div>
 
     <!-- Barra Superior -->
@@ -300,8 +301,8 @@
         </div>
 
         <div class="tab-content active" id="tab-amigos">
-            <label style="font-size:0.8em; color:#888;">Añadir amigo por @handle exacto:</label>
-            <input type="text" class="sidebar-input" id="friend-handle" placeholder="@ejemplo...">
+            <label style="font-size:0.8em; color:#888;">Añadir amigo por apodo o @handle:</label>
+            <input type="text" class="sidebar-input" id="friend-handle" placeholder="Apodo o @handle...">
             <button class="sidebar-btn-sub" onclick="enviarSolicitudAmigo()">Enviar Solicitud</button>
 
             <div class="req-box">
@@ -352,7 +353,7 @@
     </header>
 
     <div class="container">
-        <!-- Redes Sociales con Iconos SVG -->
+        <!-- Redes Sociales con SVG Logos -->
         <div class="social-box">
             <a class="btn-social" href="https://www.youtube.com/@driuk" target="_blank">
                 <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
@@ -494,7 +495,7 @@
         </div>
     </div>
 
-    <!-- Modal Canal Estilo YouTube -->
+    <!-- Modal Canal Estilo YouTube con Desplegable de Campanita -->
     <div class="modal" id="channel-modal">
         <div class="modal-content" style="max-width:700px;">
             <div style="background:linear-gradient(90deg, #330000, #990012); height:100px; border-radius:8px; display:flex; align-items:flex-end; padding:15px;">
@@ -505,9 +506,17 @@
                     <h2 id="chan-title" style="margin:0; border:none;">Nombre del Canal</h2>
                     <p id="chan-subs" style="color:#888; font-size:0.9em; margin:4px 0;">0 Suscriptores</p>
                 </div>
-                <div style="display:flex; gap:10px;">
-                    <button class="btn-auth" id="btn-subscribe" onclick="toggleSuscripcionConCampanita()">Suscribirse 🔔</button>
-                    <button class="btn-auth" style="background:#333;" onclick="abrirModalPublicarStudio()">➕ Publicar</button>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <!-- Botón y Desplegable de Suscripción -->
+                    <div class="sub-dropdown-container" id="sub-btn-wrapper">
+                        <button class="btn-auth" id="btn-subscribe-main" onclick="clickSubscriptorBotonPrincipal()">Suscribirse</button>
+                        <div class="sub-dropdown-menu" id="sub-dropdown-menu">
+                            <button onclick="seleccionarOpcionCampanita('todas')">🔔 Todas las notificaciones</button>
+                            <button onclick="seleccionarOpcionCampanita('ninguna')">🔕 Ninguna notificación</button>
+                            <button onclick="seleccionarOpcionCampanita('desuscribir')" style="color:#ff4444;">❌ Anular suscripción</button>
+                        </div>
+                    </div>
+                    <button class="btn-auth" id="btn-publish-channel" style="background:#333;" onclick="abrirModalPublicarStudio()">➕ Publicar</button>
                 </div>
             </div>
 
@@ -589,12 +598,18 @@
         let allPostsData = [];
         let perfilSeleccionadoUid = null;
 
-        // Cierre automático del menú desplegable al hacer clic fuera
+        // Cierre de menús desplegables al hacer clic fuera
         document.addEventListener('click', function(e) {
             const drop = document.getElementById('profile-dropdown');
             const avatar = document.getElementById('user-avatar');
             if (drop && drop.style.display === 'flex' && !drop.contains(e.target) && !avatar.contains(e.target)) {
                 drop.style.display = 'none';
+            }
+
+            const subMenu = document.getElementById('sub-dropdown-menu');
+            const subBtn = document.getElementById('btn-subscribe-main');
+            if (subMenu && subMenu.style.display === 'flex' && !subMenu.contains(e.target) && !subBtn.contains(e.target)) {
+                subMenu.style.display = 'none';
             }
         });
 
@@ -610,24 +625,28 @@
                 btnModal.style.display = 'none';
                 avatar.style.display = 'flex';
                 
+                // Guardado/Sincronización dual por UID y Handle para no perder datos
+                const defaultHandle = '@' + (user.email.split('@')[0]).toLowerCase();
+                const dName = user.displayName || defaultHandle;
+
                 db.ref('users/' + user.uid).once('value', snapshot => {
                     const data = snapshot.val() || {};
-                    const handle = data.handle || '@' + (user.email.split('@')[0]);
-                    const dName = data.displayName || user.displayName || handle;
+                    const finalHandle = data.handle || defaultHandle;
+                    const finalName = data.displayName || dName;
 
                     if (data.photoURL || user.photoURL) {
                         avatar.style.backgroundImage = `url(${data.photoURL || user.photoURL})`;
                         avatar.innerText = '';
                     } else {
                         avatar.style.backgroundImage = 'none';
-                        avatar.innerText = dName.charAt(0).toUpperCase();
+                        avatar.innerText = finalName.charAt(0).toUpperCase();
                     }
 
                     chatInput.disabled = false;
                     chatBtn.disabled = false;
-                    chatInput.placeholder = `Escribe como ${dName}...`;
+                    chatInput.placeholder = `Escribe como ${finalName}...`;
 
-                    // Actualizar presencias por UID
+                    // Presencia
                     const myConn = db.ref(`presence/${user.uid}`);
                     db.ref('.info/connected').on('value', snap => {
                         if (snap.val() === true) {
@@ -636,13 +655,17 @@
                         }
                     });
 
-                    db.ref('users/' + user.uid).update({
+                    // Guardar datos en ambas estructuras
+                    const userObj = {
                         uid: user.uid,
-                        displayName: dName,
-                        handle: handle.toLowerCase(),
+                        displayName: finalName,
+                        handle: finalHandle.toLowerCase(),
                         email: user.email,
                         photoURL: data.photoURL || user.photoURL || ''
-                    });
+                    };
+
+                    db.ref('users/' + user.uid).update(userObj);
+                    db.ref('users_by_handle/' + finalHandle.replace('@', '').toLowerCase()).set(userObj);
 
                     escucharNotificacionesMensajes();
                     escucharNotificacionesSuscripciones();
@@ -661,7 +684,7 @@
             }
         });
 
-        // Notificación flotante emergente
+        // Notificación emergente
         function mostrarToastNotificacion(texto) {
             const toast = document.getElementById('toast-notif');
             toast.innerText = texto;
@@ -689,16 +712,19 @@
             if(!usuarioActual) return;
             db.ref(`subscriptions/${usuarioActual.uid}`).on('child_added', snap => {
                 const creatorUid = snap.key;
-                db.ref('posts').orderByChild('uid').equalTo(creatorUid).limitToLast(1).on('child_added', postSnap => {
-                    const post = postSnap.val();
-                    if(post.timestamp > Date.now() - 10000) {
-                        mostrarToastNotificacion(`🔔 ${post.authorName} ha publicado: "${post.titulo}"`);
-                    }
-                });
+                const mode = snap.val();
+                if(mode === 'todas') {
+                    db.ref('posts').orderByChild('uid').equalTo(creatorUid).limitToLast(1).on('child_added', postSnap => {
+                        const post = postSnap.val();
+                        if(post.timestamp > Date.now() - 10000) {
+                            mostrarToastNotificacion(`🔔 ${post.authorName || 'Un creador'} ha publicado: "${post.titulo}"`);
+                        }
+                    });
+                }
             });
         }
 
-        // Auth Basica
+        // Auth
         function registrarUsuario() {
             const email = document.getElementById('auth-email').value.trim();
             const password = document.getElementById('auth-password').value.trim();
@@ -711,12 +737,9 @@
             auth.createUserWithEmailAndPassword(email, password)
                 .then(userCredential => {
                     const uid = userCredential.user.uid;
-                    return db.ref('users/' + uid).set({
-                        uid: uid,
-                        displayName: name,
-                        handle: handle,
-                        email: email
-                    });
+                    const userObj = { uid: uid, displayName: name, handle: handle, email: email };
+                    db.ref('users/' + uid).set(userObj);
+                    db.ref('users_by_handle/' + handle.replace('@', '')).set(userObj);
                 })
                 .then(() => alert("¡Cuenta registrada con éxito!"))
                 .catch(err => alert("Error: " + err.message));
@@ -750,7 +773,12 @@
             if(newHandle) updates.handle = newHandle;
 
             db.ref('users/' + usuarioActual.uid).update(updates).then(() => {
-                alert("¡Perfil actualizado sin perder datos ni amigos!");
+                if(newHandle) {
+                    db.ref('users_by_handle/' + newHandle.replace('@', '')).set({
+                        uid: usuarioActual.uid, displayName: newName || 'Usuario', handle: newHandle, email: usuarioActual.email
+                    });
+                }
+                alert("¡Perfil actualizado correctamente!");
                 location.reload();
             });
         }
@@ -788,7 +816,7 @@
             } else { sidebar.classList.add('active'); }
         }
 
-        // Amigos por UID
+        // Amigos
         function handleFriendClick(friendUid, friendHandle) {
             if (clickTimer == null) {
                 clickTimer = setTimeout(() => { clickTimer = null; abrirCanalUsuarioPorUid(friendUid); }, 250);
@@ -869,22 +897,32 @@
         }
 
         function enviarSolicitudAmigo() {
-            let targetHandle = document.getElementById('friend-handle').value.trim().toLowerCase();
-            if(!targetHandle || !usuarioActual) return;
-            if(!targetHandle.startsWith('@')) targetHandle = '@' + targetHandle;
+            let inputVal = document.getElementById('friend-handle').value.trim().toLowerCase();
+            if(!inputVal || !usuarioActual) return;
+            const searchKey = inputVal.replace('@', '');
 
-            db.ref('users').orderByChild('handle').equalTo(targetHandle).once('value', snapshot => {
-                if (!snapshot.exists()) return alert("El @handle NO existe.");
-                snapshot.forEach(child => {
-                    const targetUid = child.key;
-                    if(targetUid === usuarioActual.uid) return alert("No puedes agregarte a ti mismo.");
-
-                    db.ref('friend_requests/' + targetUid + '/received/' + usuarioActual.uid).set(true);
-                    db.ref('friend_requests/' + usuarioActual.uid + '/sent/' + targetUid).set(true);
-                    alert("Solicitud enviada a " + targetHandle);
-                    document.getElementById('friend-handle').value = '';
-                });
+            // Búsqueda dual (por Handle o por Nombre Antiguo)
+            db.ref('users_by_handle/' + searchKey).once('value', snapshot => {
+                if (snapshot.exists()) {
+                    procesarSolicitudAmigo(snapshot.val().uid, snapshot.val().handle);
+                } else {
+                    db.ref('users').orderByChild('displayName').equalTo(inputVal).once('value', snap2 => {
+                        if (snap2.exists()) {
+                            snap2.forEach(c => procesarSolicitudAmigo(c.key, c.val().handle || inputVal));
+                        } else {
+                            alert("No existe ningún usuario registrado con ese apodo o @handle.");
+                        }
+                    });
+                }
             });
+        }
+
+        function procesarSolicitudAmigo(targetUid, targetHandle) {
+            if(targetUid === usuarioActual.uid) return alert("No puedes agregarte a ti mismo.");
+            db.ref('friend_requests/' + targetUid + '/received/' + usuarioActual.uid).set(true);
+            db.ref('friend_requests/' + usuarioActual.uid + '/sent/' + targetUid).set(true);
+            alert("Solicitud enviada a " + (targetHandle || 'usuario'));
+            document.getElementById('friend-handle').value = '';
         }
 
         function aceptarAmigo(friendUid) {
@@ -898,7 +936,7 @@
             alert("¡Amigo aceptado!");
         }
 
-        // Chat Privado por UID
+        // Chat Privado
         function abrirChatPrivadoDM(friendUid, friendHandle) {
             dmFriendUid = friendUid;
             dmFriendHandle = friendHandle;
@@ -941,10 +979,7 @@
                 const chatId = usuarioActual.uid < dmFriendUid ? `${usuarioActual.uid}_${dmFriendUid}` : `${dmFriendUid}_${usuarioActual.uid}`;
 
                 db.ref('direct_messages/' + chatId).push({
-                    uid: usuarioActual.uid,
-                    authorName: myName,
-                    mensaje: texto,
-                    timestamp: Date.now()
+                    uid: usuarioActual.uid, authorName: myName, mensaje: texto, timestamp: Date.now()
                 });
                 input.value = '';
             });
@@ -988,7 +1023,10 @@
                     <button onclick="eliminarMensajeGlobal('${child.key}')">🗑️</button>
                 </div>` : '';
 
-                msgDiv.innerHTML = `<strong style="cursor:pointer;" onclick="abrirCanalUsuarioPorUid('${data.uid}')">${data.authorName}:</strong> ${data.mensaje} ${actions}`;
+                const author = data.authorName || data.usuario || 'Usuario';
+                const targetUid = data.uid || data.usuario;
+
+                msgDiv.innerHTML = `<strong style="cursor:pointer;" onclick="abrirCanalUsuarioPorUid('${targetUid}')">${author}:</strong> ${data.mensaje} ${actions}`;
                 container.appendChild(msgDiv);
             });
             container.scrollTop = container.scrollHeight;
@@ -1012,6 +1050,18 @@
 
         function abrirCanalUsuarioPorUid(targetUid) {
             perfilSeleccionadoUid = targetUid;
+            const subWrapper = document.getElementById('sub-btn-wrapper');
+            const publishBtn = document.getElementById('btn-publish-channel');
+
+            // No permitir suscribirse a tu propio canal
+            if (usuarioActual && usuarioActual.uid === targetUid) {
+                subWrapper.style.display = 'none';
+                publishBtn.style.display = 'inline-block';
+            } else {
+                subWrapper.style.display = 'inline-block';
+                publishBtn.style.display = 'none';
+                comprobarEstadoSuscripcion();
+            }
             
             db.ref('users/' + targetUid).once('value', snapshot => {
                 const data = snapshot.val() || {};
@@ -1025,10 +1075,15 @@
                 document.getElementById('chan-subs').innerText = `${snap.numChildren()} Suscriptores`;
             });
 
-            db.ref('posts').orderByChild('uid').equalTo(targetUid).on('value', snapshot => {
+            db.ref('posts').on('value', snapshot => {
                 allPostsData = [];
                 if(snapshot.exists()) {
-                    snapshot.forEach(child => allPostsData.push({ id: child.key, ...child.val() }));
+                    snapshot.forEach(child => {
+                        const val = child.val();
+                        if (val.uid === targetUid || val.usuario === targetUid) {
+                            allPostsData.push({ id: child.key, ...val });
+                        }
+                    });
                 }
                 renderCanalPosts('all');
             });
@@ -1036,20 +1091,47 @@
             openModal('channel-modal');
         }
 
-        function toggleSuscripcionConCampanita() {
-            if(!usuarioActual || !perfilSeleccionadoUid) return alert("Inicia sesión para suscribirte.");
+        function clickSubscriptorBotonPrincipal() {
+            if(!usuarioActual) return alert("Inicia sesión para suscribirte.");
+            const menu = document.getElementById('sub-dropdown-menu');
+            if (menu.style.display === 'flex') {
+                menu.style.display = 'none';
+            } else {
+                menu.style.display = 'flex';
+            }
+        }
+
+        function comprobarEstadoSuscripcion() {
+            if (!usuarioActual || !perfilSeleccionadoUid) return;
+            const btnMain = document.getElementById('btn-subscribe-main');
+
+            db.ref(`subscriptions/${usuarioActual.uid}/${perfilSeleccionadoUid}`).once('value', snap => {
+                if (snap.exists()) {
+                    const mode = snap.val();
+                    btnMain.innerText = mode === 'todas' ? 'Suscrito 🔔 ▾' : 'Suscrito 🔕 ▾';
+                    btnMain.style.background = '#333';
+                } else {
+                    btnMain.innerText = 'Suscribirse';
+                    btnMain.style.background = 'var(--primary-red)';
+                }
+            });
+        }
+
+        function seleccionarOpcionCampanita(modo) {
+            if(!usuarioActual || !perfilSeleccionadoUid) return;
+            document.getElementById('sub-dropdown-menu').style.display = 'none';
+
             const subRef = db.ref(`subscriptions/${usuarioActual.uid}/${perfilSeleccionadoUid}`);
             const creatorSubRef = db.ref(`subscribers/${perfilSeleccionadoUid}/${usuarioActual.uid}`);
 
-            subRef.once('value', snap => {
-                if(snap.exists()) {
-                    subRef.remove(); creatorSubRef.remove();
-                    alert("Suscripción cancelada.");
-                } else {
-                    subRef.set(true); creatorSubRef.set(true);
-                    alert("¡Te has suscrito con la campanita activada! 🔔");
-                }
-            });
+            if (modo === 'desuscribir') {
+                subRef.remove(); creatorSubRef.remove();
+                alert("Has anulado la suscripción.");
+            } else {
+                subRef.set(modo); creatorSubRef.set(modo);
+                alert(modo === 'todas' ? "Suscrito con TODAS las notificaciones 🔔" : "Suscrito sin notificaciones 🔕");
+            }
+            comprobarEstadoSuscripcion();
         }
 
         function filtrarCanalTab(type) {
@@ -1105,7 +1187,7 @@
                 } else if (urlInput) {
                     guardarPostBaseDatos(authorName, type, title, urlInput, desc);
                 } else {
-                    alert("Proporciona una URL o un archivo de vídeo.");
+                    alert("Proporciona una URL o un archivo.");
                 }
             });
         }
@@ -1142,11 +1224,13 @@
             const container = document.getElementById('community-feed');
             container.innerHTML = '';
 
-            const filtered = allPostsData.filter(p => 
-                p.titulo.toLowerCase().includes(query) || p.authorName.toLowerCase().includes(query)
-            );
+            const filtered = allPostsData.filter(p => {
+                const name = (p.authorName || p.usuario || '').toLowerCase();
+                const title = (p.titulo || '').toLowerCase();
+                return title.includes(query) || name.includes(query);
+            });
 
-            if(filtered.length === 0) return container.innerHTML = '<p style="color:#888;">No se encontraron resultados.</p>';
+            if(filtered.length === 0) return container.innerHTML = '<p style="color:#888;">No hay publicaciones comunitarias aún.</p>';
             filtered.forEach(post => container.appendChild(crearCardPost(post, post.id)));
         }
 
@@ -1166,10 +1250,13 @@
                 mediaHtml = `<p style="color:var(--primary-red); font-weight:bold;">🔴 Directo en Vivo en Twitch: <a href="${post.url}" target="_blank" style="color:white;">${post.url}</a></p>`;
             }
 
+            const author = post.authorName || post.usuario || 'Usuario';
+            const authorUid = post.uid || post.usuario;
+
             card.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <strong style="color:var(--primary-red); cursor:pointer;" onclick="abrirCanalUsuarioPorUid('${post.uid}')">${post.authorName}</strong>
-                    <span style="font-size:0.75em; color:#888;">${post.tipo.toUpperCase()}</span>
+                    <strong style="color:var(--primary-red); cursor:pointer;" onclick="abrirCanalUsuarioPorUid('${authorUid}')">${author}</strong>
+                    <span style="font-size:0.75em; color:#888;">${(post.tipo || 'POST').toUpperCase()}</span>
                 </div>
                 <h4 style="margin:8px 0 4px 0;">${post.titulo}</h4>
                 <p style="font-size:0.9em; color:#ccc; margin:0;">${post.descripcion || ''}</p>
@@ -1196,7 +1283,7 @@
             });
         }
 
-        // YouTube API v3 (Mantiene estadísticas actualizadas)
+        // YouTube API v3
         const YT_API_KEY = "AIzaSyCKbpL_H5jrqsuoWv0EKEIJ3TB9lvN3kCo";
         const YT_HANDLE = "driuk";
 
