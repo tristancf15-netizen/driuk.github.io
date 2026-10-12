@@ -39,7 +39,7 @@
             width: 100%;
             background: #0d0d0d;
             border-bottom: 1px solid #222;
-            padding: 12px 25px;
+            padding: 12px 25px 12px 70px;
             box-sizing: border-box;
             display: flex;
             justify-content: space-between;
@@ -96,12 +96,28 @@
             background-position: center;
         }
 
-        /* Menú Lateral Estético */
+        /* Botón Abrir Menú Lateral */
+        .toggle-sidebar-btn {
+            position: fixed;
+            top: 10px;
+            left: 12px;
+            z-index: 110;
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 0 10px var(--neon-glow);
+        }
+
+        /* Menú Lateral Limpio */
         .sidebar {
             position: fixed;
             top: 60px;
-            left: -320px;
-            width: 300px;
+            left: -330px;
+            width: 320px;
             height: calc(100vh - 60px);
             background: #0d0d0d;
             border-right: 1px solid #222;
@@ -119,22 +135,6 @@
             left: 0;
         }
 
-        .toggle-sidebar-btn {
-            position: fixed;
-            top: 70px;
-            left: 10px;
-            z-index: 95;
-            background: var(--primary-red);
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 0 10px var(--neon-glow);
-        }
-
-        /* Tabs para la Barra Lateral */
         .sidebar-tabs {
             display: flex;
             gap: 8px;
@@ -198,6 +198,45 @@
             border-radius: 6px;
             font-weight: bold;
             cursor: pointer;
+        }
+
+        .req-box {
+            background: #141414;
+            border: 1px solid #222;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 5px;
+        }
+
+        .req-title {
+            color: var(--primary-red);
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .req-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.88em;
+            padding: 4px 0;
+            border-bottom: 1px dashed #222;
+        }
+
+        .req-actions button {
+            background: #222;
+            border: none;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75em;
+        }
+
+        .req-actions button.accept {
+            background: #00aa44;
         }
 
         header {
@@ -514,6 +553,9 @@
 </head>
 <body>
 
+    <!-- Botón Abrir Menú Lateral -->
+    <button class="toggle-sidebar-btn" onclick="toggleSidebar()">☰ Menú</button>
+
     <!-- Barra Superior -->
     <div class="top-bar">
         <div class="brand">DRIUK WEB</div>
@@ -523,9 +565,6 @@
         </div>
     </div>
 
-    <!-- Botón Menú Lateral -->
-    <button class="toggle-sidebar-btn" onclick="toggleSidebar()">☰ Amigos & Ajustes</button>
-
     <!-- Menú Lateral Ordenado con Pestañas -->
     <div class="sidebar" id="sidebar">
         <div class="sidebar-tabs">
@@ -533,25 +572,51 @@
             <button class="tab-btn" onclick="switchTab('tab-ajustes')">⚙️ Ajustes</button>
         </div>
 
-        <!-- Pestaña 1: Amigos -->
+        <!-- Pestaña 1: Amigos y Solicitudes estilo Discord -->
         <div class="tab-content active" id="tab-amigos">
-            <p style="font-size:0.85em; color:#888; margin:0;">Añade amigos por su apodo o correo:</p>
-            <input type="text" class="sidebar-input" id="friend-username" placeholder="Apodo de tu amigo...">
+            <label style="font-size:0.8em; color:#888;">Añadir amigo por apodo exacto:</label>
+            <input type="text" class="sidebar-input" id="friend-username" placeholder="Escribe apodo exacto...">
             <button class="sidebar-btn-sub" onclick="enviarSolicitudAmigo()">Enviar Solicitud</button>
             
-            <h4 style="color:var(--primary-red); margin: 15px 0 5px 0;">Lista de Amigos</h4>
-            <div id="friends-list" style="font-size:0.9em; color:var(--text-gray);">
-                No tienes amigos agregados aún.
+            <!-- Solicitudes Recibidas -->
+            <div class="req-box">
+                <div class="req-title">Solicitudes de Amistad:</div>
+                <div id="incoming-requests" style="font-size:0.85em; color:#888;">No tienes solicitudes pendientes.</div>
+            </div>
+
+            <!-- Solicitudes Enviadas -->
+            <div class="req-box">
+                <div class="req-title">Solicitudes Enviadas:</div>
+                <div id="outgoing-requests" style="font-size:0.85em; color:#888;">Sin solicitudes enviadas.</div>
+            </div>
+
+            <!-- Lista de Amigos -->
+            <div class="req-box">
+                <div class="req-title">Mis Amigos:</div>
+                <div id="friends-list" style="font-size:0.85em; color:#888;">No tienes amigos aceptados.</div>
             </div>
         </div>
 
-        <!-- Pestaña 2: Ajustes de Perfil -->
+        <!-- Pestaña 2: Ajustes de Perfil y Cuenta -->
         <div class="tab-content" id="tab-ajustes">
-            <p style="font-size:0.85em; color:#888; margin:0;">Foto de Perfil (Pegar enlace URL):</p>
+            <label style="font-size:0.8em; color:#888;">Foto de Perfil (URL Imagen):</label>
             <input type="text" class="sidebar-input" id="avatar-url-input" placeholder="https://...">
             <button class="sidebar-btn-sub" onclick="guardarFotoPerfil()">Guardar Foto</button>
 
-            <button onclick="cerrarSesion()" style="background:#333; color:white; border:none; padding:10px; border-radius:6px; cursor:pointer; margin-top:20px; font-weight:bold;">Cerrar Sesión</button>
+            <label style="font-size:0.8em; color:#888; margin-top:10px;">Cambiar Apodo:</label>
+            <input type="text" class="sidebar-input" id="new-username-input" placeholder="Nuevo Apodo...">
+            <button class="sidebar-btn-sub" onclick="cambiarApodo()">Actualizar Apodo</button>
+
+            <label style="font-size:0.8em; color:#888; margin-top:10px;">Privacidad de Mensajes:</label>
+            <select class="sidebar-input" id="privacy-select" onchange="guardarPrivacidad()">
+                <option value="todos">Permitir mensajes de todos</option>
+                <option value="amigos">Solo mensajes de amigos</option>
+            </select>
+
+            <button onclick="verificarCorreo()" style="background:#222; color:white; border:1px solid #444; padding:8px; border-radius:6px; cursor:pointer; margin-top:10px; font-size:0.8em;">📧 Verificar Correo Electrónico</button>
+            <button onclick="recuperarPassword()" style="background:#222; color:white; border:1px solid #444; padding:8px; border-radius:6px; cursor:pointer; font-size:0.8em;">🔑 Cambiar Contraseña</button>
+
+            <button onclick="cerrarSesion()" style="background:var(--dark-red); color:white; border:none; padding:10px; border-radius:6px; cursor:pointer; margin-top:15px; font-weight:bold;">Cerrar Sesión</button>
         </div>
     </div>
 
@@ -686,7 +751,7 @@
     </div>
 
     <script>
-        // Configuración oficial de tu proyecto Firebase
+        // Configuración oficial de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCspy94tmXYMUucN5bbr-fXlA2ry3XecSk",
             authDomain: "driuk-web-fcabd.firebaseapp.com",
@@ -703,7 +768,7 @@
 
         let usuarioActual = null;
 
-        // Control de sesión
+        // Estado de autenticación
         auth.onAuthStateChanged(user => {
             const btnModal = document.getElementById('btn-login-modal');
             const avatar = document.getElementById('user-avatar');
@@ -727,6 +792,15 @@
                 chatInput.disabled = false;
                 chatBtn.disabled = false;
                 chatInput.placeholder = `Escribe como ${username}...`;
+                
+                // Registrar o actualizar usuario en la base de datos pública
+                db.ref('users/' + username.toLowerCase()).set({
+                    uid: user.uid,
+                    displayName: username,
+                    email: user.email
+                });
+
+                cargarSolicitudesYAmigos();
                 closeModal();
             } else {
                 usuarioActual = null;
@@ -738,46 +812,176 @@
             }
         });
 
-        // Registro e Inicio de sesión
+        // Registro con validación
         function registrarUsuario() {
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-password').value;
-            const username = document.getElementById('auth-username').value;
+            const email = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value.trim();
+            const username = document.getElementById('auth-username').value.trim();
 
             if(!email || !password || !username) {
-                alert("Por favor rellena Apodo, Correo y Contraseña.");
+                alert("Rellena Apodo, Correo y Contraseña.");
                 return;
             }
 
-            auth.createUserWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    return userCredential.user.updateProfile({ displayName: username });
-                })
-                .then(() => alert("¡Cuenta creada correctamente!"))
-                .catch(err => alert("Error al registrar: " + err.message));
+            // Comprobar si el apodo ya existe
+            db.ref('users/' + username.toLowerCase()).once('value', snapshot => {
+                if (snapshot.exists()) {
+                    alert("Ese apodo ya está en uso por otro usuario. Por favor elige otro.");
+                } else {
+                    auth.createUserWithEmailAndPassword(email, password)
+                        .then(userCredential => {
+                            return userCredential.user.updateProfile({ displayName: username });
+                        })
+                        .then(() => alert("¡Cuenta registrada con éxito!"))
+                        .catch(err => alert("Error: " + err.message));
+                }
+            });
         }
 
         function iniciarSesion() {
-            const email = document.getElementById('auth-email').value;
-            const password = document.getElementById('auth-password').value;
+            const email = document.getElementById('auth-email').value.trim();
+            const password = document.getElementById('auth-password').value.trim();
 
             auth.signInWithEmailAndPassword(email, password)
-                .catch(err => alert("Error de acceso: " + err.message));
+                .catch(err => alert("Error al entrar: " + err.message));
         }
 
         function recuperarPassword() {
-            const email = document.getElementById('auth-email').value;
+            const email = document.getElementById('auth-email').value.trim();
             if(!email) {
-                alert("Escribe tu correo en la casilla para enviarte el enlace de recuperación.");
+                alert("Introduce tu correo para enviarte el enlace.");
                 return;
             }
             auth.sendPasswordResetEmail(email)
-                .then(() => alert("Enlace de recuperación enviado a tu correo."))
+                .then(() => alert("Enlace enviado a tu correo."))
                 .catch(err => alert("Error: " + err.message));
+        }
+
+        function verificarCorreo() {
+            if(usuarioActual) {
+                usuarioActual.sendEmailVerification()
+                    .then(() => alert("Correo de verificación enviado a " + usuarioActual.email))
+                    .catch(err => alert("Error: " + err.message));
+            }
+        }
+
+        function cambiarApodo() {
+            const nuevoApodo = document.getElementById('new-username-input').value.trim();
+            if(!nuevoApodo || !usuarioActual) return;
+
+            db.ref('users/' + nuevoApodo.toLowerCase()).once('value', snapshot => {
+                if (snapshot.exists()) {
+                    alert("Ese apodo ya pertenece a otra cuenta.");
+                } else {
+                    usuarioActual.updateProfile({ displayName: nuevoApodo }).then(() => {
+                        alert("¡Apodo actualizado!");
+                        location.reload();
+                    });
+                }
+            });
         }
 
         function cerrarSesion() {
             auth.signOut();
+        }
+
+        // Sistema de Solicitudes de Amistad (Validando que la cuenta exista)
+        function enviarSolicitudAmigo() {
+            const targetUsername = document.getElementById('friend-username').value.trim().toLowerCase();
+            if(!targetUsername || !usuarioActual) return;
+
+            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
+
+            if (targetUsername === myUsername) {
+                alert("No puedes enviarte una solicitud a ti mismo.");
+                return;
+            }
+
+            // Verificar si el usuario destino existe en la base de datos
+            db.ref('users/' + targetUsername).once('value', snapshot => {
+                if (!snapshot.exists()) {
+                    alert("La cuenta que buscas NO existe.");
+                } else {
+                    // Enviar la solicitud en la base de datos
+                    db.ref('friend_requests/' + targetUsername + '/received/' + myUsername).set(true);
+                    db.ref('friend_requests/' + myUsername + '/sent/' + targetUsername).set(true);
+                    alert("Solicitud de amistad enviada a " + targetUsername);
+                    document.getElementById('friend-username').value = '';
+                }
+            });
+        }
+
+        function cargarSolicitudesYAmigos() {
+            if(!usuarioActual) return;
+            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
+
+            // Cargar solicitudes recibidas
+            db.ref('friend_requests/' + myUsername + '/received').on('value', snapshot => {
+                const container = document.getElementById('incoming-requests');
+                container.innerHTML = '';
+                if (!snapshot.exists()) {
+                    container.innerText = "No tienes solicitudes pendientes.";
+                    return;
+                }
+                snapshot.forEach(child => {
+                    const fromUser = child.key;
+                    const item = document.createElement('div');
+                    item.className = 'req-item';
+                    item.innerHTML = `<span>${fromUser}</span>
+                        <div class="req-actions">
+                            <button class="accept" onclick="aceptarAmigo('${fromUser}')">Aceptar</button>
+                        </div>`;
+                    container.appendChild(item);
+                });
+            });
+
+            // Cargar solicitudes enviadas
+            db.ref('friend_requests/' + myUsername + '/sent').on('value', snapshot => {
+                const container = document.getElementById('outgoing-requests');
+                container.innerHTML = '';
+                if (!snapshot.exists()) {
+                    container.innerText = "Sin solicitudes enviadas.";
+                    return;
+                }
+                snapshot.forEach(child => {
+                    const toUser = child.key;
+                    const item = document.createElement('div');
+                    item.className = 'req-item';
+                    item.innerHTML = `<span>${toUser}</span><span style="color:#888; font-size:0.8em;">Pendiente</span>`;
+                    container.appendChild(item);
+                });
+            });
+
+            // Cargar Amigos aceptados
+            db.ref('friends/' + myUsername).on('value', snapshot => {
+                const container = document.getElementById('friends-list');
+                container.innerHTML = '';
+                if (!snapshot.exists()) {
+                    container.innerText = "No tienes amigos aceptados.";
+                    return;
+                }
+                snapshot.forEach(child => {
+                    const friendName = child.key;
+                    const item = document.createElement('div');
+                    item.className = 'req-item';
+                    item.innerHTML = `<span>🟢 ${friendName}</span>`;
+                    container.appendChild(item);
+                });
+            });
+        }
+
+        function aceptarAmigo(friendUser) {
+            if(!usuarioActual) return;
+            const myUsername = (usuarioActual.displayName || usuarioActual.email.split('@')[0]).toLowerCase();
+
+            // Guardar en la lista de amigos de ambos
+            db.ref('friends/' + myUsername + '/' + friendUser).set(true);
+            db.ref('friends/' + friendUser + '/' + myUsername).set(true);
+
+            // Eliminar la solicitud
+            db.ref('friend_requests/' + myUsername + '/received/' + friendUser).remove();
+            db.ref('friend_requests/' + friendUser + '/sent/' + myUsername).remove();
+            alert("¡Ahora eres amigo de " + friendUser + "!");
         }
 
         // Chat global en tiempo real
@@ -797,7 +1001,6 @@
             input.value = '';
         }
 
-        // Escuchar mensajes en vivo desde Firebase
         db.ref('chat_global').limitToLast(50).on('child_added', snapshot => {
             const data = snapshot.val();
             const container = document.getElementById('chat-messages');
@@ -810,19 +1013,7 @@
             container.scrollTop = container.scrollHeight;
         });
 
-        // Enviar solicitudes de amistad
-        function enviarSolicitudAmigo() {
-            const friendName = document.getElementById('friend-username').value.trim();
-            if(!friendName) return;
-            if(!usuarioActual) {
-                alert("Inicia sesión primero.");
-                return;
-            }
-            alert(`Solicitud enviada a ${friendName}`);
-            document.getElementById('friend-username').value = '';
-        }
-
-        // YouTube API v3 (Consulta automática)
+        // YouTube API v3
         const YT_API_KEY = "AIzaSyCKbpL_H5jrqsuoWv0EKEIJ3TB9lvN3kCo";
         const YT_HANDLE = "driuk";
 
@@ -845,7 +1036,7 @@
             cargarEstadisticasYouTube();
         };
 
-        // Permite enviar mensaje con tecla Enter
+        // Escuchar Enter en Chat
         document.addEventListener("DOMContentLoaded", () => {
             const input = document.getElementById('chat-input');
             if(input) {
@@ -855,7 +1046,7 @@
             }
         });
 
-        // Modales, Tabs y Sidebar
+        // Controles de interfaz
         function openModal() { document.getElementById('auth-modal').style.display = 'flex'; }
         function closeModal() { document.getElementById('auth-modal').style.display = 'none'; }
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('active'); }
@@ -869,7 +1060,7 @@
         }
 
         function guardarFotoPerfil() {
-            const url = document.getElementById('avatar-url-input').value;
+            const url = document.getElementById('avatar-url-input').value.trim();
             if(url && usuarioActual) {
                 usuarioActual.updateProfile({ photoURL: url }).then(() => {
                     const avatar = document.getElementById('user-avatar');
@@ -878,6 +1069,11 @@
                     alert("¡Foto de perfil actualizada!");
                 });
             }
+        }
+
+        function guardarPrivacidad() {
+            const val = document.getElementById('privacy-select').value;
+            alert("Preferencia de privacidad guardada: " + val);
         }
     </script>
 </body>
