@@ -257,6 +257,68 @@
         <!-- Feed Principal a la Izquierda -->
         <div class="feed-main">
 
+            <!-- ⚙️ SECCIÓN NUEVA: CONVERSOR DE SENSIBILIDAD -->
+            <section style="border-color:var(--gold-color);">
+                <h2 style="color:var(--gold-color);">⚙️ CONVERSOR DE SENSIBILIDAD (eDPI)</h2>
+                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Calcula tu sensibilidad exacta al cambiar de DPI manteniendo el mismo eDPI en cualquier juego.</p>
+                <div class="grid-info" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+                    <div class="info-card">
+                        <label style="font-size:0.8em; color:#aaa;">Sensibilidad Actual:</label>
+                        <input type="number" id="conv-curr-sens" value="8.0" step="0.1" class="sidebar-input" style="margin-top:5px;">
+                    </div>
+                    <div class="info-card">
+                        <label style="font-size:0.8em; color:#aaa;">DPI Actual:</label>
+                        <input type="number" id="conv-curr-dpi" value="800" step="50" class="sidebar-input" style="margin-top:5px;">
+                    </div>
+                    <div class="info-card">
+                        <label style="font-size:0.8em; color:#aaa;">Nuevo DPI Objetivo:</label>
+                        <input type="number" id="conv-target-dpi" value="1600" step="50" class="sidebar-input" style="margin-top:5px;">
+                    </div>
+                </div>
+                <button onclick="calcularSensibilidad()" class="btn-claim-mission" style="margin-top:15px; width:100%; padding:10px; font-size:0.95em;">
+                    Calcular Sensibilidad Objetivo 🎯
+                </button>
+                <div id="conv-result-box" style="margin-top:12px; display:none; background:#0a0a0a; padding:12px; border-radius:8px; border:1px solid var(--gold-color); display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <span style="font-size:0.85em; color:#aaa;">Sensibilidad recomendada:</span>
+                        <div id="conv-result-text" style="color:var(--gold-color); font-weight:bold; font-size:1.2em;">0.0</div>
+                    </div>
+                    <button onclick="copiarSensResultado()" class="sidebar-btn-sub" style="width:auto; padding:8px 15px; background:var(--gold-color); color:black;">Copiar Sens 📋</button>
+                </div>
+            </section>
+
+            <!-- 📁 SECCIÓN NUEVA: MIS AJUSTES PERSONALES (CLOUDS / SMURF SAFE) -->
+            <section style="border-color:#00ffff;">
+                <h2 style="color:#00ffff;">📁 MIS AJUSTES PERSONALES POR CUENTA</h2>
+                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Guarda tu configuración privada para cada juego. Al entrar con tu cuenta principal o secundaria (smurf), se cargan automáticamente al pulsar Cargar.</p>
+                <div style="display:flex; flex-direction:column; gap:10px;">
+                    <label style="font-size:0.85em; color:#00ffff; font-weight:bold;">Selecciona el Videojuego:</label>
+                    <select id="my-game-select" class="sidebar-input" onchange="cargarMisAjustesPrivados()">
+                        <option value="fortnite">Fortnite</option>
+                        <option value="cs2">Counter-Strike 2</option>
+                        <option value="rocket_league">Rocket League</option>
+                        <option value="valorant">Valorant</option>
+                    </select>
+                    <textarea id="my-game-config-text" placeholder="Pega o escribe aquí tu configuración (Sensibilidad, DPI, Resolución, Mira/Crosshair, Binds...)" rows="4" class="sidebar-input"></textarea>
+                    <div style="display:flex; gap:10px;">
+                        <button onclick="guardarMisAjustesPrivados()" class="btn-auth" style="flex:1; background:#00ffff; color:black;">Guardar Configuración 💾</button>
+                        <button onclick="cargarMisAjustesPrivados()" class="sidebar-btn-sub" style="flex:1; background:#222; border:1px solid #00ffff; color:#00ffff;">Cargar Mis Ajustes 🔄</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 📢 SECCIÓN NUEVA: CONFIGURACIONES PÚBLICAS DE LA COMUNIDAD -->
+            <section style="border-color:var(--primary-red);">
+                <h2 style="color:var(--primary-red);">📢 CONFIGURACIONES DE LA COMUNIDAD (SIN FOTOS)</h2>
+                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Publica tus ajustes mediante un cuestionario detallado para que otros puedan copiarlos al instante sin necesidad de capturas de pantalla.</p>
+                <button onclick="abrirModalPublicarConfig()" class="btn-auth" style="width:100%; padding:10px; font-size:0.95em; margin-bottom:15px;">
+                    📝 Publicar mis Ajustes (Cuestionario)
+                </button>
+                <div id="community-configs-list" style="max-height:350px; overflow-y:auto; display:flex; flex-direction:column; gap:10px;">
+                    <p style="color:#888;">Cargando configuraciones compartidas...</p>
+                </div>
+            </section>
+
             <!-- 🏆 TORNEO FORTNITE -->
             <section style="border-color:var(--gold-color);">
                 <h2 style="color:var(--gold-color);">🏆 TORNEOS TRYHARDS — FORTNITE</h2>
@@ -530,6 +592,37 @@
         </div>
     </div>
 
+    <!-- Modal Publicar Configuración (Cuestionario Detallado) -->
+    <div class="modal" id="publish-config-modal">
+        <div class="modal-content" style="max-width:600px;">
+            <h3 style="color:var(--primary-red);">📝 Cuestionario de Configuración</h3>
+            <p style="font-size:0.8em; color:#aaa; margin:0;">Rellena los apartados para compartir tus ajustes exactos con la comunidad sin fotos.</p>
+            
+            <label style="font-size:0.8em; color:#ccc;">Videojuego:</label>
+            <select id="pub-conf-game" class="sidebar-input">
+                <option value="Fortnite">Fortnite</option>
+                <option value="Counter-Strike 2">Counter-Strike 2</option>
+                <option value="Rocket League">Rocket League</option>
+                <option value="Valorant">Valorant</option>
+            </select>
+
+            <label style="font-size:0.8em; color:#ccc;">Sensibilidad y DPI:</label>
+            <input type="text" id="pub-conf-sens" placeholder="Ej: Sens: 7.5% | DPI: 800" class="sidebar-input">
+
+            <label style="font-size:0.8em; color:#ccc;">Resolución y Modo de Pantalla:</label>
+            <input type="text" id="pub-conf-res" placeholder="Ej: 1920x1080 (Pantalla Completa) o 1440x1080 Estirada" class="sidebar-input">
+
+            <label style="font-size:0.8em; color:#ccc;">Mira / Crosshair (Código o Descripción):</label>
+            <input type="text" id="pub-conf-crosshair" placeholder="Ej: Código de cruceta o color cian sin punto" class="sidebar-input">
+
+            <label style="font-size:0.8em; color:#ccc;">Binds o Ajustes Personalizados (Notas / Custom):</label>
+            <textarea id="pub-conf-custom" placeholder="Ej: Tecla de editar en F, confirmar al soltar activado, binds especiales..." rows="3" class="sidebar-input"></textarea>
+
+            <button onclick="publicarConfiguracionComunidad()" class="btn-auth" style="margin-top:10px;">Publicar Configuración 🚀</button>
+            <button style="background:transparent; color:red; border:none; cursor:pointer;" onclick="closeModal('publish-config-modal')">Cancelar</button>
+        </div>
+    </div>
+
     <!-- Modal Canal Estilo YouTube -->
     <div class="modal" id="channel-modal">
         <div class="modal-content" style="max-width:700px;">
@@ -697,6 +790,8 @@
                     escucharPuntosUsuario();
                     cargarInventario();
                     cargarPropuestas();
+                    cargarMisAjustesPrivados();
+                    cargarConfigsComunidad();
                     renderMisiones();
                 });
             } else {
@@ -713,6 +808,115 @@
             db.ref(`users/${usuarioActual.uid}/points`).on('value', snap => {
                 const el = document.getElementById('widget-points');
                 if(el) el.innerText = `${(snap.val() || 0).toLocaleString()} PUNTOS`;
+            });
+        }
+
+        /* CONVERSOR DE SENSIBILIDAD */
+        let ultimaSensCalculada = "";
+        function calcularSensibilidad() {
+            const sens = parseFloat(document.getElementById('conv-curr-sens').value);
+            const dpiCurr = parseFloat(document.getElementById('conv-curr-dpi').value);
+            const dpiTarget = parseFloat(document.getElementById('conv-target-dpi').value);
+
+            if(!sens || !dpiCurr || !dpiTarget) return alert("Introduce valores válidos.");
+
+            const edpi = sens * dpiCurr;
+            const targetSens = (edpi / dpiTarget).toFixed(2);
+            ultimaSensCalculada = targetSens;
+
+            document.getElementById('conv-result-text').innerText = `${targetSens} (a ${dpiTarget} DPI)`;
+            document.getElementById('conv-result-box').style.display = 'flex';
+        }
+
+        function copiarSensResultado() {
+            if(!ultimaSensCalculada) return;
+            navigator.clipboard.writeText(ultimaSensCalculada);
+            alert(`¡Sensibilidad ${ultimaSensCalculada} copiada al portapapeles!`);
+        }
+
+        /* AJUSTES PERSONALES POR CUENTA / SMURF */
+        function guardarMisAjustesPrivados() {
+            if(!usuarioActual) return alert("Inicia sesión para guardar tus ajustes.");
+            const juego = document.getElementById('my-game-select').value;
+            const textoConfig = document.getElementById('my-game-config-text').value.trim();
+
+            db.ref(`user_private_configs/${usuarioActual.uid}/${juego}`).set(textoConfig).then(() => {
+                alert("¡Configuración guardada en tu cuenta de forma segura!");
+            });
+        }
+
+        function cargarMisAjustesPrivados() {
+            if(!usuarioActual) return;
+            const juego = document.getElementById('my-game-select').value;
+            db.ref(`user_private_configs/${usuarioActual.uid}/${juego}`).once('value', snap => {
+                const val = snap.val() || '';
+                document.getElementById('my-game-config-text').value = val;
+            });
+        }
+
+        /* PUBLICAR CONFIGURACIONES DE LA COMUNIDAD (CUESTIONARIO) */
+        function abrirModalPublicarConfig() {
+            if(!usuarioActual) return alert("Inicia sesión para publicar tus ajustes.");
+            openModal('publish-config-modal');
+        }
+
+        function publicarConfiguracionComunidad() {
+            if(!usuarioActual) return;
+            const juego = document.getElementById('pub-conf-game').value;
+            const sens = document.getElementById('pub-conf-sens').value.trim();
+            const resolucion = document.getElementById('pub-conf-res').value.trim();
+            const crosshair = document.getElementById('pub-conf-crosshair').value.trim();
+            const custom = document.getElementById('pub-conf-custom').value.trim();
+
+            if(!sens) return alert("Por favor, al menos indica la sensibilidad y DPI.");
+
+            db.ref('users/' + usuarioActual.uid).once('value', uSnap => {
+                const authorName = (uSnap.val() || {}).displayName || 'Usuario';
+                db.ref('community_configs').push({
+                    uid: usuarioActual.uid,
+                    authorName: authorName,
+                    juego: juego,
+                    sens: sens,
+                    resolucion: resolucion || 'No especificada',
+                    crosshair: crosshair || 'Por defecto',
+                    custom: custom || 'Ninguno',
+                    timestamp: Date.now()
+                }).then(() => {
+                    alert("¡Configuración publicada correctamente en la comunidad!");
+                    closeModal('publish-config-modal');
+                    // Limpiar campos
+                    document.getElementById('pub-conf-sens').value = '';
+                    document.getElementById('pub-conf-res').value = '';
+                    document.getElementById('pub-conf-crosshair').value = '';
+                    document.getElementById('pub-conf-custom').value = '';
+                });
+            });
+        }
+
+        function cargarConfigsComunidad() {
+            db.ref('community_configs').limitToLast(20).on('value', snap => {
+                const container = document.getElementById('community-configs-list');
+                if(!container) return;
+                container.innerHTML = '';
+                if(!snap.exists()) return container.innerHTML = '<p style="color:#888;">No hay configuraciones publicadas aún.</p>';
+
+                snap.forEach(child => {
+                    const cfg = child.val();
+                    container.innerHTML += `
+                        <div class="item-card-inv" style="display:flex; flex-direction:column; align-items:flex-start; gap:6px;">
+                            <div style="display:flex; justify-content:space-between; width:100%;">
+                                <strong style="color:var(--primary-red);">${cfg.authorName}</strong>
+                                <span class="tag-badge">${cfg.juego}</span>
+                            </div>
+                            <div style="font-size:0.85em; color:#ccc;">
+                                <div>⚡ <strong>Sens/DPI:</strong> ${cfg.sens}</div>
+                                <div>🖥️ <strong>Resolución:</strong> ${cfg.resolucion}</div>
+                                <div>🎯 <strong>Mira:</strong> ${cfg.crosshair}</div>
+                                <div>📌 <strong>Notas:</strong> ${cfg.custom}</div>
+                            </div>
+                        </div>
+                    `;
+                });
             });
         }
 
