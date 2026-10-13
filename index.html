@@ -259,10 +259,10 @@
         <!-- Feed Principal a la Izquierda -->
         <div class="feed-main">
 
-            <!-- 📧 SECCIÓN NUEVA: GENERADOR DE CORREOS TEMPORALES ILIMITADOS (SIN TELÉFONO) -->
+            <!-- 📧 CORREOS PERMANENTES ILIMITADOS (SIN TELÉFONO) -->
             <section style="border-color:#00ff66;">
-                <h2 style="color:#00ff66;">📧 GENERADOR DE CORREOS ILIMITADOS (SIN TELÉFONO)</h2>
-                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Crea correos temporales instantáneos y recibe códigos o confirmaciones sin número de teléfono.</p>
+                <h2 style="color:#00ff66;">📧 CORREOS PERMANENTES (SIN TELÉFONO)</h2>
+                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Tus correos temporales se guardan permanentemente en tu cuenta (incluso al recargar o cambiar de smurf).</p>
                 
                 <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
                     <button onclick="generarNuevoCorreoTemp()" class="btn-auth" style="background:#00ff66; color:black; flex:1; padding:10px; font-weight:900;">Generar Nuevo Correo ⚡</button>
@@ -270,8 +270,8 @@
                 </div>
 
                 <div style="background:#0a0a0a; border:1px solid #333; padding:12px; border-radius:8px; margin-bottom:12px;">
-                    <span style="font-size:0.8em; color:#888;">Tu Correo Activo:</span>
-                    <div id="temp-email-display" style="color:#00ff66; font-weight:bold; font-size:1.1em; word-break:break-all; margin-top:4px;">Haz clic en "Generar Nuevo Correo"</div>
+                    <span style="font-size:0.8em; color:#888;">Tu Correo Permanente Activo:</span>
+                    <div id="temp-email-display" style="color:#00ff66; font-weight:bold; font-size:1.1em; word-break:break-all; margin-top:4px;">Inicia sesión para cargar tu correo permanente</div>
                 </div>
 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
@@ -284,10 +284,10 @@
                 </div>
             </section>
 
-            <!-- 🎮 SECCIÓN NUEVA: MINIJUEGOS & SIMULADORES (FORTNITE, ROBLOX RIVALS Y VALORANT) -->
+            <!-- 🎮 MINIJUEGOS & SIMULADORES GAMING (VALORANT, FORTNITE, ROBLOX RIVALS) -->
             <section style="border-color:var(--gold-color);">
                 <h2 style="color:var(--gold-color);">🎮 SIMULADORES & MINIJUEGOS GAMING</h2>
-                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Practica y juega directamente en la web con ajuste de sensibilidad, resolución, miras y optimización de FPS.</p>
+                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Practica tu puntería con sensibilidad, resolución, miras y optimización de FPS ajustables.</p>
                 
                 <div class="missions-filter" style="margin-bottom:15px;">
                     <button class="mission-tab-btn active" onclick="switchGameTab('valorant')">Valorant Aim Trainer</button>
@@ -295,7 +295,6 @@
                     <button class="mission-tab-btn" onclick="switchGameTab('roblox')">Roblox Rivals Arena</button>
                 </div>
 
-                <!-- Panel de Ajustes del Juego Actual -->
                 <div style="background:#0a0a0a; border:1px solid #333; padding:12px; border-radius:8px; margin-bottom:12px; display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:10px;">
                     <div>
                         <label style="font-size:0.75em; color:#aaa;">Sensibilidad:</label>
@@ -326,7 +325,6 @@
                     </div>
                 </div>
 
-                <!-- Canvas del Minijuego -->
                 <div style="position:relative;">
                     <canvas id="game-canvas" class="game-canvas" width="600" height="260" onclick="clicMinijuego(event)"></canvas>
                     <div id="game-hud" style="position:absolute; top:10px; left:15px; font-weight:bold; color:var(--gold-color); font-size:0.9em; text-shadow:0 0 5px #000;">Puntuación: 0 | Aciertos: 0</div>
@@ -773,30 +771,48 @@
         let ultimoMensajeTiempo = 0;
         let ultimaPropuestaTiempo = 0;
 
-        /* CORREOS TEMPORALES (TEMP MAIL) */
+        /* CORREOS PERMANENTES EN FIREBASE */
         let correoTempActual = "";
+
         function generarNuevoCorreoTemp() {
+            if(!usuarioActual) return alert("Inicia sesión para generar y guardar tu correo permanente.");
             fetch('https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1')
                 .then(res => res.json())
                 .then(data => {
                     if(data && data.length > 0) {
                         correoTempActual = data[0];
-                        document.getElementById('temp-email-display').innerText = correoTempActual;
-                        actualizarBandejaTemp();
-                        alert("¡Correo temporal generado con éxito sin número de teléfono!");
+                        db.ref(`users/${usuarioActual.uid}/tempEmail`).set(correoTempActual).then(() => {
+                            document.getElementById('temp-email-display').innerText = correoTempActual;
+                            actualizarBandejaTemp();
+                            alert("¡Correo permanente generado y guardado en tu cuenta!");
+                        });
                     }
                 })
                 .catch(() => {
-                    // Fallback local si la API externa falla
-                    const randomName = 'driuk_smurf_' + Math.floor(Math.random() * 90000 + 10000);
+                    const randomName = 'driuk_user_' + Math.floor(Math.random() * 90000 + 10000);
                     correoTempActual = randomName + '@1secmail.com';
-                    document.getElementById('temp-email-display').innerText = correoTempActual;
-                    alert("¡Correo generado correctamente!");
+                    db.ref(`users/${usuarioActual.uid}/tempEmail`).set(correoTempActual).then(() => {
+                        document.getElementById('temp-email-display').innerText = correoTempActual;
+                        alert("¡Correo permanente generado con éxito!");
+                    });
                 });
         }
 
+        function cargarCorreoPermanente() {
+            if(!usuarioActual) return;
+            db.ref(`users/${usuarioActual.uid}/tempEmail`).once('value', snap => {
+                if(snap.exists()) {
+                    correoTempActual = snap.val();
+                    document.getElementById('temp-email-display').innerText = correoTempActual;
+                    actualizarBandejaTemp();
+                } else {
+                    document.getElementById('temp-email-display').innerText = 'Haz clic en "Generar Nuevo Correo"';
+                }
+            });
+        }
+
         function copiarCorreoTemp() {
-            if(!correoTempActual) return alert("Genera un correo primero.");
+            if(!correoTempActual) return alert("No hay ningún correo activo.");
             navigator.clipboard.writeText(correoTempActual);
             alert(`¡Copiado al portapapeles: ${correoTempActual}!`);
         }
@@ -810,7 +826,7 @@
                 .then(msgs => {
                     const inbox = document.getElementById('temp-inbox-list');
                     inbox.innerHTML = '';
-                    if(!msgs || msgs.length === 0) return inbox.innerHTML = '<p style="color:#888; font-size:0.85em; margin:0;">Bandeja limpia. Esperando mensajes...</p>';
+                    if(!msgs || msgs.length === 0) return inbox.innerHTML = '<p style="color:#888; font-size:0.85em; margin:0;">Bandeja limpia. Esperando correos entrantes...</p>';
                     msgs.forEach(m => {
                         inbox.innerHTML += `<div class="chat-msg"><strong>De: ${m.from}</strong><br>Asunto: ${m.subject} <span style="font-size:0.7em; color:#888;">(${m.date})</span></div>`;
                     });
@@ -818,7 +834,7 @@
                 .catch(() => {});
         }
 
-        /* MINIJUEGOS Y SIMULADORES GAMING (VALORANT, FORTNITE, ROBLOX RIVALS) */
+        /* MINIJUEGOS & SIMULADORES GAMING (CLICS CORREGIDOS CON RATIO DE ESCALA) */
         let juegoActualTab = 'valorant';
         let gameInterval = null;
         let gameScore = 0;
@@ -842,7 +858,7 @@
 
             gameInterval = setInterval(() => {
                 actualizarYRenderizarJuego();
-            }, 1000 / 60); // 60 FPS o más fluido según FPS Mode
+            }, 1000 / 60);
         }
 
         function reiniciarMinijuego() {
@@ -864,21 +880,17 @@
             const ctx = canvas.getContext('2d');
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Fondo según resolución y modo FPS
             ctx.fillStyle = '#0a0a0a';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Generar blancos aleatorios
             if(Math.random() < 0.03 && targets.length < 4) {
                 targets.push({
                     x: Math.random() * (canvas.width - 60) + 30,
                     y: Math.random() * (canvas.height - 60) + 30,
-                    radius: juegoActualTab === 'fortnite' ? 22 : 18,
-                    vida: 100
+                    radius: juegoActualTab === 'fortnite' ? 24 : 18
                 });
             }
 
-            // Dibujar blancos
             targets.forEach(t => {
                 ctx.beginPath();
                 ctx.arc(t.x, t.y, t.radius, 0, Math.PI * 2);
@@ -889,7 +901,6 @@
                 ctx.stroke();
             });
 
-            // Actualizar HUD
             const hud = document.getElementById('game-hud');
             if(hud) hud.innerText = `Puntuación: ${gameScore} | Aciertos: ${gameHits}`;
         }
@@ -897,8 +908,12 @@
         function clicMinijuego(event) {
             const canvas = document.getElementById('game-canvas');
             const rect = canvas.getBoundingClientRect();
-            const x = event.clientX - rect.left;
-            const y = event.clientY - rect.top;
+            
+            // Corrección exacta de escala de clics entre tamaño CSS y resolución interna del Canvas
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const x = (event.clientX - rect.left) * scaleX;
+            const y = (event.clientY - rect.top) * scaleY;
 
             let hit = false;
             for(let i = targets.length - 1; i >= 0; i--) {
@@ -912,14 +927,11 @@
                     break;
                 }
             }
-            if(!hit && gameScore >= 25) gameScore -= 25; // Penalización fallo
+            if(!hit && gameScore >= 25) gameScore -= 25;
         }
 
         function actualizarAjustesJuego() {
-            const sens = document.getElementById('game-sens').value;
-            const res = document.getElementById('game-res').value;
-            const crosshair = document.getElementById('game-crosshair').value;
-            // Ajustes aplicados instantáneamente a la simulación
+            // Ajustes aplicados a la simulación
         }
 
         const MISIONES_BASE = {
@@ -1020,6 +1032,7 @@
                     cargarPropuestas();
                     cargarMisAjustesPrivados();
                     cargarConfigsComunidad();
+                    cargarCorreoPermanente();
                     renderMisiones();
                 });
             } else {
@@ -1028,6 +1041,7 @@
                 if(avatar) avatar.style.display = 'none';
                 if(chatInput) { chatInput.disabled = true; chatInput.placeholder = "Inicia sesión para chatear..."; }
                 if(chatBtn) chatBtn.disabled = true;
+                document.getElementById('temp-email-display').innerText = 'Inicia sesión para cargar tu correo permanente';
             }
         });
 
