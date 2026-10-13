@@ -259,15 +259,15 @@
         <!-- Feed Principal a la Izquierda -->
         <div class="feed-main">
 
-            <!-- 📧 CORREOS PERMANENTES CON RECEPCIÓN REAL (MAIL.GW API) -->
+            <!-- 📧 CORREOS PERMANENTES (CORS SOLUCIONADO + WEB EXTERNA) -->
             <section style="border-color:#00ff66;">
-                <h2 style="color:#00ff66;">📧 CORREOS PERMANENTES (CON RECEPCIÓN REAL)</h2>
-                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Integrado con Mail.gw para recibir correos reales desde Outlook al instante. Tus credenciales se guardan en tu cuenta.</p>
+                <h2 style="color:#00ff66;">📧 CORREOS PERMANENTES (PERMANENTE & SEGURO)</h2>
+                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Tus correos temporales se guardan permanentemente en tu cuenta (incluso al recargar con Ctrl+F5). Accede también mediante el botón a la web externa.</p>
                 
                 <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
                     <button onclick="generarNuevoCorreoTemp()" class="btn-auth" style="background:#00ff66; color:black; flex:1; padding:10px; font-weight:900;">Generar Nuevo Correo ⚡</button>
                     <button onclick="copiarCorreoTemp()" class="sidebar-btn-sub" style="flex:1; background:#222; border:1px solid #00ff66; color:#00ff66;">Copiar Dirección 📋</button>
-                    <a href="https://mail.gw" target="_blank" class="sidebar-btn-sub" style="flex:1; background:#222; border:1px solid #00ffff; color:#00ffff; text-align:center; text-decoration:none; display:flex; align-items:center; justify-content:center;">🌐 Abrir Web Externa</a>
+                    <a href="https://www.1secmail.com/" target="_blank" class="sidebar-btn-sub" style="flex:1; background:#222; border:1px solid #00ffff; color:#00ffff; text-align:center; text-decoration:none; display:flex; align-items:center; justify-content:center;">🌐 Abrir Web Externa</a>
                 </div>
 
                 <div style="background:#0a0a0a; border:1px solid #333; padding:12px; border-radius:8px; margin-bottom:12px;">
@@ -276,12 +276,12 @@
                 </div>
 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <strong style="font-size:0.9em; color:#aaa;">Bandeja de Entrada (Recepción Real):</strong>
+                    <strong style="font-size:0.9em; color:#aaa;">Bandeja de Entrada:</strong>
                     <button onclick="actualizarBandejaTemp()" class="btn-widget" style="font-size:0.75em;">Actualizar 🔄</button>
                 </div>
 
                 <div id="temp-inbox-list" style="max-height:180px; overflow-y:auto; background:#0a0a0a; border:1px solid #222; border-radius:8px; padding:10px;">
-                    <p style="color:#888; font-size:0.85em; margin:0;">Sin mensajes recibidos todavía. Envía un correo desde Outlook.</p>
+                    <p style="color:#888; font-size:0.85em; margin:0;">Sin mensajes recibidos todavía.</p>
                 </div>
             </section>
 
@@ -772,77 +772,35 @@
         let ultimoMensajeTiempo = 0;
         let ultimaPropuestaTiempo = 0;
 
-        /* CORREOS PERMANENTES CON MAIL.GW API (RECEPCIÓN REAL DESDE OUTLOOK) */
+        /* CORREOS PERMANENTES (CORS 1SECMAIL API & WEB EXTERNA) */
         let correoTempActual = "";
-        let tempEmailToken = "";
 
-        async function generarNuevoCorreoTemp() {
+        function generarNuevoCorreoTemp() {
             if(!usuarioActual) return alert("Inicia sesión para generar y guardar tu correo permanente.");
-            try {
-                const domRes = await fetch('https://api.mail.gw/domains');
-                const domData = await domRes.json();
-                const domains = domData['hydra:member'] || domData;
-                if(!domains || domains.length === 0) throw new Error("No hay dominios de correo disponibles");
-                const domain = domains[0].domain;
-
-                const username = 'driuk_' + Math.random().toString(36).substring(2, 10);
-                const email = `${username}@${domain}`;
-                const password = 'Pass_' + Math.random().toString(36).substring(2, 12) + '9!';
-
-                const accRes = await fetch('https://api.mail.gw/accounts', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ address: email, password: password })
+            fetch('https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1')
+                .then(res => res.json())
+                .then(data => {
+                    if(data && data.length > 0) {
+                        correoTempActual = data[0];
+                        db.ref(`users/${usuarioActual.uid}/tempEmail`).set(correoTempActual).then(() => {
+                            document.getElementById('temp-email-display').innerText = correoTempActual;
+                            actualizarBandejaTemp();
+                            alert("¡Correo permanente generado y guardado en tu cuenta!");
+                        });
+                    }
+                })
+                .catch(err => {
+                    alert("Error generando correo: " + err.message);
                 });
-                if(!accRes.ok) throw new Error("Error al crear cuenta de correo en el servidor SMTP");
-
-                const tokenRes = await fetch('https://api.mail.gw/token', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ address: email, password: password })
-                });
-                const tokenData = await tokenRes.json();
-                const token = tokenData.token;
-                if(!token) throw new Error("No se pudo autenticar el token de correo");
-
-                correoTempActual = email;
-                tempEmailToken = token;
-
-                await db.ref(`users/${usuarioActual.uid}`).update({
-                    tempEmail: email,
-                    tempPassword: password,
-                    tempToken: token
-                });
-
-                document.getElementById('temp-email-display').innerText = correoTempActual;
-                actualizarBandejaTemp();
-                alert("¡Correo permanente generado con éxito! Ya puedes enviarle correos desde Outlook.");
-            } catch(err) {
-                alert("Error generando correo: " + err.message);
-            }
         }
 
-        async function cargarCorreoPermanente() {
+        function cargarCorreoPermanente() {
             if(!usuarioActual) return;
-            db.ref(`users/${usuarioActual.uid}`).once('value', async snap => {
-                const data = snap.val() || {};
-                if(data.tempEmail && data.tempPassword) {
-                    correoTempActual = data.tempEmail;
+            db.ref(`users/${usuarioActual.uid}/tempEmail`).once('value', snap => {
+                if(snap.exists()) {
+                    correoTempActual = snap.val();
                     document.getElementById('temp-email-display').innerText = correoTempActual;
-                    try {
-                        const tokenRes = await fetch('https://api.mail.gw/token', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ address: data.tempEmail, password: data.tempPassword })
-                        });
-                        const tokenData = await tokenRes.json();
-                        if(tokenData.token) {
-                            tempEmailToken = tokenData.token;
-                            actualizarBandejaTemp();
-                        }
-                    } catch(e) {
-                        console.error(e);
-                    }
+                    actualizarBandejaTemp();
                 } else {
                     document.getElementById('temp-email-display').innerText = 'Haz clic en "Generar Nuevo Correo"';
                 }
@@ -855,45 +813,39 @@
             alert(`¡Copiado al portapapeles: ${correoTempActual}!`);
         }
 
-        async function actualizarBandejaTemp() {
-            if(!tempEmailToken || !correoTempActual) return;
-            try {
-                const res = await fetch('https://api.mail.gw/messages', {
-                    headers: { 'Authorization': `Bearer ${tempEmailToken}` }
-                });
-                const data = await res.json();
-                const msgs = data['hydra:member'] || data || [];
-                const inbox = document.getElementById('temp-inbox-list');
-                inbox.innerHTML = '';
-                if(!msgs || msgs.length === 0) {
-                    inbox.innerHTML = '<p style="color:#888; font-size:0.85em; margin:0;">Bandeja limpia. Esperando correos entrantes de Outlook...</p>';
-                    return;
-                }
-                msgs.forEach(m => {
-                    inbox.innerHTML += `
-                        <div class="chat-msg" style="border-left-color:#00ff66; cursor:pointer;" onclick="leerMensajeTemp('${m.id}')">
-                            <strong>De: ${m.from.address}</strong><br>
-                            <span>Asunto: ${m.subject || '(Sin Asunto)'}</span>
-                            <div style="font-size:0.7em; color:#888; margin-top:2px;">${new Date(m.createdAt).toLocaleTimeString()}</div>
-                        </div>
-                    `;
-                });
-            } catch(e) {
-                console.error(e);
-            }
+        function actualizarBandejaTemp() {
+            if(!correoTempActual) return;
+            const parts = correoTempActual.split('@');
+            if(parts.length !== 2) return;
+            fetch(`https://www.1secmail.com/api/v1/?action=getMessages&login=${parts[0]}&domain=${parts[1]}`)
+                .then(res => res.json())
+                .then(msgs => {
+                    const inbox = document.getElementById('temp-inbox-list');
+                    inbox.innerHTML = '';
+                    if(!msgs || msgs.length === 0) {
+                        inbox.innerHTML = '<p style="color:#888; font-size:0.85em; margin:0;">Bandeja limpia. Esperando correos entrantes...</p>';
+                        return;
+                    }
+                    msgs.forEach(m => {
+                        inbox.innerHTML += `
+                            <div class="chat-msg" style="border-left-color:#00ff66; cursor:pointer;" onclick="leerMensajeTemp('${parts[0]}', '${parts[1]}', '${m.id}')">
+                                <strong>De: ${m.from}</strong><br>
+                                <span>Asunto: ${m.subject || '(Sin Asunto)'}</span>
+                                <div style="font-size:0.7em; color:#888; margin-top:2px;">${m.date}</div>
+                            </div>
+                        `;
+                    });
+                })
+                .catch(() => {});
         }
 
-        async function leerMensajeTemp(msgId) {
-            if(!tempEmailToken) return;
-            try {
-                const res = await fetch(`https://api.mail.gw/messages/${msgId}`, {
-                    headers: { 'Authorization': `Bearer ${tempEmailToken}` }
-                });
-                const msg = await res.json();
-                alert(`📧 De: ${msg.from.address}\nAsunto: ${msg.subject}\n\n${msg.text || msg.intro || 'Sin contenido de texto'}`);
-            } catch(e) {
-                alert("No se pudo cargar el contenido del mensaje.");
-            }
+        function leerMensajeTemp(login, domain, msgId) {
+            fetch(`https://www.1secmail.com/api/v1/?action=readMessage&login=${login}&domain=${domain}&id=${msgId}`)
+                .then(res => res.json())
+                .then(msg => {
+                    alert(`📧 De: ${msg.from}\nAsunto: ${msg.subject}\n\n${msg.textBody || msg.body || 'Sin contenido'}`);
+                })
+                .catch(() => alert("No se pudo cargar el contenido del mensaje."));
         }
 
         /* MINIJUEGOS & SIMULADORES GAMING (CLICS CORREGIDOS CON RATIO DE ESCALA) */
