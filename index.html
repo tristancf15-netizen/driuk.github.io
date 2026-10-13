@@ -259,32 +259,6 @@
         <!-- Feed Principal a la Izquierda -->
         <div class="feed-main">
 
-            <!-- 📧 CORREOS PERMANENTES (CORS SOLUCIONADO + WEB EXTERNA) -->
-            <section style="border-color:#00ff66;">
-                <h2 style="color:#00ff66;">📧 CORREOS PERMANENTES (PERMANENTE & SEGURO)</h2>
-                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Tus correos temporales se guardan permanentemente en tu cuenta (incluso al recargar con Ctrl+F5). Accede también mediante el botón a la web externa.</p>
-                
-                <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
-                    <button onclick="generarNuevoCorreoTemp()" class="btn-auth" style="background:#00ff66; color:black; flex:1; padding:10px; font-weight:900;">Generar Nuevo Correo ⚡</button>
-                    <button onclick="copiarCorreoTemp()" class="sidebar-btn-sub" style="flex:1; background:#222; border:1px solid #00ff66; color:#00ff66;">Copiar Dirección 📋</button>
-                    <a href="https://www.1secmail.com/" target="_blank" class="sidebar-btn-sub" style="flex:1; background:#222; border:1px solid #00ffff; color:#00ffff; text-align:center; text-decoration:none; display:flex; align-items:center; justify-content:center;">🌐 Abrir Web Externa</a>
-                </div>
-
-                <div style="background:#0a0a0a; border:1px solid #333; padding:12px; border-radius:8px; margin-bottom:12px;">
-                    <span style="font-size:0.8em; color:#888;">Tu Correo Permanente Activo:</span>
-                    <div id="temp-email-display" style="color:#00ff66; font-weight:bold; font-size:1.1em; word-break:break-all; margin-top:4px;">Inicia sesión para cargar tu correo permanente</div>
-                </div>
-
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                    <strong style="font-size:0.9em; color:#aaa;">Bandeja de Entrada:</strong>
-                    <button onclick="actualizarBandejaTemp()" class="btn-widget" style="font-size:0.75em;">Actualizar 🔄</button>
-                </div>
-
-                <div id="temp-inbox-list" style="max-height:180px; overflow-y:auto; background:#0a0a0a; border:1px solid #222; border-radius:8px; padding:10px;">
-                    <p style="color:#888; font-size:0.85em; margin:0;">Sin mensajes recibidos todavía.</p>
-                </div>
-            </section>
-
             <!-- 🎮 MINIJUEGOS & SIMULADORES GAMING (VALORANT, FORTNITE, ROBLOX RIVALS) -->
             <section style="border-color:var(--gold-color);">
                 <h2 style="color:var(--gold-color);">🎮 SIMULADORES & MINIJUEGOS GAMING</h2>
@@ -772,83 +746,7 @@
         let ultimoMensajeTiempo = 0;
         let ultimaPropuestaTiempo = 0;
 
-        /* CORREOS PERMANENTES (CORS 1SECMAIL API & WEB EXTERNA) */
-        let correoTempActual = "";
-
-        function generarNuevoCorreoTemp() {
-            if(!usuarioActual) return alert("Inicia sesión para generar y guardar tu correo permanente.");
-            fetch('https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1')
-                .then(res => res.json())
-                .then(data => {
-                    if(data && data.length > 0) {
-                        correoTempActual = data[0];
-                        db.ref(`users/${usuarioActual.uid}/tempEmail`).set(correoTempActual).then(() => {
-                            document.getElementById('temp-email-display').innerText = correoTempActual;
-                            actualizarBandejaTemp();
-                            alert("¡Correo permanente generado y guardado en tu cuenta!");
-                        });
-                    }
-                })
-                .catch(err => {
-                    alert("Error generando correo: " + err.message);
-                });
-        }
-
-        function cargarCorreoPermanente() {
-            if(!usuarioActual) return;
-            db.ref(`users/${usuarioActual.uid}/tempEmail`).once('value', snap => {
-                if(snap.exists()) {
-                    correoTempActual = snap.val();
-                    document.getElementById('temp-email-display').innerText = correoTempActual;
-                    actualizarBandejaTemp();
-                } else {
-                    document.getElementById('temp-email-display').innerText = 'Haz clic en "Generar Nuevo Correo"';
-                }
-            });
-        }
-
-        function copiarCorreoTemp() {
-            if(!correoTempActual) return alert("No hay ningún correo activo.");
-            navigator.clipboard.writeText(correoTempActual);
-            alert(`¡Copiado al portapapeles: ${correoTempActual}!`);
-        }
-
-        function actualizarBandejaTemp() {
-            if(!correoTempActual) return;
-            const parts = correoTempActual.split('@');
-            if(parts.length !== 2) return;
-            fetch(`https://www.1secmail.com/api/v1/?action=getMessages&login=${parts[0]}&domain=${parts[1]}`)
-                .then(res => res.json())
-                .then(msgs => {
-                    const inbox = document.getElementById('temp-inbox-list');
-                    inbox.innerHTML = '';
-                    if(!msgs || msgs.length === 0) {
-                        inbox.innerHTML = '<p style="color:#888; font-size:0.85em; margin:0;">Bandeja limpia. Esperando correos entrantes...</p>';
-                        return;
-                    }
-                    msgs.forEach(m => {
-                        inbox.innerHTML += `
-                            <div class="chat-msg" style="border-left-color:#00ff66; cursor:pointer;" onclick="leerMensajeTemp('${parts[0]}', '${parts[1]}', '${m.id}')">
-                                <strong>De: ${m.from}</strong><br>
-                                <span>Asunto: ${m.subject || '(Sin Asunto)'}</span>
-                                <div style="font-size:0.7em; color:#888; margin-top:2px;">${m.date}</div>
-                            </div>
-                        `;
-                    });
-                })
-                .catch(() => {});
-        }
-
-        function leerMensajeTemp(login, domain, msgId) {
-            fetch(`https://www.1secmail.com/api/v1/?action=readMessage&login=${login}&domain=${domain}&id=${msgId}`)
-                .then(res => res.json())
-                .then(msg => {
-                    alert(`📧 De: ${msg.from}\nAsunto: ${msg.subject}\n\n${msg.textBody || msg.body || 'Sin contenido'}`);
-                })
-                .catch(() => alert("No se pudo cargar el contenido del mensaje."));
-        }
-
-        /* MINIJUEGOS & SIMULADORES GAMING (CLICS CORREGIDOS CON RATIO DE ESCALA) */
+        /* MINIJUEGOS & SIMULADORES GAMING */
         let juegoActualTab = 'valorant';
         let gameInterval = null;
         let gameScore = 0;
@@ -1046,7 +944,6 @@
                     cargarPropuestas();
                     cargarMisAjustesPrivados();
                     cargarConfigsComunidad();
-                    cargarCorreoPermanente();
                     renderMisiones();
                 });
             } else {
@@ -1055,7 +952,6 @@
                 if(avatar) avatar.style.display = 'none';
                 if(chatInput) { chatInput.disabled = true; chatInput.placeholder = "Inicia sesión para chatear..."; }
                 if(chatBtn) chatBtn.disabled = true;
-                document.getElementById('temp-email-display').innerText = 'Inicia sesión para cargar tu correo permanente';
             }
         });
 
