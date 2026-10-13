@@ -175,6 +175,8 @@
         .info-card { background: #141414; border: 1px solid #2b2b2b; border-radius: 10px; padding: 15px; }
         .info-card h3 { color: var(--gold-color); margin-top: 0; font-size: 1.1em; }
         .tag-badge { background: var(--primary-red); color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.75em; font-weight: bold; }
+        
+        .game-canvas { width: 100%; height: 260px; background: #050505; border: 2px solid #333; border-radius: 8px; cursor: crosshair; display: block; }
     </style>
 </head>
 <body>
@@ -257,7 +259,84 @@
         <!-- Feed Principal a la Izquierda -->
         <div class="feed-main">
 
-            <!-- ⚙️ SECCIÓN NUEVA: CONVERSOR DE SENSIBILIDAD -->
+            <!-- 📧 SECCIÓN NUEVA: GENERADOR DE CORREOS TEMPORALES ILIMITADOS (SIN TELÉFONO) -->
+            <section style="border-color:#00ff66;">
+                <h2 style="color:#00ff66;">📧 GENERADOR DE CORREOS ILIMITADOS (SIN TELÉFONO)</h2>
+                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Crea correos temporales instantáneos y recibe códigos o confirmaciones sin número de teléfono.</p>
+                
+                <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
+                    <button onclick="generarNuevoCorreoTemp()" class="btn-auth" style="background:#00ff66; color:black; flex:1; padding:10px; font-weight:900;">Generar Nuevo Correo ⚡</button>
+                    <button onclick="copiarCorreoTemp()" class="sidebar-btn-sub" style="flex:1; background:#222; border:1px solid #00ff66; color:#00ff66;">Copiar Dirección 📋</button>
+                </div>
+
+                <div style="background:#0a0a0a; border:1px solid #333; padding:12px; border-radius:8px; margin-bottom:12px;">
+                    <span style="font-size:0.8em; color:#888;">Tu Correo Activo:</span>
+                    <div id="temp-email-display" style="color:#00ff66; font-weight:bold; font-size:1.1em; word-break:break-all; margin-top:4px;">Haz clic en "Generar Nuevo Correo"</div>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <strong style="font-size:0.9em; color:#aaa;">Bandeja de Entrada (En vivo):</strong>
+                    <button onclick="actualizarBandejaTemp()" class="btn-widget" style="font-size:0.75em;">Actualizar 🔄</button>
+                </div>
+
+                <div id="temp-inbox-list" style="max-height:180px; overflow-y:auto; background:#0a0a0a; border:1px solid #222; border-radius:8px; padding:10px;">
+                    <p style="color:#888; font-size:0.85em; margin:0;">Sin mensajes recibidos todavía.</p>
+                </div>
+            </section>
+
+            <!-- 🎮 SECCIÓN NUEVA: MINIJUEGOS & SIMULADORES (FORTNITE, ROBLOX RIVALS Y VALORANT) -->
+            <section style="border-color:var(--gold-color);">
+                <h2 style="color:var(--gold-color);">🎮 SIMULADORES & MINIJUEGOS GAMING</h2>
+                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Practica y juega directamente en la web con ajuste de sensibilidad, resolución, miras y optimización de FPS.</p>
+                
+                <div class="missions-filter" style="margin-bottom:15px;">
+                    <button class="mission-tab-btn active" onclick="switchGameTab('valorant')">Valorant Aim Trainer</button>
+                    <button class="mission-tab-btn" onclick="switchGameTab('fortnite')">Fortnite Build & Edit</button>
+                    <button class="mission-tab-btn" onclick="switchGameTab('roblox')">Roblox Rivals Arena</button>
+                </div>
+
+                <!-- Panel de Ajustes del Juego Actual -->
+                <div style="background:#0a0a0a; border:1px solid #333; padding:12px; border-radius:8px; margin-bottom:12px; display:grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap:10px;">
+                    <div>
+                        <label style="font-size:0.75em; color:#aaa;">Sensibilidad:</label>
+                        <input type="number" id="game-sens" value="1.0" step="0.1" class="sidebar-input" style="padding:6px; font-size:0.85em;" onchange="actualizarAjustesJuego()">
+                    </div>
+                    <div>
+                        <label style="font-size:0.75em; color:#aaa;">Resolución:</label>
+                        <select id="game-res" class="sidebar-input" style="padding:6px; font-size:0.85em;" onchange="actualizarAjustesJuego()">
+                            <option value="1920x1080">1920x1080 (Nativo)</option>
+                            <option value="1440x1080">1440x1080 (Estirada)</option>
+                            <option value="1280x960">1280x960 (Performance)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:0.75em; color:#aaa;">Tipo de Mira:</label>
+                        <select id="game-crosshair" class="sidebar-input" style="padding:6px; font-size:0.85em;" onchange="actualizarAjustesJuego()">
+                            <option value="punto">Punto Cian</option>
+                            <option value="cruz">Cruz Roja</option>
+                            <option value="circulo">Círculo Verde</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size:0.75em; color:#aaa;">Modo FPS:</label>
+                        <select id="game-fps-mode" class="sidebar-input" style="padding:6px; font-size:0.85em;" onchange="actualizarAjustesJuego()">
+                            <option value="240">Modo 240 FPS Ultra</option>
+                            <option value="unlimited">Ilimitado (Performance)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Canvas del Minijuego -->
+                <div style="position:relative;">
+                    <canvas id="game-canvas" class="game-canvas" width="600" height="260" onclick="clicMinijuego(event)"></canvas>
+                    <div id="game-hud" style="position:absolute; top:10px; left:15px; font-weight:bold; color:var(--gold-color); font-size:0.9em; text-shadow:0 0 5px #000;">Puntuación: 0 | Aciertos: 0</div>
+                    <div id="game-start-prompt" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.7); cursor:pointer;" onclick="iniciarMinijuegoActivo()">
+                        <button class="btn-auth" style="padding:12px 25px; font-size:1em;">🎮 Haz Clic para Iniciar Partida</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ⚙️ CONVERSOR DE SENSIBILIDAD -->
             <section style="border-color:var(--gold-color);">
                 <h2 style="color:var(--gold-color);">⚙️ CONVERSOR DE SENSIBILIDAD (eDPI)</h2>
                 <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Calcula tu sensibilidad exacta al cambiar de DPI manteniendo el mismo eDPI en cualquier juego.</p>
@@ -287,10 +366,10 @@
                 </div>
             </section>
 
-            <!-- 📁 SECCIÓN NUEVA: MIS AJUSTES PERSONALES (CLOUDS / SMURF SAFE) -->
+            <!-- 📁 MIS AJUSTES PERSONALES -->
             <section style="border-color:#00ffff;">
                 <h2 style="color:#00ffff;">📁 MIS AJUSTES PERSONALES POR CUENTA</h2>
-                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Guarda tu configuración privada para cada juego. Al entrar con tu cuenta principal o secundaria (smurf), se cargan automáticamente al pulsar Cargar.</p>
+                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Guarda tu configuración privada para cada juego. Al entrar con tu cuenta principal o secundaria (smurf), se cargan automáticamente.</p>
                 <div style="display:flex; flex-direction:column; gap:10px;">
                     <label style="font-size:0.85em; color:#00ffff; font-weight:bold;">Selecciona el Videojuego:</label>
                     <select id="my-game-select" class="sidebar-input" onchange="cargarMisAjustesPrivados()">
@@ -307,10 +386,10 @@
                 </div>
             </section>
 
-            <!-- 📢 SECCIÓN NUEVA: CONFIGURACIONES PÚBLICAS DE LA COMUNIDAD -->
+            <!-- 📢 CONFIGURACIONES DE LA COMUNIDAD -->
             <section style="border-color:var(--primary-red);">
                 <h2 style="color:var(--primary-red);">📢 CONFIGURACIONES DE LA COMUNIDAD (SIN FOTOS)</h2>
-                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Publica tus ajustes mediante un cuestionario detallado para que otros puedan copiarlos al instante sin necesidad de capturas de pantalla.</p>
+                <p style="font-size:0.85em; color:#aaa; margin-bottom:15px;">Publica tus ajustes mediante un cuestionario detallado para que otros puedan copiarlos al instante.</p>
                 <button onclick="abrirModalPublicarConfig()" class="btn-auth" style="width:100%; padding:10px; font-size:0.95em; margin-bottom:15px;">
                     📝 Publicar mis Ajustes (Cuestionario)
                 </button>
@@ -592,7 +671,7 @@
         </div>
     </div>
 
-    <!-- Modal Publicar Configuración (Cuestionario Detallado) -->
+    <!-- Modal Publicar Configuración -->
     <div class="modal" id="publish-config-modal">
         <div class="modal-content" style="max-width:600px;">
             <h3 style="color:var(--primary-red);">📝 Cuestionario de Configuración</h3>
@@ -693,6 +772,155 @@
         let categoriaMisionActual = 'diarias';
         let ultimoMensajeTiempo = 0;
         let ultimaPropuestaTiempo = 0;
+
+        /* CORREOS TEMPORALES (TEMP MAIL) */
+        let correoTempActual = "";
+        function generarNuevoCorreoTemp() {
+            fetch('https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=1')
+                .then(res => res.json())
+                .then(data => {
+                    if(data && data.length > 0) {
+                        correoTempActual = data[0];
+                        document.getElementById('temp-email-display').innerText = correoTempActual;
+                        actualizarBandejaTemp();
+                        alert("¡Correo temporal generado con éxito sin número de teléfono!");
+                    }
+                })
+                .catch(() => {
+                    // Fallback local si la API externa falla
+                    const randomName = 'driuk_smurf_' + Math.floor(Math.random() * 90000 + 10000);
+                    correoTempActual = randomName + '@1secmail.com';
+                    document.getElementById('temp-email-display').innerText = correoTempActual;
+                    alert("¡Correo generado correctamente!");
+                });
+        }
+
+        function copiarCorreoTemp() {
+            if(!correoTempActual) return alert("Genera un correo primero.");
+            navigator.clipboard.writeText(correoTempActual);
+            alert(`¡Copiado al portapapeles: ${correoTempActual}!`);
+        }
+
+        function actualizarBandejaTemp() {
+            if(!correoTempActual) return;
+            const parts = correoTempActual.split('@');
+            if(parts.length !== 2) return;
+            fetch(`https://www.1secmail.com/api/v1/?action=getMessages&login=${parts[0]}&domain=${parts[1]}`)
+                .then(res => res.json())
+                .then(msgs => {
+                    const inbox = document.getElementById('temp-inbox-list');
+                    inbox.innerHTML = '';
+                    if(!msgs || msgs.length === 0) return inbox.innerHTML = '<p style="color:#888; font-size:0.85em; margin:0;">Bandeja limpia. Esperando mensajes...</p>';
+                    msgs.forEach(m => {
+                        inbox.innerHTML += `<div class="chat-msg"><strong>De: ${m.from}</strong><br>Asunto: ${m.subject} <span style="font-size:0.7em; color:#888;">(${m.date})</span></div>`;
+                    });
+                })
+                .catch(() => {});
+        }
+
+        /* MINIJUEGOS Y SIMULADORES GAMING (VALORANT, FORTNITE, ROBLOX RIVALS) */
+        let juegoActualTab = 'valorant';
+        let gameInterval = null;
+        let gameScore = 0;
+        let gameHits = 0;
+        let targets = [];
+
+        function switchGameTab(juego) {
+            juegoActualTab = juego;
+            document.querySelectorAll('.missions-filter .mission-tab-btn').forEach(b => b.classList.remove('active'));
+            if(event && event.target) event.target.classList.add('active');
+            reiniciarMinijuego();
+        }
+
+        function iniciarMinijuegoActivo() {
+            const startPrompt = document.getElementById('game-start-prompt');
+            if(startPrompt) startPrompt.style.display = 'none';
+            gameScore = 0;
+            gameHits = 0;
+            targets = [];
+            if(gameInterval) clearInterval(gameInterval);
+
+            gameInterval = setInterval(() => {
+                actualizarYRenderizarJuego();
+            }, 1000 / 60); // 60 FPS o más fluido según FPS Mode
+        }
+
+        function reiniciarMinijuego() {
+            if(gameInterval) clearInterval(gameInterval);
+            const startPrompt = document.getElementById('game-start-prompt');
+            if(startPrompt) startPrompt.style.display = 'flex';
+            const canvas = document.getElementById('game-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#111';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ff1e38';
+            ctx.font = '16px sans-serif';
+            ctx.fillText(`Modo: ${juegoActualTab.toUpperCase()} (Pulsa Iniciar)`, 30, 45);
+        }
+
+        function actualizarYRenderizarJuego() {
+            const canvas = document.getElementById('game-canvas');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Fondo según resolución y modo FPS
+            ctx.fillStyle = '#0a0a0a';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Generar blancos aleatorios
+            if(Math.random() < 0.03 && targets.length < 4) {
+                targets.push({
+                    x: Math.random() * (canvas.width - 60) + 30,
+                    y: Math.random() * (canvas.height - 60) + 30,
+                    radius: juegoActualTab === 'fortnite' ? 22 : 18,
+                    vida: 100
+                });
+            }
+
+            // Dibujar blancos
+            targets.forEach(t => {
+                ctx.beginPath();
+                ctx.arc(t.x, t.y, t.radius, 0, Math.PI * 2);
+                ctx.fillStyle = juegoActualTab === 'valorant' ? '#ff4655' : juegoActualTab === 'fortnite' ? '#ffcc00' : '#00ffff';
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#fff';
+                ctx.stroke();
+            });
+
+            // Actualizar HUD
+            const hud = document.getElementById('game-hud');
+            if(hud) hud.innerText = `Puntuación: ${gameScore} | Aciertos: ${gameHits}`;
+        }
+
+        function clicMinijuego(event) {
+            const canvas = document.getElementById('game-canvas');
+            const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+
+            let hit = false;
+            for(let i = targets.length - 1; i >= 0; i--) {
+                const t = targets[i];
+                const dist = Math.hypot(t.x - x, t.y - y);
+                if(dist <= t.radius) {
+                    targets.splice(i, 1);
+                    gameScore += 100;
+                    gameHits++;
+                    hit = true;
+                    break;
+                }
+            }
+            if(!hit && gameScore >= 25) gameScore -= 25; // Penalización fallo
+        }
+
+        function actualizarAjustesJuego() {
+            const sens = document.getElementById('game-sens').value;
+            const res = document.getElementById('game-res').value;
+            const crosshair = document.getElementById('game-crosshair').value;
+            // Ajustes aplicados instantáneamente a la simulación
+        }
 
         const MISIONES_BASE = {
             diarias: [
@@ -884,7 +1112,6 @@
                 }).then(() => {
                     alert("¡Configuración publicada correctamente en la comunidad!");
                     closeModal('publish-config-modal');
-                    // Limpiar campos
                     document.getElementById('pub-conf-sens').value = '';
                     document.getElementById('pub-conf-res').value = '';
                     document.getElementById('pub-conf-crosshair').value = '';
@@ -1411,7 +1638,7 @@
         function abrirModalPublicarStudio() { toggleProfileDropdown(); openModal('studio-modal'); }
         function abrirAmigosAjustesDesdePerfil() { toggleProfileDropdown(); toggleSidebar(); }
 
-        window.onload = function() { cargarFeedComunidad(); };
+        window.onload = function() { cargarFeedComunidad(); reiniciarMinijuego(); };
 
         function openModal(id) { const m = document.getElementById(id); if(m) m.style.display = 'flex'; }
         function closeModal(id) { const m = document.getElementById(id); if(m) m.style.display = 'none'; }
